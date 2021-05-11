@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import 'configure_nonweb.dart' if (dart.library.html) 'configure_web.dart';
+import 'frontegg.dart';
 
 void main() {
   configureApp();
+
+  initialize(FronteggOptions(
+      version: 'next',
+      contextOptions: ContextOptions(baseUrl: 'https://david.frontegg.com')));
   runApp(MyApp());
 }
 
@@ -17,7 +22,6 @@ class MyApp extends StatelessWidget {
         '/': (context) => MyHomePage(title: 'Flutter Demo Home Page'),
         '/overview': (context) => MyHomePage(title: 'TTTT'),
         '/account/login': (context) => EmptyPage(),
-
       },
       theme: ThemeData(
         // This is the theme of your application.
@@ -121,10 +125,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             Text(
               '$_counter',
-              style: Theme
-                  .of(context)
-                  .textTheme
-                  .headline4,
+              style: Theme.of(context).textTheme.headline4,
             ),
           ],
         ),
