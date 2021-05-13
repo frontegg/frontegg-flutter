@@ -1,14 +1,28 @@
+import 'dart:js';
+
 import 'package:flutter/material.dart';
 import 'configure_nonweb.dart' if (dart.library.html) 'configure_web.dart';
 import 'frontegg.dart';
+import 'dart:developer';
+
+var fronteggApp;
 
 void main() {
   configureApp();
 
-  initialize(FronteggOptions(
+  fronteggApp = initialize(FronteggOptions(
       version: 'next',
       contextOptions: ContextOptions(baseUrl: 'https://david.frontegg.com')));
-  runApp(MyApp());
+
+  fronteggApp.onStoreChange(allowInterop((FronteggState state) {
+    log("${state.authState.user.email}");
+  }));
+
+  log("Loading...");
+  fronteggApp.onLoad(allowInterop(() {
+    runApp(MyApp());
+    log("Loaded");
+  }));
 }
 
 class MyApp extends StatelessWidget {
@@ -21,7 +35,9 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (context) => MyHomePage(title: 'Flutter Demo Home Page'),
         '/overview': (context) => MyHomePage(title: 'TTTT'),
-        '/account/login': (context) => EmptyPage(),
+        '/account/login': (context) => Container(),
+        '/account/logout': (context) => Container(),
+        '/account/sign-up': (context) => Container(),
       },
       theme: ThemeData(
         // This is the theme of your application.
@@ -120,21 +136,15 @@ class _MyHomePageState extends State<MyHomePage> {
           // horizontal).
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
+            MaterialButton(
+              onPressed: () => {fronteggApp.mountAdminPortal()},
+              child: Text(
+                'Open Admin Portal',
+              ),
+            )
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
