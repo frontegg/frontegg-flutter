@@ -1,8 +1,8 @@
 import 'dart:js';
 
 import 'package:flutter/material.dart';
+import 'package:frontegg/frontegg.dart';
 import 'configure_nonweb.dart' if (dart.library.html) 'configure_web.dart';
-import 'frontegg.dart';
 import 'dart:developer';
 
 var fronteggApp;
@@ -14,9 +14,9 @@ void main() {
       version: 'next',
       contextOptions: ContextOptions(baseUrl: 'https://david.frontegg.com')));
 
-  fronteggApp.onStoreChange(allowInterop((FronteggState state) {
-    log("${state.authState.user.email}");
-  }));
+  // fronteggApp.onStoreChange(allowInterop((FronteggState state) {
+  //   log("${state.authState.user.email}");
+  // }));
 
   log("Loading...");
   fronteggApp.onLoad(allowInterop(() {
@@ -35,6 +35,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (context) => MyHomePage(title: 'Flutter Demo Home Page'),
         '/overview': (context) => MyHomePage(title: 'TTTT'),
+        
         '/account/login': (context) => Container(),
         '/account/logout': (context) => Container(),
         '/account/sign-up': (context) => Container(),

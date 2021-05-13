@@ -2,7 +2,6 @@
 library frontegg;
 
 import 'dart:js';
-
 import 'package:js/js.dart';
 
 @JS()
@@ -22,6 +21,9 @@ class FronteggOptions {
   external ContextOptions get contextOptions;
 
   external String get version;
+
+  external String get cred;
+
 
   // Must have an unnamed factory constructor with named arguments.
   external factory FronteggOptions(
