@@ -1,14 +1,24 @@
-# frontegg_flutter
 
-A new Flutter package project.
+<p align="center">
+  <a href="https://www.frontegg.com/" rel="noopener" target="_blank">
+    <img style="margin-top:40px" height="50" src="https://frontegg.com/wp-content/uploads/2020/04/logo_frrontegg.svg" alt="Frontegg logo">
+  </a>
+</p>
+<h1 align="center">Frontegg-React</h1>
+<div align="center">
 
-## Getting Started
+[Flutter Web](https://flutter.dev/web) pre-built Component for faster and simpler integration with Frontegg services.
+</div>
 
-This project is a starting point for a Dart
-[package](https://flutter.dev/developing-packages/),
-a library module containing code that can be shared easily across
-multiple Flutter or Dart projects.
+## Installation
+Frontegg-Flutter is available as an [pub.dev package](https://www.npmjs.com/package/@frontegg/react-core).
 
-For help getting started with Flutter, view our 
-[online documentation](https://flutter.dev/docs), which offers tutorials, 
-samples, guidance on mobile development, and a full API reference.
+<font color='red'>**NOTE!**:</font> **For typescript project make sure your are using typescirpt with version > 3.9.0**
+
+using **NPX**:
+```
+/* Run Frontegg React installer */
+
+npx @frontegg/react-cli init
+
+```
