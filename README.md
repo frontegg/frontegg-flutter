@@ -11,7 +11,7 @@
 </div>
 
 ## Installation
-Frontegg-Flutter is available as an [pub.dev package](https://www.npmjs.com/package/@frontegg/react-core).
+Frontegg-Flutter is available as an [pub.dev package](https://pub.dev/packages/frontegg).
 
 #### 1. Add `frontegg` package to `pubspec.yaml` dependencies:
 ```yaml
