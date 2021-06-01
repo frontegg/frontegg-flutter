@@ -14,6 +14,11 @@ class ContextOptions {
   external factory ContextOptions({String baseUrl, String requestCredentials});
 }
 
+enum UrlStrategy {
+  path,
+  hash,
+}
+
 @JS()
 @anonymous
 class FronteggOptions {
@@ -21,10 +26,13 @@ class FronteggOptions {
 
   external String get version;
 
+  external UrlStrategy get urlStrategy;
+
   // Must have an unnamed factory constructor with named arguments.
   external factory FronteggOptions({
     ContextOptions contextOptions,
     String version,
     Function(String path) onRedirectTo,
+    UrlStrategy urlStrategy,
   });
 }

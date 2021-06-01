@@ -2,25 +2,21 @@ import 'dart:js';
 
 import 'package:flutter/material.dart';
 import 'package:frontegg/frontegg.dart';
-import 'configure_nonweb.dart' if (dart.library.html) 'configure_web.dart';
 import 'dart:developer';
-import 'dart:convert';
-
 
 var fronteggApp;
 
 void main() {
-  configureApp();
-
   fronteggApp = initialize(FronteggOptions(
       version: 'next',
       contextOptions: ContextOptions(
-          baseUrl: 'https://david.frontegg.com',
-          requestCredentials: 'include'
-      ),
+          baseUrl: 'https://david.frontegg.com', requestCredentials: 'include'),
       onRedirectTo: allowInterop((String path) {
         log('message: $path');
-      })));
+      }),
+    urlStrategy: UrlStrategy.hash
+  )
+  );
 
   // fronteggApp.onStoreChange(allowInterop((FronteggState state) {
   //   log("${state.authState.user.email}");
