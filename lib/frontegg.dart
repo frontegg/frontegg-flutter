@@ -1,3 +1,8 @@
-export 'src/frontegg_app.dart';
-export 'src/options.dart';
-export 'src/state.dart';
+
+import 'frontegg_platform_interface.dart';
+
+class FronteggFlutter {
+  Future<String?> getPlatformVersion() {
+    return FronteggPlatform.instance.getPlatformVersion();
+  }
+}
