@@ -1,27 +1,45 @@
 package com.frontegg.flutter
 
 
-import android.app.Activity
 import android.content.Context
+import android.util.Log
 import com.frontegg.android.FronteggApp
-import com.frontegg.android.FronteggAuth
+import com.frontegg.flutter.stateListener.FronteggStateListener
+import com.frontegg.flutter.stateListener.FronteggStateListenerImpl
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
-import io.flutter.plugin.common.MethodCall
+import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.MethodChannel
-import io.flutter.plugin.common.MethodChannel.MethodCallHandler
-import io.flutter.plugin.common.MethodChannel.Result
 
 /** FronteggFlutterPlugin */
-class FronteggFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
+class FronteggFlutterPlugin : FlutterPlugin, ActivityAware, ActivityPluginBindingGetter {
     private lateinit var channel: MethodChannel
+    private lateinit var statesEventChannel: EventChannel
+
     private var context: Context? = null
-    private var activity: Activity? = null
+    private var binding: ActivityPluginBinding? = null
+    private val stateListener: FronteggStateListener = FronteggStateListenerImpl(this)
+
 
     override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
         channel = MethodChannel(flutterPluginBinding.binaryMessenger, "frontegg_flutter")
-        channel.setMethodCallHandler(this)
+        channel.setMethodCallHandler(FronteggMethodCallHandler(stateListener, this))
+
+        statesEventChannel =
+            EventChannel(flutterPluginBinding.binaryMessenger, "frontegg_flutter_state_changed")
+
+        statesEventChannel.setStreamHandler(object : EventChannel.StreamHandler {
+            override fun onListen(arguments: Any?, events: EventChannel.EventSink?) {
+                stateListener.setEventSink(events)
+            }
+
+            override fun onCancel(arguments: Any?) {
+                stateListener.setEventSink(null)
+            }
+
+        })
+
         context = flutterPluginBinding.applicationContext
         val constants = context!!.constants
         FronteggApp.init(
@@ -33,37 +51,31 @@ class FronteggFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
         )
     }
 
-    override fun onMethodCall(call: MethodCall, result: Result) {
-        if (call.method == "login") {
-            result.success(login())
-        } else {
-            result.notImplemented()
-        }
-    }
-
     override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
         channel.setMethodCallHandler(null)
         context = null
+        stateListener.dispose()
     }
 
     override fun onDetachedFromActivity() {
-        activity = null
+        this.binding = null
     }
 
+
     override fun onReattachedToActivityForConfigChanges(binding: ActivityPluginBinding) {
-        activity = binding.activity
+        this.binding = binding
     }
 
     override fun onAttachedToActivity(binding: ActivityPluginBinding) {
-        activity = binding.activity
+        this.binding = binding
     }
 
     override fun onDetachedFromActivityForConfigChanges() {
-        activity = null
+        this.binding = null
     }
 
-    private fun login() {
-        FronteggAuth.instance.login(activity!!)
+    override fun getActivityPluginBinding(): ActivityPluginBinding? {
+        return this.binding
     }
 
     companion object {

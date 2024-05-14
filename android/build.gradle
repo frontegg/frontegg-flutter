@@ -54,9 +54,11 @@ android {
         testImplementation 'org.mockito:mockito-core:5.0.0'
 
         // Frontegg dependencies
-        implementation 'androidx.core:core-ktx:1.10.0'
         implementation 'com.frontegg.sdk:android:1.2.11'
+        // Utils
+        implementation 'androidx.core:core-ktx:1.10.0'
         implementation 'io.reactivex.rxjava3:rxkotlin:3.0.1'
+        implementation 'com.google.code.gson:gson:2.8.9'
     }
 
     testOptions {

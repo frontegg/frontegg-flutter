@@ -10,5 +10,11 @@ class MethodChannelFrontegg extends FronteggPlatform {
   final methodChannel = const MethodChannel('frontegg_flutter');
 
   @override
-  Future<void> login() => methodChannel.invokeMethod<String>('login');
+  final eventChannel = const EventChannel('frontegg_flutter_state_changed');
+
+  @override
+  Future<void> login() => methodChannel.invokeMethod<void>('login');
+
+  @override
+  Future<void> subscribe() => methodChannel.invokeMethod('subscribe');
 }

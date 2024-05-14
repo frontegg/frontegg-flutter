@@ -2,10 +2,15 @@ package com.frontegg.flutter
 
 import android.content.Context
 import android.util.Log
+import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
 
 
 const val TAG: String = "FronteggUtils"
 
+
+interface ActivityPluginBindingGetter {
+    fun getActivityPluginBinding(): ActivityPluginBinding?
+}
 
 val Context.constants: FronteggConstants
     get() {
