@@ -2,7 +2,7 @@
 import 'frontegg_platform_interface.dart';
 
 class FronteggFlutter {
-  Future<String?> getPlatformVersion() {
-    return FronteggPlatform.instance.getPlatformVersion();
+  Future<void> login() {
+    return FronteggPlatform.instance.login();
   }
 }

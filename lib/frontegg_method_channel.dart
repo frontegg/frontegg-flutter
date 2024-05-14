@@ -10,8 +10,5 @@ class MethodChannelFrontegg extends FronteggPlatform {
   final methodChannel = const MethodChannel('frontegg_flutter');
 
   @override
-  Future<String?> getPlatformVersion() async {
-    final version = await methodChannel.invokeMethod<String>('getPlatformVersion');
-    return version;
-  }
+  Future<void> login() => methodChannel.invokeMethod<String>('login');
 }

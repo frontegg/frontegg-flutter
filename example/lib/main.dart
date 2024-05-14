@@ -31,8 +31,8 @@ class _MyAppState extends State<MyApp> {
     // Platform messages may fail, so we use a try/catch PlatformException.
     // We also handle the message potentially returning null.
     try {
-      platformVersion =
-          await _fronteggFlutterPlugin.getPlatformVersion() ?? 'Unknown platform version';
+      await _fronteggFlutterPlugin.login();
+      platformVersion = "Some";
     } on PlatformException {
       platformVersion = 'Failed to get platform version.';
     }
