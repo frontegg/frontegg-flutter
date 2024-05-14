@@ -1,4 +1,4 @@
-package com.frontegg.frontegg_flutter_example
+package com.frontegg.flutter.example
 
 import io.flutter.embedding.android.FlutterActivity
 
