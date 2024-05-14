@@ -1,14 +1,14 @@
-allprojects {
-    repositories {
-        google()
-        mavenCentral()
-    }
+rootProject.buildDir = '../build'
+
+ext {
+    kotlinVersion = "1.7.10"
+    buildToolsVersion = "32.0.0"
 }
 
-rootProject.buildDir = '../build'
 subprojects {
     project.buildDir = "${rootProject.buildDir}/${project.name}"
 }
+
 subprojects {
     project.evaluationDependsOn(':app')
 }
