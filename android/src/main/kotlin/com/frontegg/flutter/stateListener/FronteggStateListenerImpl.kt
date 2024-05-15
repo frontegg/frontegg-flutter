@@ -54,11 +54,6 @@ class FronteggStateListenerImpl(
 
 
     private fun notifyChanges() {
-        val lifecycle = activityPluginBindingGetter.getActivityPluginBinding()?.lifecycle
-        if (lifecycle != null && lifecycle is HiddenLifecycleReference && lifecycle.lifecycle.currentState != Lifecycle.State.RESUMED) {
-            return
-        }
-
         state = FronteggState(
             accessToken = FronteggAuth.instance.accessToken.value,
             refreshToken = FronteggAuth.instance.refreshToken.value,
