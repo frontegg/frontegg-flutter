@@ -10,75 +10,87 @@
 
 import 'package:frontegg/utils.dart';
 
-class FronteggRole {
+class FronteggUserRole {
   final String id;
-  final String vendorId;
   final String key;
-  final String name;
   final bool isDefault;
+  final String name;
+  final String? description;
+  final List<String> permissions;
+  final String? tenantId;
+  final String vendorId;
   final DateTime createdAt;
   final DateTime updatedAt;
-  final List<String> permissions;
 
-  FronteggRole({
+  FronteggUserRole({
     required this.id,
-    required this.vendorId,
     required this.key,
-    required this.name,
     required this.isDefault,
+    required this.name,
+    this.description,
+    required this.permissions,
+    this.tenantId,
+    required this.vendorId,
     required this.createdAt,
     required this.updatedAt,
-    required this.permissions,
   });
 
   Map<String, dynamic> toMap() {
     return {
       'id': id,
-      'vendorId': vendorId,
       'key': key,
-      'name': name,
       'isDefault': isDefault,
+      'name': name,
+      'description': description,
+      'permissions': permissions,
+      'tenantId': tenantId,
+      'vendorId': vendorId,
       'createdAt': createdAt,
       'updatedAt': updatedAt,
-      'permissions': permissions,
     };
   }
 
-  factory FronteggRole.fromMap(Map<Object?, Object?> map) {
-    return FronteggRole(
+  factory FronteggUserRole.fromMap(Map<Object?, Object?> map) {
+    return FronteggUserRole(
       id: map['id'] as String,
-      vendorId: map['vendorId'] as String,
       key: map['key'] as String,
-      name: map['name'] as String,
       isDefault: map['isDefault'] as bool,
+      name: map['name'] as String,
+      description: map['description'] as String?,
+      permissions: (map['permissions'] as List<Object?>).map((e) => e.toString()).toList(),
+      tenantId: map['tenantId'] as String?,
+      vendorId: map['vendorId'] as String,
       createdAt: (map['createdAt'] as String).toDateTime(),
       updatedAt: (map['updatedAt'] as String).toDateTime(),
-      permissions: map['permissions'] as List<String>,
     );
   }
 
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is FronteggRole &&
+      other is FronteggUserRole &&
           runtimeType == other.runtimeType &&
           id == other.id &&
-          vendorId == other.vendorId &&
           key == other.key &&
-          name == other.name &&
           isDefault == other.isDefault &&
+          name == other.name &&
+          description == other.description &&
+          permissions == other.permissions &&
+          tenantId == other.tenantId &&
+          vendorId == other.vendorId &&
           createdAt == other.createdAt &&
-          updatedAt == other.updatedAt &&
-          permissions == other.permissions;
+          updatedAt == other.updatedAt;
 
   @override
   int get hashCode =>
       id.hashCode ^
-      vendorId.hashCode ^
       key.hashCode ^
-      name.hashCode ^
       isDefault.hashCode ^
+      name.hashCode ^
+      description.hashCode ^
+      permissions.hashCode ^
+      tenantId.hashCode ^
+      vendorId.hashCode ^
       createdAt.hashCode ^
-      updatedAt.hashCode ^
-      permissions.hashCode;
+      updatedAt.hashCode;
 }
