@@ -59,6 +59,8 @@ android {
 
         buildConfigField "String", 'FRONTEGG_DOMAIN', "\"$fronteggDomain\""
         buildConfigField "String", 'FRONTEGG_CLIENT_ID', "\"$fronteggClientId\""
+        buildConfigField "Boolean", 'FRONTEGG_USE_ASSETS_LINKS', "false"
+        buildConfigField "Boolean", 'FRONTEGG_USE_CHROME_CUSTOM_TABS', "false"
     }
 
     buildTypes {
