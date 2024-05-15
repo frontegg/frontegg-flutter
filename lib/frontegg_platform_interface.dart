@@ -33,4 +33,24 @@ abstract class FronteggPlatform extends PlatformInterface {
   Future<void> subscribe() {
     throw UnimplementedError('login() has not been implemented.');
   }
+
+  Future<void> switchTenant(String tenantId) {
+    throw UnimplementedError('switchTenant() has not been implemented.');
+  }
+
+  Future<void> directLoginAction(String type, String data) {
+    throw UnimplementedError('directLoginAction() has not been implemented.');
+  }
+
+  Future<void> refreshToken() {
+    throw UnimplementedError('refreshToken() has not been implemented.');
+  }
+
+  Future<void> logout() {
+    throw UnimplementedError('logout() has not been implemented.');
+  }
+
+  Future<Map<Object?, Object?>?> getConstants() {
+    throw UnimplementedError('getConstants() has not been implemented.');
+  }
 }

@@ -7,6 +7,7 @@ import com.frontegg.flutter.ActivityPluginBindingGetter
 import com.frontegg.flutter.toReadableMap
 import io.flutter.embedding.engine.plugins.lifecycle.HiddenLifecycleReference
 import io.flutter.plugin.common.EventChannel
+import io.flutter.plugin.common.MethodChannel
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.Disposable
 import kotlinx.coroutines.Dispatchers
@@ -32,7 +33,7 @@ class FronteggStateListenerImpl(
         }
     }
 
-    override fun subscribe(): Unit? {
+    override fun subscribe(result: MethodChannel.Result) {
         this.disposable?.dispose()
         this.disposable = null
 
@@ -48,7 +49,7 @@ class FronteggStateListenerImpl(
             notifyChanges()
         }
         notifyChanges()
-        return null
+        result.success(null)
     }
 
 

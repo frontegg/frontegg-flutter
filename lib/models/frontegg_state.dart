@@ -10,13 +10,13 @@ class FronteggState {
   final bool showLoader;
 
   const FronteggState({
-    required this.accessToken,
-    required this.refreshToken,
-    required this.user,
-    required this.isAuthenticated,
-    required this.isLoading,
-    required this.initializing,
-    required this.showLoader,
+    this.accessToken,
+    this.refreshToken,
+    this.user,
+    this.isAuthenticated = false,
+    this.isLoading = true,
+    this.initializing = true,
+    this.showLoader = true,
   });
 
   @override

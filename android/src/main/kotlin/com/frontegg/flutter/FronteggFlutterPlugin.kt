@@ -2,7 +2,6 @@ package com.frontegg.flutter
 
 
 import android.content.Context
-import android.util.Log
 import com.frontegg.android.FronteggApp
 import com.frontegg.flutter.stateListener.FronteggStateListener
 import com.frontegg.flutter.stateListener.FronteggStateListenerImpl
@@ -23,8 +22,11 @@ class FronteggFlutterPlugin : FlutterPlugin, ActivityAware, ActivityPluginBindin
 
 
     override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
+        context = flutterPluginBinding.applicationContext
+        val constants = context!!.constants
+
         channel = MethodChannel(flutterPluginBinding.binaryMessenger, "frontegg_flutter")
-        channel.setMethodCallHandler(FronteggMethodCallHandler(stateListener, this))
+        channel.setMethodCallHandler(FronteggMethodCallHandler(stateListener, this, constants))
 
         statesEventChannel =
             EventChannel(flutterPluginBinding.binaryMessenger, "frontegg_flutter_state_changed")
@@ -37,11 +39,8 @@ class FronteggFlutterPlugin : FlutterPlugin, ActivityAware, ActivityPluginBindin
             override fun onCancel(arguments: Any?) {
                 stateListener.setEventSink(null)
             }
-
         })
 
-        context = flutterPluginBinding.applicationContext
-        val constants = context!!.constants
         FronteggApp.init(
             context = context!!,
             fronteggDomain = constants.baseUrl,

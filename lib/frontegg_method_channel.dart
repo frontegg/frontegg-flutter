@@ -17,4 +17,22 @@ class MethodChannelFrontegg extends FronteggPlatform {
 
   @override
   Future<void> subscribe() => methodChannel.invokeMethod('subscribe');
+
+  @override
+  Future<void> switchTenant(String tenantId) =>
+      methodChannel.invokeMethod('switchTenant', {"tenantId": tenantId});
+
+  @override
+  Future<void> directLoginAction(String type, String data) =>
+      methodChannel.invokeMethod('directLoginAction', {"type": type, "data": data});
+
+  @override
+  Future<void> refreshToken() => methodChannel.invokeMethod('refreshToken');
+
+  @override
+  Future<void> logout() => methodChannel.invokeMethod('logout');
+
+  @override
+  Future<Map<Object?, Object?>?> getConstants() =>
+      methodChannel.invokeMethod<Map<Object?, Object?>>('getConstants');
 }
