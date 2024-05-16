@@ -1,10 +1,13 @@
-import 'package:flutter/material.dart';
-import 'package:frontegg/src/frontegg_flutter.dart';
+import "package:flutter/material.dart";
+import "package:frontegg/src/frontegg_flutter.dart";
 
 class FronteggProvider extends InheritedWidget {
   final _value = FronteggFlutter();
 
-  FronteggProvider({super.key, required super.child});
+  FronteggProvider({
+    super.key,
+    required super.child,
+  });
 
   @override
   bool updateShouldNotify(covariant InheritedWidget oldWidget) => false;
@@ -15,12 +18,12 @@ class FronteggProvider extends InheritedWidget {
 
   static FronteggFlutter of(BuildContext context) {
     final FronteggProvider? result = maybeOf(context);
-    assert(result != null, 'No FronteggProvider found in context');
+    assert(result != null, "No FronteggProvider found in context");
     return result!._value;
   }
 
   @override
-  InheritedElement createElement() => FronteggProviderInheritedElement(
+  InheritedElement createElement() => _FronteggProviderInheritedElement(
         this,
         dispose: () async {
           await _value.dispose();
@@ -28,10 +31,10 @@ class FronteggProvider extends InheritedWidget {
       );
 }
 
-class FronteggProviderInheritedElement extends InheritedElement {
+class _FronteggProviderInheritedElement extends InheritedElement {
   final void Function() dispose;
 
-  FronteggProviderInheritedElement(
+  _FronteggProviderInheritedElement(
     super.widget, {
     required this.dispose,
   });

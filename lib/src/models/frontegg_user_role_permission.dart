@@ -1,4 +1,4 @@
-import 'package:frontegg/src/inner_utils.dart';
+import "package:frontegg/src/inner_utils.dart";
 
 class FronteggUserRolePermission {
   final String id;
@@ -23,27 +23,27 @@ class FronteggUserRolePermission {
 
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
-      'key': key,
-      'name': name,
-      'description': description,
-      'categoryId': categoryId,
-      'fePermission': fePermission,
-      'createdAt': createdAt,
-      'updatedAt': updatedAt,
+      "id": id,
+      "key": key,
+      "name": name,
+      "description": description,
+      "categoryId": categoryId,
+      "fePermission": fePermission,
+      "createdAt": createdAt,
+      "updatedAt": updatedAt,
     };
   }
 
   factory FronteggUserRolePermission.fromMap(Map<Object?, Object?> map) {
     return FronteggUserRolePermission(
-      id: map['id'] as String,
-      key: map['key'] as String,
-      name: map['name'] as String,
-      categoryId: map['categoryId'] as String,
-      description: map['description'] as String?,
-      fePermission: map['fePermission'] as bool,
-      createdAt: (map['createdAt'] as String).toDateTime(),
-      updatedAt: (map['updatedAt'] as String).toDateTime(),
+      id: map["id"] as String,
+      key: map["key"] as String,
+      name: map["name"] as String,
+      categoryId: map["categoryId"] as String,
+      description: map["description"] as String?,
+      fePermission: map["fePermission"] as bool,
+      createdAt: (map["createdAt"] as String).toDateTime(),
+      updatedAt: (map["updatedAt"] as String).toDateTime(),
     );
   }
 

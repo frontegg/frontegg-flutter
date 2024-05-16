@@ -35,10 +35,10 @@ data class FronteggState(
         )
     }
 
-    override fun equals(o: Any?): Boolean {
-        if (this === o) return true;
-        if (o == null || javaClass != o.javaClass) return false
-        val state = o as FronteggState
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true;
+        if (other == null || javaClass != other.javaClass) return false
+        val state = other as FronteggState
         return Objects.equals(accessToken, state.accessToken) &&
                 Objects.equals(refreshToken, state.refreshToken) &&
                 Objects.equals(user, state.user) &&

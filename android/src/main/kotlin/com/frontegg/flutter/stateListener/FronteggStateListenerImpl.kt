@@ -1,22 +1,16 @@
 package com.frontegg.flutter.stateListener
 
-import android.util.Log
-import androidx.lifecycle.Lifecycle
 import com.frontegg.android.FronteggAuth
-import com.frontegg.flutter.ActivityPluginBindingGetter
+import com.frontegg.flutter.ActivityProvider
 import com.frontegg.flutter.toReadableMap
-import io.flutter.embedding.engine.plugins.lifecycle.HiddenLifecycleReference
 import io.flutter.plugin.common.EventChannel
-import io.flutter.plugin.common.MethodChannel
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.Disposable
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-class FronteggStateListenerImpl(
-    val activityPluginBindingGetter: ActivityPluginBindingGetter
-) : FronteggStateListener {
+class FronteggStateListenerImpl : FronteggStateListener {
     private var disposable: Disposable? = null
     private var state: FronteggState? = null
 
@@ -28,14 +22,10 @@ class FronteggStateListenerImpl(
 
     override fun setEventSink(eventSink: EventChannel.EventSink?) {
         this.eventSink = eventSink
-        if (this.disposable != null) {
-            notifyChanges()
-        }
     }
 
     override fun subscribe() {
         this.disposable?.dispose()
-        this.disposable = null
 
         this.disposable = Observable.mergeArray(
             FronteggAuth.instance.accessToken.observable,

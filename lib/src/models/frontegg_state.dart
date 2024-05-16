@@ -1,4 +1,4 @@
-import 'frontegg_user.dart';
+import 'package:frontegg/frontegg_flutter.dart';
 
 class FronteggState {
   final String? accessToken;
@@ -44,27 +44,27 @@ class FronteggState {
 
   Map<String, dynamic> toMap() {
     return {
-      'accessToken': accessToken,
-      'refreshToken': refreshToken,
-      'user': user,
-      'isAuthenticated': isAuthenticated,
-      'isLoading': isLoading,
-      'initializing': initializing,
-      'showLoader': showLoader,
+      "accessToken": accessToken,
+      "refreshToken": refreshToken,
+      "user": user,
+      "isAuthenticated": isAuthenticated,
+      "isLoading": isLoading,
+      "initializing": initializing,
+      "showLoader": showLoader,
     };
   }
 
   factory FronteggState.fromMap(Map<Object?, Object?> map) {
-    var user = map['user'] as Map<Object?, Object?>?;
+    var user = map["user"] as Map<Object?, Object?>?;
 
     return FronteggState(
-      accessToken: map['accessToken'] as String?,
-      refreshToken: map['refreshToken'] as String?,
+      accessToken: map["accessToken"] as String?,
+      refreshToken: map["refreshToken"] as String?,
       user: user != null ? FronteggUser.fromMap(user) : null,
-      isAuthenticated: map['isAuthenticated'] as bool,
-      isLoading: map['isLoading'] as bool,
-      initializing: map['initializing'] as bool,
-      showLoader: map['showLoader'] as bool,
+      isAuthenticated: map["isAuthenticated"] as bool,
+      isLoading: map["isLoading"] as bool,
+      initializing: map["initializing"] as bool,
+      showLoader: map["showLoader"] as bool,
     );
   }
 }
