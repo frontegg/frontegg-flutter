@@ -8,7 +8,7 @@
 // updatedAt: 2024-05-13T11:59:55.000Z,
 // vendorId: 392b348b-a37c-471f-8f1b-2c35d23aa7e6}
 
-import 'package:frontegg/utils.dart';
+import 'package:frontegg/inner_utils.dart';
 
 class FronteggUserRole {
   final String id;

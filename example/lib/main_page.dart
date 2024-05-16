@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:frontegg/frontegg.dart';
 import 'package:frontegg/models/frontegg_state.dart';
+import 'package:frontegg/utils.dart';
 import 'package:frontegg_flutter_example/user_page.dart';
-import 'package:provider/provider.dart';
 
 import 'login_page.dart';
 
@@ -11,7 +10,7 @@ class MainPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final frontegg = context.read<FronteggFlutter>();
+    final frontegg = context.frontegg;
     return Scaffold(
       body: Center(
         child: StreamBuilder<FronteggState>(

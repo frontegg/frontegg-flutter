@@ -9,7 +9,7 @@
 //     updatedAt: 2024-03-21T07:27:46.000Z
 // },
 
-import 'package:frontegg/utils.dart';
+import 'package:frontegg/inner_utils.dart';
 
 class FronteggUserRolePermission {
   final String id;

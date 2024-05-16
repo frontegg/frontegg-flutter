@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:frontegg/frontegg.dart';
 import 'package:frontegg/models/frontegg_user.dart';
-import 'package:provider/provider.dart';
+import 'package:frontegg/utils.dart';
 
 import 'tenants_tab.dart';
 import 'user_tab.dart';
@@ -23,7 +22,7 @@ class _UserPageState extends State<UserPage> {
 
   @override
   Widget build(BuildContext context) {
-    final frontegg = context.read<FronteggFlutter>();
+    final frontegg = context.frontegg;
     return Scaffold(
       appBar: AppBar(
         title: Text(_currentIndex == 0 ? "User" : "Tenants"),

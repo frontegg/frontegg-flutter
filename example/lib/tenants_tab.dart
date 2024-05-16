@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:frontegg/frontegg.dart';
 import 'package:frontegg/models/frontegg_state.dart';
-import 'package:provider/provider.dart';
+import 'package:frontegg/utils.dart';
 
 class TenantsTab extends StatelessWidget {
   const TenantsTab({
@@ -10,7 +9,7 @@ class TenantsTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final frontegg = context.read<FronteggFlutter>();
+    final frontegg = context.frontegg;
     return StreamBuilder<FronteggState>(
       stream: frontegg.onStateChanged,
       builder: (BuildContext context, AsyncSnapshot<FronteggState> snapshot) {

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:frontegg/frontegg.dart';
-import 'package:provider/provider.dart';
+import 'package:frontegg/provider.dart';
 
 import 'main_page.dart';
 
@@ -15,9 +14,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Provider(
-        create: (_) => FronteggFlutter(),
-        dispose: (_, frontegg) => frontegg.dispose(),
+      home: FronteggProvider(
         child: const MainPage(),
       ),
     );

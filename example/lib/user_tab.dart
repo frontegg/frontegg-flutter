@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:frontegg/frontegg.dart';
 import 'package:frontegg/models/frontegg_state.dart';
-import 'package:provider/provider.dart';
+import 'package:frontegg/utils.dart';
 
 class UserTab extends StatelessWidget {
   const UserTab({
@@ -10,7 +9,7 @@ class UserTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final frontegg = context.read<FronteggFlutter>();
+    final frontegg = context.frontegg;
     final size = MediaQuery.of(context).size;
     return Center(
       child: StreamBuilder<FronteggState>(
