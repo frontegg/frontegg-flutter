@@ -29,7 +29,7 @@ class LoginPage extends StatelessWidget {
           Align(
             alignment: Alignment.center,
             child: StreamBuilder<FronteggState>(
-              stream: frontegg.onStateChanged,
+              stream: frontegg.stateChanged,
               builder: (BuildContext context, AsyncSnapshot<FronteggState> snapshot) {
                 if (snapshot.hasData) {
                   final state = snapshot.data!;

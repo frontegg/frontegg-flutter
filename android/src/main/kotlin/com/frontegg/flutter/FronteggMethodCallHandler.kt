@@ -10,7 +10,6 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 class FronteggMethodCallHandler(
-    private val stateListener: FronteggStateListener,
     private val activityPluginBindingGetter: ActivityPluginBindingGetter,
     private val constants: FronteggConstants
 ) : MethodCallHandler {
@@ -18,7 +17,6 @@ class FronteggMethodCallHandler(
     override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
         when (call.method) {
             "login" -> login(result)
-            "subscribe" -> stateListener.subscribe(result)
             "switchTenant" -> switchTenant(call, result)
             "directLoginAction" -> directLoginAction(call, result)
             "refreshToken" -> refreshToken(result)
@@ -69,8 +67,8 @@ class FronteggMethodCallHandler(
     private fun logout(result: MethodChannel.Result) {
         FronteggAuth.instance.logout()
         result.success(null)
-    }    
-    
+    }
+
     private fun getConstants(result: MethodChannel.Result) {
         result.success(constants.toMap())
     }

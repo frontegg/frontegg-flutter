@@ -33,7 +33,7 @@ class FronteggStateListenerImpl(
         }
     }
 
-    override fun subscribe(result: MethodChannel.Result) {
+    override fun subscribe() {
         this.disposable?.dispose()
         this.disposable = null
 
@@ -49,7 +49,6 @@ class FronteggStateListenerImpl(
             notifyChanges()
         }
         notifyChanges()
-        result.success(null)
     }
 
 

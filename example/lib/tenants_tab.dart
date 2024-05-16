@@ -11,7 +11,7 @@ class TenantsTab extends StatelessWidget {
   Widget build(BuildContext context) {
     final frontegg = context.frontegg;
     return StreamBuilder<FronteggState>(
-      stream: frontegg.onStateChanged,
+      stream: frontegg.stateChanged,
       builder: (BuildContext context, AsyncSnapshot<FronteggState> snapshot) {
         if (snapshot.hasData && snapshot.data?.user != null) {
           final state = snapshot.data!;

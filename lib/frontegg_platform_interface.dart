@@ -1,4 +1,3 @@
-import 'package:flutter/services.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import 'frontegg_method_channel.dart';
@@ -24,13 +23,9 @@ abstract class FronteggPlatform extends PlatformInterface {
     _instance = instance;
   }
 
-  EventChannel get eventChannel;
+  Stream get stateChanged;
 
   Future<void> login() {
-    throw UnimplementedError('login() has not been implemented.');
-  }
-
-  Future<void> subscribe() {
     throw UnimplementedError('login() has not been implemented.');
   }
 

@@ -7,17 +7,15 @@ import 'frontegg_platform_interface.dart';
 import 'models/frontegg_state.dart';
 
 class FronteggFlutter {
-  final _stateChanged = FronteggPlatform.instance.eventChannel.receiveBroadcastStream();
-  FronteggState _currentState = const FronteggState();
+  static FronteggState _currentState = const FronteggState();
   StreamSubscription? _stateStreamSubscription;
-  final _stateSubscription = BehaviorSubject<FronteggState>.seeded(const FronteggState());
+  static final _stateChangedSubscription = BehaviorSubject<FronteggState>.seeded(_currentState);
 
   FronteggFlutter() {
-    _stateStreamSubscription = _stateChanged.listen((state) {
+    _stateStreamSubscription = FronteggPlatform.instance.stateChanged.listen((state) {
       _currentState = FronteggState.fromMap(state as Map<Object?, Object?>);
-      _stateSubscription.add(_currentState);
+      _stateChangedSubscription.add(_currentState);
     });
-    FronteggPlatform.instance.subscribe();
   }
 
   Future<void> dispose() async {
@@ -30,7 +28,7 @@ class FronteggFlutter {
     await FronteggPlatform.instance.login();
   }
 
-  Stream<FronteggState> get onStateChanged => _stateSubscription.stream;
+  Stream<FronteggState> get stateChanged => _stateChangedSubscription.stream;
 
   Future<void> switchTenant(String tenantId) => FronteggPlatform.instance.switchTenant(tenantId);
 

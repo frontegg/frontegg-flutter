@@ -14,7 +14,7 @@ class MainPage extends StatelessWidget {
     return Scaffold(
       body: Center(
         child: StreamBuilder<FronteggState>(
-          stream: frontegg.onStateChanged,
+          stream: frontegg.stateChanged,
           builder: (BuildContext context, AsyncSnapshot<FronteggState> snapshot) {
             if (snapshot.hasData) {
               final state = snapshot.data!;

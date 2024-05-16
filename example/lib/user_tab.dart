@@ -13,7 +13,7 @@ class UserTab extends StatelessWidget {
     final size = MediaQuery.of(context).size;
     return Center(
       child: StreamBuilder<FronteggState>(
-        stream: frontegg.onStateChanged,
+        stream: frontegg.stateChanged,
         builder: (BuildContext context, AsyncSnapshot<FronteggState> snapshot) {
           if (snapshot.hasData && snapshot.data?.user != null) {
             final state = snapshot.data!;

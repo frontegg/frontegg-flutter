@@ -26,7 +26,7 @@ class FronteggFlutterPlugin : FlutterPlugin, ActivityAware, ActivityPluginBindin
         val constants = context!!.constants
 
         channel = MethodChannel(flutterPluginBinding.binaryMessenger, "frontegg_flutter")
-        channel.setMethodCallHandler(FronteggMethodCallHandler(stateListener, this, constants))
+        channel.setMethodCallHandler(FronteggMethodCallHandler(this, constants))
 
         statesEventChannel =
             EventChannel(flutterPluginBinding.binaryMessenger, "frontegg_flutter_state_changed")
@@ -34,6 +34,7 @@ class FronteggFlutterPlugin : FlutterPlugin, ActivityAware, ActivityPluginBindin
         statesEventChannel.setStreamHandler(object : EventChannel.StreamHandler {
             override fun onListen(arguments: Any?, events: EventChannel.EventSink?) {
                 stateListener.setEventSink(events)
+                stateListener.subscribe()
             }
 
             override fun onCancel(arguments: Any?) {
