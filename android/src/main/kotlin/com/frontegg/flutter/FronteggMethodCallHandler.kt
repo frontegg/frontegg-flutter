@@ -5,6 +5,9 @@ import com.frontegg.flutter.stateListener.FronteggStateListener
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class FronteggMethodCallHandler(
     private val stateListener: FronteggStateListener,
@@ -55,8 +58,12 @@ class FronteggMethodCallHandler(
     }
 
     private fun refreshToken(result: MethodChannel.Result) {
-        FronteggAuth.instance.refreshTokenIfNeeded()
-        result.success(null)
+        GlobalScope.launch(Dispatchers.IO) {
+            val success = FronteggAuth.instance.refreshTokenIfNeeded()
+            GlobalScope.launch(Dispatchers.Main) {
+                result.success(success)
+            }
+        }
     }
 
     private fun logout(result: MethodChannel.Result) {
