@@ -1,6 +1,6 @@
+import 'frontegg_tenant.dart';
 import 'frontegg_user_role.dart';
 import 'frontegg_user_role_permission.dart';
-import 'frontegg_tenant.dart';
 
 class FronteggUser {
   final String id;
@@ -79,7 +79,7 @@ class FronteggUser {
           .map((e) => FronteggUserRolePermission.fromMap(e as Map<Object?, Object?>))
           .toList(),
       tenantId: map['tenantId'] as String,
-      tenantIds:  (map['tenantIds'] as List<Object?>).map((e) => e.toString()).toList(),
+      tenantIds: (map['tenantIds'] as List<Object?>).map((e) => e.toString()).toList(),
       tenants: (map['tenants'] as List<Object?>)
           .map((e) => FronteggTenant.fromMap(e as Map<Object?, Object?>))
           .toList(),

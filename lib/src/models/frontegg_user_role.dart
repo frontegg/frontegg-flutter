@@ -1,33 +1,26 @@
-// {
-// categoryId: 0c587ef6-eb9e-4a10-b888-66ec4bcb1548,
-// createdAt: 2024-03-21T07:27:46.000Z,
-// description: View all applications in the account,
-//     fePermission: true,
-// id: 0e8c0103-feb1-4ae0-8230-00de5fd0f857,
-// key: fe.account-settings.read.app,
-// name: Read application,
-//     updatedAt: 2024-03-21T07:27:46.000Z
-// },
+import 'package:frontegg/src/inner_utils.dart';
 
-import 'package:frontegg/inner_utils.dart';
-
-class FronteggUserRolePermission {
+class FronteggUserRole {
   final String id;
   final String key;
+  final bool isDefault;
   final String name;
   final String? description;
-  final String categoryId;
-  final bool fePermission;
+  final List<String> permissions;
+  final String? tenantId;
+  final String vendorId;
   final DateTime createdAt;
   final DateTime updatedAt;
 
-  FronteggUserRolePermission({
+  FronteggUserRole({
     required this.id,
     required this.key,
+    required this.isDefault,
     required this.name,
-    required this.description,
-    required this.categoryId,
-    required this.fePermission,
+    this.description,
+    required this.permissions,
+    this.tenantId,
+    required this.vendorId,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -36,23 +29,27 @@ class FronteggUserRolePermission {
     return {
       'id': id,
       'key': key,
+      'isDefault': isDefault,
       'name': name,
       'description': description,
-      'categoryId': categoryId,
-      'fePermission': fePermission,
+      'permissions': permissions,
+      'tenantId': tenantId,
+      'vendorId': vendorId,
       'createdAt': createdAt,
       'updatedAt': updatedAt,
     };
   }
 
-  factory FronteggUserRolePermission.fromMap(Map<Object?, Object?> map) {
-    return FronteggUserRolePermission(
+  factory FronteggUserRole.fromMap(Map<Object?, Object?> map) {
+    return FronteggUserRole(
       id: map['id'] as String,
       key: map['key'] as String,
+      isDefault: map['isDefault'] as bool,
       name: map['name'] as String,
-      categoryId: map['categoryId'] as String,
       description: map['description'] as String?,
-      fePermission: map['fePermission'] as bool,
+      permissions: (map['permissions'] as List<Object?>).map((e) => e.toString()).toList(),
+      tenantId: map['tenantId'] as String?,
+      vendorId: map['vendorId'] as String,
       createdAt: (map['createdAt'] as String).toDateTime(),
       updatedAt: (map['updatedAt'] as String).toDateTime(),
     );
@@ -61,14 +58,16 @@ class FronteggUserRolePermission {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is FronteggUserRolePermission &&
+      other is FronteggUserRole &&
           runtimeType == other.runtimeType &&
           id == other.id &&
           key == other.key &&
+          isDefault == other.isDefault &&
           name == other.name &&
           description == other.description &&
-          categoryId == other.categoryId &&
-          fePermission == other.fePermission &&
+          permissions == other.permissions &&
+          tenantId == other.tenantId &&
+          vendorId == other.vendorId &&
           createdAt == other.createdAt &&
           updatedAt == other.updatedAt;
 
@@ -76,10 +75,12 @@ class FronteggUserRolePermission {
   int get hashCode =>
       id.hashCode ^
       key.hashCode ^
+      isDefault.hashCode ^
       name.hashCode ^
       description.hashCode ^
-      categoryId.hashCode ^
-      fePermission.hashCode ^
+      permissions.hashCode ^
+      tenantId.hashCode ^
+      vendorId.hashCode ^
       createdAt.hashCode ^
       updatedAt.hashCode;
 }

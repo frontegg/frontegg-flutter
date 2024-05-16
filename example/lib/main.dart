@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:frontegg/provider.dart';
-
-import 'main_page.dart';
+import 'package:frontegg/frontegg_flutter.dart';
+import 'package:frontegg_flutter_example/main_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

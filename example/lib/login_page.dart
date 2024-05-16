@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:frontegg/models/frontegg_state.dart';
-import 'package:frontegg/utils.dart';
+import 'package:frontegg/frontegg_flutter.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});

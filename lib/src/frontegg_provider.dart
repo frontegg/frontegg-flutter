@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:frontegg/frontegg.dart';
+import 'package:frontegg/src/frontegg_flutter.dart';
 
 class FronteggProvider extends InheritedWidget {
   final _value = FronteggFlutter();

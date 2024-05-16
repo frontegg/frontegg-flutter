@@ -1,4 +1,4 @@
-import 'package:frontegg/inner_utils.dart';
+import 'package:frontegg/src/inner_utils.dart';
 
 class FronteggTenant {
   final String id;

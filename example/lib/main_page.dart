@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:frontegg/models/frontegg_state.dart';
-import 'package:frontegg/utils.dart';
+import 'package:frontegg/frontegg_flutter.dart';
+import 'package:frontegg_flutter_example/login_page.dart';
 import 'package:frontegg_flutter_example/user_page.dart';
-
-import 'login_page.dart';
 
 class MainPage extends StatelessWidget {
   const MainPage({super.key});
@@ -19,9 +17,7 @@ class MainPage extends StatelessWidget {
             if (snapshot.hasData) {
               final state = snapshot.data!;
               if (state.isAuthenticated && state.user != null) {
-                return UserPage(
-                  user: state.user!,
-                );
+                return const UserPage();
               } else if (state.initializing) {
                 return const CircularProgressIndicator();
               } else {

@@ -1,10 +1,9 @@
 import 'dart:async';
 
-import 'package:frontegg/models/frontegg_constants.dart';
+import 'package:frontegg/src/frontegg_platform_interface.dart';
+import 'package:frontegg/src/models/frontegg_constants.dart';
+import 'package:frontegg/src/models/frontegg_state.dart';
 import 'package:rxdart/rxdart.dart';
-
-import 'frontegg_platform_interface.dart';
-import 'models/frontegg_state.dart';
 
 class FronteggFlutter {
   static FronteggState _currentState = const FronteggState();

@@ -1,16 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:frontegg/models/frontegg_user.dart';
-import 'package:frontegg/utils.dart';
-
-import 'tenants_tab.dart';
-import 'user_tab.dart';
+import 'package:frontegg/frontegg_flutter.dart';
+import 'package:frontegg_flutter_example/tenants_tab.dart';
+import 'package:frontegg_flutter_example/user_tab.dart';
 
 class UserPage extends StatefulWidget {
-  final FronteggUser user;
-
   const UserPage({
     super.key,
-    required this.user,
   });
 
   @override
