@@ -19,16 +19,12 @@ class MainPage extends StatelessWidget {
           builder: (BuildContext context, AsyncSnapshot<FronteggState> snapshot) {
             if (snapshot.hasData) {
               final state = snapshot.data!;
-              print("STATE ${state.isAuthenticated}");
-              frontegg.getConstants().then((value) {
-                print("Constants: ${value.toMap()}");
-              });
-              if (state.isLoading) {
-                return const CircularProgressIndicator();
-              } else if (state.isAuthenticated && state.user != null) {
+              if (state.isAuthenticated && state.user != null) {
                 return UserPage(
                   user: state.user!,
                 );
+              } else if (state.initializing) {
+                return const CircularProgressIndicator();
               } else {
                 return const LoginPage();
               }

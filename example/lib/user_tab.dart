@@ -17,7 +17,8 @@ class UserTab extends StatelessWidget {
         stream: frontegg.onStateChanged,
         builder: (BuildContext context, AsyncSnapshot<FronteggState> snapshot) {
           if (snapshot.hasData && snapshot.data?.user != null) {
-            final user = snapshot.data!.user!;
+            final state = snapshot.data!;
+            final user = state.user!;
             return Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
@@ -42,14 +43,16 @@ class UserTab extends StatelessWidget {
                   style: const TextStyle(fontSize: 17),
                 ),
                 const SizedBox(height: 40),
-                ElevatedButton(
-                  child: const Text(
-                    "Logout",
+                if (state.isLoading) const CircularProgressIndicator(),
+                if (!state.isLoading)
+                  ElevatedButton(
+                    child: const Text(
+                      "Logout",
+                    ),
+                    onPressed: () {
+                      frontegg.logout();
+                    },
                   ),
-                  onPressed: () {
-                    frontegg.logout();
-                  },
-                ),
               ],
             );
           }

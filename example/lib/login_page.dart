@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontegg/frontegg.dart';
+import 'package:frontegg/models/frontegg_state.dart';
 import 'package:provider/provider.dart';
 
 class LoginPage extends StatelessWidget {
@@ -28,16 +29,24 @@ class LoginPage extends StatelessWidget {
           ),
           Align(
             alignment: Alignment.center,
-            child: SizedBox(
-              width: 200,
-              child: ElevatedButton(
-                child: const Text(
-                  "Login",
-                ),
-                onPressed: () {
-                  frontegg.login();
-                },
-              ),
+            child: StreamBuilder<FronteggState>(
+              stream: frontegg.onStateChanged,
+              builder: (BuildContext context, AsyncSnapshot<FronteggState> snapshot) {
+                if (snapshot.hasData) {
+                  final state = snapshot.data!;
+                  if (state.isLoading) {
+                    return const CircularProgressIndicator();
+                  } else if (!state.initializing && !state.isAuthenticated) {
+                    return ElevatedButton(
+                      child: const Text("Login"),
+                      onPressed: () {
+                        frontegg.login();
+                      },
+                    );
+                  }
+                }
+                return const SizedBox();
+              },
             ),
           )
         ],

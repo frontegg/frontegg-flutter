@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:frontegg/frontegg.dart';
 import 'package:frontegg/models/frontegg_user.dart';
+import 'package:provider/provider.dart';
 
 import 'tenants_tab.dart';
 import 'user_tab.dart';
@@ -21,10 +23,20 @@ class _UserPageState extends State<UserPage> {
 
   @override
   Widget build(BuildContext context) {
+    final frontegg = context.read<FronteggFlutter>();
     return Scaffold(
       appBar: AppBar(
         title: Text(_currentIndex == 0 ? "User" : "Tenants"),
         centerTitle: true,
+        actions: [
+          if (_currentIndex == 0)
+            IconButton(
+              icon: const Icon(Icons.refresh),
+              onPressed: () async {
+                await frontegg.refreshToken();
+              },
+            )
+        ],
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
@@ -46,7 +58,7 @@ class _UserPageState extends State<UserPage> {
           ),
         ],
       ),
-      body: _currentIndex == 0 ? const UserTab() : TenantsTab(),
+      body: _currentIndex == 0 ? const UserTab() : const TenantsTab(),
     );
   }
 }
