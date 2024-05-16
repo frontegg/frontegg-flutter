@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:frontegg/utils.dart';
 
 class FronteggTenant {
@@ -46,8 +44,6 @@ class FronteggTenant {
   }
 
   factory FronteggTenant.fromMap(Map<Object?, Object?> map) {
-    log(map.toString());
-
     return FronteggTenant(
       id: map['id'] as String,
       tenantId: map['tenantId'] as String,

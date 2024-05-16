@@ -1,7 +1,4 @@
-import 'dart:developer';
-
-import 'package:frontegg/models/frontegg_user_role.dart';
-
+import 'frontegg_user_role.dart';
 import 'frontegg_user_role_permission.dart';
 import 'frontegg_tenant.dart';
 
@@ -67,8 +64,6 @@ class FronteggUser {
   }
 
   factory FronteggUser.fromMap(Map<Object?, Object?> map) {
-    log('FronteggUser');
-    log(map.toString());
     return FronteggUser(
       id: map['id'] as String,
       email: map['email'] as String,
