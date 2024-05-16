@@ -33,7 +33,7 @@ val Context.constants: FronteggConstants
                 safeGetValueFromBuildConfig(
                     buildConfigClass,
                     "FRONTEGG_USE_CHROME_CUSTOM_TABS",
-                    false
+                    true
                 )
 
             return FronteggConstants(
