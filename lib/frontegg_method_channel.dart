@@ -27,7 +27,7 @@ class MethodChannelFrontegg extends FronteggPlatform {
       methodChannel.invokeMethod('directLoginAction', {"type": type, "data": data});
 
   @override
-  Future<void> refreshToken() => methodChannel.invokeMethod('refreshToken');
+  Future<bool?> refreshToken() => methodChannel.invokeMethod<bool>('refreshToken');
 
   @override
   Future<void> logout() => methodChannel.invokeMethod('logout');

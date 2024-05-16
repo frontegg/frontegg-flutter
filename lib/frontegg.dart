@@ -37,7 +37,10 @@ class FronteggFlutter {
   Future<void> directLoginAction(String type, String data) =>
       FronteggPlatform.instance.directLoginAction(type, data);
 
-  Future<void> refreshToken() => FronteggPlatform.instance.refreshToken();
+  Future<bool> refreshToken() async {
+    final success = await FronteggPlatform.instance.refreshToken();
+    return success ?? false;
+  }
 
   Future<void> logout() => FronteggPlatform.instance.logout();
 

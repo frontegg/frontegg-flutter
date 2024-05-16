@@ -42,7 +42,7 @@ abstract class FronteggPlatform extends PlatformInterface {
     throw UnimplementedError('directLoginAction() has not been implemented.');
   }
 
-  Future<void> refreshToken() {
+  Future<bool?> refreshToken() {
     throw UnimplementedError('refreshToken() has not been implemented.');
   }
 
