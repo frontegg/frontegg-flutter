@@ -9,14 +9,14 @@ class MethodChannelFrontegg extends FronteggPlatform {
   @visibleForTesting
   final methodChannel = const MethodChannel('frontegg_flutter');
 
-  @visibleForTesting
-  final stateChangedEventChanel = const EventChannel('frontegg_flutter_state_changed');
+  // @visibleForTesting
+  // final stateChangedEventChanel = const EventChannel('frontegg_flutter_state_changed');
 
-  late final Stream<dynamic> _stateChangedEventChanelStream =
-      stateChangedEventChanel.receiveBroadcastStream();
+  // late final Stream<dynamic> _stateChangedEventChanelStream =
+  //     stateChangedEventChanel.receiveBroadcastStream();
 
-  @override
-  Stream get stateChanged => _stateChangedEventChanelStream;
+  // @override
+  // Stream get stateChanged => _stateChangedEventChanelStream;
 
   @override
   Future<void> login() => methodChannel.invokeMethod<void>('login');

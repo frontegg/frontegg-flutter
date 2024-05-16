@@ -8,8 +8,8 @@ class FronteggConstants {
   FronteggConstants({
     required this.baseUrl,
     required this.clientId,
-    required this.useAssetsLinks,
-    required this.useChromeCustomTabs,
+    this.useAssetsLinks = false,
+    this.useChromeCustomTabs = false,
     required this.bundleId,
   });
 
@@ -46,8 +46,8 @@ class FronteggConstants {
     return FronteggConstants(
       baseUrl: map['baseUrl'] as String,
       clientId: map['clientId'] as String,
-      useAssetsLinks: map['useAssetsLinks'] as bool,
-      useChromeCustomTabs: map['useChromeCustomTabs'] as bool,
+      useAssetsLinks: (map['useAssetsLinks'] as bool?) ?? false,
+      useChromeCustomTabs:( map['useChromeCustomTabs'] as bool?) ?? false,
       bundleId: map['bundleId'] as String,
     );
   }
