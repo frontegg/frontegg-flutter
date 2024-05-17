@@ -29,8 +29,8 @@ class TenantsTab extends StatelessWidget {
                     title: Row(
                       children: [
                         Text(e.name),
-                        if (!isActive) const SizedBox(width: 10),
-                        if (!isActive)
+                        if (isActive) const SizedBox(width: 10),
+                        if (isActive)
                           const Text(
                             "(active)",
                             style: TextStyle(

@@ -1,6 +1,6 @@
 package com.frontegg.flutter
 
-
+import android.app.Activity
 import android.content.Context
 import com.frontegg.android.FronteggApp
 import com.frontegg.flutter.stateListener.FronteggStateListener
@@ -11,27 +11,24 @@ import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
 import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.MethodChannel
 
-/** FronteggFlutterPlugin */
-class FronteggFlutterPlugin : FlutterPlugin, ActivityAware, ActivityPluginBindingGetter {
+class FronteggFlutterPlugin : FlutterPlugin, ActivityAware, ActivityProvider {
     private lateinit var channel: MethodChannel
-    private lateinit var statesEventChannel: EventChannel
+    private lateinit var stateEventChannel: EventChannel
 
     private var context: Context? = null
     private var binding: ActivityPluginBinding? = null
-    private val stateListener: FronteggStateListener = FronteggStateListenerImpl(this)
+    private val stateListener: FronteggStateListener = FronteggStateListenerImpl()
 
 
     override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
         context = flutterPluginBinding.applicationContext
         val constants = context!!.constants
 
-        channel = MethodChannel(flutterPluginBinding.binaryMessenger, "frontegg_flutter")
+        channel = MethodChannel(flutterPluginBinding.binaryMessenger, METHOD_CHANNEL_NAME)
         channel.setMethodCallHandler(FronteggMethodCallHandler(this, constants))
 
-        statesEventChannel =
-            EventChannel(flutterPluginBinding.binaryMessenger, "frontegg_flutter_state_changed")
-
-        statesEventChannel.setStreamHandler(object : EventChannel.StreamHandler {
+        stateEventChannel = EventChannel(flutterPluginBinding.binaryMessenger, STATE_EVENT_CHANNEL_NAME)
+        stateEventChannel.setStreamHandler(object : EventChannel.StreamHandler {
             override fun onListen(arguments: Any?, events: EventChannel.EventSink?) {
                 stateListener.setEventSink(events)
                 stateListener.subscribe()
@@ -74,11 +71,12 @@ class FronteggFlutterPlugin : FlutterPlugin, ActivityAware, ActivityPluginBindin
         this.binding = null
     }
 
-    override fun getActivityPluginBinding(): ActivityPluginBinding? {
-        return this.binding
+    override fun getActivity(): Activity? {
+        return this.binding?.activity
     }
 
     companion object {
-        val TAG: String = FronteggFlutterPlugin.Companion::class.java.simpleName
+        const val METHOD_CHANNEL_NAME = "frontegg_flutter"
+        const val STATE_EVENT_CHANNEL_NAME = "frontegg_flutter/state_stream"
     }
 }

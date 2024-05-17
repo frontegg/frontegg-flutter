@@ -1,7 +1,6 @@
 package com.frontegg.flutter
 
 import com.frontegg.android.FronteggAuth
-import com.frontegg.flutter.stateListener.FronteggStateListener
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
@@ -10,8 +9,8 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 class FronteggMethodCallHandler(
-    private val activityPluginBindingGetter: ActivityPluginBindingGetter,
-    private val constants: FronteggConstants
+    private val activityProvider: ActivityProvider,
+    private val constants: FronteggConstants,
 ) : MethodCallHandler {
 
     override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
@@ -27,8 +26,8 @@ class FronteggMethodCallHandler(
     }
 
     private fun login(result: MethodChannel.Result) {
-        activityPluginBindingGetter.getActivityPluginBinding()?.let {
-            FronteggAuth.instance.login(it.activity)
+        activityProvider.getActivity()?.let {
+            FronteggAuth.instance.login(it)
         }
         result.success(null)
     }
@@ -43,13 +42,10 @@ class FronteggMethodCallHandler(
     }
 
     private fun directLoginAction(call: MethodCall, result: MethodChannel.Result) {
-        val type =
-            call.argument<String>("type") ?: throw ArgumentNotFindException("type")
-        val data =
-            call.argument<String>("data") ?: throw ArgumentNotFindException("data")
+        val type = call.argument<String>("type") ?: throw ArgumentNotFindException("type")
+        val data = call.argument<String>("data") ?: throw ArgumentNotFindException("data")
 
-        val activity = activityPluginBindingGetter.getActivityPluginBinding()?.activity
-        activity?.let {
+        activityProvider.getActivity()?.let {
             FronteggAuth.instance.directLoginAction(it, type, data)
         }
         result.success(null)

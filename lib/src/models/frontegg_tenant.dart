@@ -1,4 +1,4 @@
-import 'package:frontegg/src/inner_utils.dart';
+import "package:frontegg/src/inner_utils.dart";
 
 class FronteggTenant {
   final String id;
@@ -29,33 +29,33 @@ class FronteggTenant {
 
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
-      'tenantId': tenantId,
-      'name': name,
-      'creatorEmail': creatorEmail,
-      'creatorName': creatorName,
-      'vendorId': vendorId,
-      'isReseller': isReseller,
-      'metadata': metadata,
-      'createdAt': createdAt,
-      'updatedAt': updatedAt,
-      'website': website,
+      "id": id,
+      "tenantId": tenantId,
+      "name": name,
+      "creatorEmail": creatorEmail,
+      "creatorName": creatorName,
+      "vendorId": vendorId,
+      "isReseller": isReseller,
+      "metadata": metadata,
+      "createdAt": createdAt,
+      "updatedAt": updatedAt,
+      "website": website,
     };
   }
 
   factory FronteggTenant.fromMap(Map<Object?, Object?> map) {
     return FronteggTenant(
-      id: map['id'] as String,
-      tenantId: map['tenantId'] as String,
-      name: map['name'] as String,
-      creatorEmail: map['creatorEmail'] as String?,
-      creatorName: map['creatorName'] as String?,
-      vendorId: map['vendorId'] as String,
-      isReseller: map['isReseller'] as bool,
-      metadata: map['metadata'] as String,
-      createdAt: (map['createdAt'] as String).toDateTime(),
-      updatedAt: (map['updatedAt'] as String).toDateTime(),
-      website: map['website'] as String?,
+      id: map["id"] as String,
+      tenantId: map["tenantId"] as String,
+      name: map["name"] as String,
+      creatorEmail: map["creatorEmail"] as String?,
+      creatorName: map["creatorName"] as String?,
+      vendorId: map["vendorId"] as String,
+      isReseller: map["isReseller"] as bool,
+      metadata: map["metadata"] as String,
+      createdAt: (map["createdAt"] as String).toDateTime(),
+      updatedAt: (map["updatedAt"] as String).toDateTime(),
+      website: map["website"] as String?,
     );
   }
 

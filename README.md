@@ -5,24 +5,32 @@ features for the product-led era.
 
 ## Table of Contents
 
-- [Project Requirements](#project-requirements)
-- [Getting Started](#getting-started)
+- [@frontegg/flutter](#fronteggflutter)
+  - [Table of Contents](#table-of-contents)
+  - [Project Requirements](#project-requirements)
+  - [Getting Started](#getting-started)
     - [Prepare Frontegg workspace](#prepare-frontegg-workspace)
-    - [Setup Hosted Login](#setup-hosted-login)
     - [Add frontegg package to the project](#add-frontegg-package-to-the-project)
-- [Setup iOS Project](#setup-ios-project)
+  - [Setup iOS Project](#setup-ios-project)
     - [Create Frontegg plist file](#create-frontegg-plist-file)
     - [Handle Open App with URL](#handle-open-app-with-url)
+    - [`For Objective-C:`](#for-objective-c)
+    - [`For Swift:`](#for-swift)
+    - [Handle Open App with URL (Objective-C)](#handle-open-app-with-url-objective-c)
     - [Config iOS associated domain](#config-ios-associated-domain)
-- [Setup Android Project](#setup-android-project)
-    - [Set minimum SDK version](#set-minimum-sdk-version)
+  - [Setup Android Project](#setup-android-project)
+    - [Set minimum sdk version](#set-minimum-sdk-version)
     - [Configure build config fields](#configure-build-config-fields)
+    - [Add permissions to AndroidManifest.xml](#add-permissions-to-androidmanifestxml)
     - [Config Android AssetLinks](#config-android-assetlinks)
     - [Enabling Chrome Custom Tabs for Social Login](#enabling-chrome-custom-tabs-for-social-login)
-- [Usages](#usages)
-    - [Wrap your app with FronteggProvider](#wrap-your-app-with-fronteggprovider)
+  - [Usages](#usages)
+    - [Wrap your root Widget with FronteggProvider:](#wrap-your-root-widget-with-fronteggprovider)
+    - [Access to frontegg instance](#access-to-frontegg-instance)
     - [Login with frontegg](#login-with-frontegg)
-    - [Check if user is authenticated](#check-if-user-is-authenticated)
+    - [Switch tenant frontegg](#switch-tenant-frontegg)
+    - [Frontegg state](#frontegg-state)
+    - [Other frontegg features:](#other-frontegg-features)
 
 ## Project Requirements
 
@@ -51,7 +59,7 @@ from [Frontegg Portal Domain](https://portal.frontegg.com/development/settings/d
 
 ### Add frontegg package to the project
 
-Use a package manager npm/yarn to install frontegg React Native library.
+Use a package manager pab to install frontegg Flutter library.
 
 **Terminal:**
 
@@ -259,6 +267,11 @@ android {
 }
 ```
 
+Note: 
+`FRONTEGG_USE_ASSETS_LINKS` by default is `true`.
+`FRONTEGG_USE_CHROME_CUSTOM_TABS` by default is `true`. 
+So, if you do not set up those values we will use values by default.
+
 Add bundleConfig=true if not exists inside the android section inside the app gradle `android/app/build.gradle`
 
 ```groovy
@@ -360,3 +373,189 @@ android {
 ```
 
 ## Usages
+
+### Wrap your root Widget with FronteggProvider:
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:frontegg/frontegg_flutter.dart';
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: FronteggProvider(
+        child: const MainPage(),
+      ),
+    );
+  }
+}
+```
+
+Or Use Provider from the [plugin](https://pub.dev/packages/provider) or other suitable plugin,
+don't forget about `dispose` of the `FronteggFlutter`:
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:frontegg/frontegg_flutter.dart';
+import 'package:provider/provider.dart';
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Provider(
+        create: (_) => FronteggFlutter(),
+        dispose: (_, frontegg) => frontegg.dispose(),
+        child: const MainPage(),
+      ),
+    );
+  }
+}
+```
+
+### Access to frontegg instance
+
+To get the `FronteggFlutter` instance use the Frontegg BuildContext extension down the widget tree:
+
+```dart
+class MainPage extends StatelessWidget {
+  const MainPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final frontegg = context.frontegg;
+    return const SizedBox();
+  }
+}
+```
+
+
+### Login with frontegg
+
+To log in with frontegg you can use the `context`.`frontegg` accessor and call `login` method:
+
+```dart
+class MainPage extends StatelessWidget {
+  const MainPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final frontegg = context.frontegg;
+    return Scaffold(
+      body: Center(
+        child: ElevatedButton(
+          child: const Text("Login"),
+          onPressed: () async {
+            await frontegg.login();
+          },
+        ),
+      ),
+    );
+  }
+}
+```
+
+### Switch tenant frontegg
+
+To switch tenant  with frontegg you can use the `context`.`frontegg` accessor and call `switchTenant` method:
+
+```dart
+class MainPage extends StatelessWidget {
+  const MainPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final frontegg = context.frontegg;
+    return Scaffold(
+      body: Center(
+        child: ElevatedButton(
+          child: const Text("Login"),
+          onPressed: () async {
+            final tenantId = "TENANT_ID";
+            await frontegg.switchTenant(tenantId);
+          },
+        ),
+      ),
+    );
+  }
+}
+```
+
+### Frontegg state
+
+`FronteggPlugin` has a `FronteggState` and this state is changing according to the plugin flowing:
+
+```dart
+class FronteggState {
+  final String? accessToken;
+  final String? refreshToken;
+  final FronteggUser? user;
+  final bool isAuthenticated;
+  final bool isLoading;
+  final bool initializing;
+  final bool showLoader;
+}
+```
+
+To get a state of the `FronteggFlutter` you have two option:
+
+1. Get `currentState`:
+   ```dart
+    @override
+    Widget build(BuildContext context) {
+      final frontegg = context.frontegg;
+      final fronteggState = frontegg.currentState;
+    }
+    
+   ```
+2. Listen `stateChanged` stream:
+   ```dart
+    import 'package:flutter/material.dart';
+    import 'package:frontegg/frontegg_flutter.dart';
+    import 'package:frontegg_flutter_example/login_page.dart';
+    import 'package:frontegg_flutter_example/user_page.dart';
+
+    class MainPage extends StatelessWidget {
+      const MainPage({super.key});
+
+      @override
+      Widget build(BuildContext context) {
+        final frontegg = context.frontegg;
+        return Scaffold(
+          body: Center(
+            child: StreamBuilder<FronteggState>(
+              stream: frontegg.stateChanged,
+              builder: (BuildContext context, AsyncSnapshot<FronteggState> snapshot) {
+                if (snapshot.hasData) {
+                  final state = snapshot.data!;
+                  if (state.isAuthenticated && state.user != null) {
+                    return const UserPage();
+                  } else if (state.initializing) {
+                    return const CircularProgressIndicator();
+                  } else {
+                    return const LoginPage();
+                  }
+                }
+
+                return const SizedBox();
+              },
+            ),
+          ),
+        );
+      }
+    }
+   ```
+
+### Other frontegg features:
+
+Also frontegg give you next features:
+  1. `logout` - logs out from `FronteggFlutter`;
+  2. `refreshToken` - refreshes `accessToken` and `refreshToken` only if needed, returns `true` if refreshing succeeds;
+  3. `getConstants` - returns `Frontegg Flutter` initialize constants;
+  4. `directLoginAction` - direct logs in with `type` and `data`.
+   
