@@ -27,7 +27,7 @@ class FronteggFlutterPlugin : FlutterPlugin, ActivityAware, ActivityProvider {
         channel = MethodChannel(flutterPluginBinding.binaryMessenger, METHOD_CHANNEL_NAME)
         channel.setMethodCallHandler(FronteggMethodCallHandler(this, constants))
 
-        stateEventChannel = EventChannel(flutterPluginBinding.binaryMessenger, STATE_EVENT_CHANNEL)
+        stateEventChannel = EventChannel(flutterPluginBinding.binaryMessenger, STATE_EVENT_CHANNEL_NAME)
         stateEventChannel.setStreamHandler(object : EventChannel.StreamHandler {
             override fun onListen(arguments: Any?, events: EventChannel.EventSink?) {
                 stateListener.setEventSink(events)
@@ -77,6 +77,6 @@ class FronteggFlutterPlugin : FlutterPlugin, ActivityAware, ActivityProvider {
 
     companion object {
         const val METHOD_CHANNEL_NAME = "frontegg_flutter"
-        const val STATE_EVENT_CHANNEL = "frontegg_flutter/state_stream"
+        const val STATE_EVENT_CHANNEL_NAME = "frontegg_flutter/state_stream"
     }
 }
