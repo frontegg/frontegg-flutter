@@ -1,4 +1,4 @@
 package com.frontegg.flutter
 
-class ArgumentNotFindException(argumentName: String) :
+class ArgumentNotFoundException(argumentName: String) :
     Exception("Argument '$argumentName' not Found")
