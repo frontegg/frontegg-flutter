@@ -87,8 +87,8 @@ class FronteggMethodCallHandler {
     private func refreshToken(result: @escaping FlutterResult) {
         DispatchQueue.global(qos: .userInteractive).async {
             Task {
-                await self.fronteggApp.auth.refreshTokenIfNeeded()
-                result(true)
+                let success = await self.fronteggApp.auth.refreshTokenIfNeeded()
+                result(success)
             }
         }
     }
