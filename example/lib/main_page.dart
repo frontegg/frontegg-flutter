@@ -9,27 +9,25 @@ class MainPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final frontegg = context.frontegg;
-    frontegg.getConstants().then((value) => print(value.clientId));
     return Scaffold(
       body: Center(
-        child: const LoginPage(),
-        // StreamBuilder<FronteggState>(
-        //   stream: frontegg.stateChanged,
-        //   builder: (BuildContext context, AsyncSnapshot<FronteggState> snapshot) {
-        //     if (snapshot.hasData) {
-        //       final state = snapshot.data!;
-        //       if (state.isAuthenticated && state.user != null) {
-        //         return const UserPage();
-        //       } else if (state.initializing) {
-        //         return const CircularProgressIndicator();
-        //       } else {
-        //         return const LoginPage();
-        //       }
-        //     }
-        //
-        //     return const SizedBox();
-        //   },
-        // ),
+        child: StreamBuilder<FronteggState>(
+          stream: frontegg.stateChanged,
+          builder: (BuildContext context, AsyncSnapshot<FronteggState> snapshot) {
+            if (snapshot.hasData) {
+              final state = snapshot.data!;
+              if (state.isAuthenticated && state.user != null) {
+                return const UserPage();
+              } else if (state.initializing) {
+                return const CircularProgressIndicator();
+              } else {
+                return const LoginPage();
+              }
+            }
+
+            return const SizedBox();
+          },
+        ),
       ),
     );
   }

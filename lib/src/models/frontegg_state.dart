@@ -8,6 +8,7 @@ class FronteggState {
   final bool isLoading;
   final bool initializing;
   final bool showLoader;
+  final bool appLink;
 
   const FronteggState({
     this.accessToken,
@@ -17,6 +18,7 @@ class FronteggState {
     this.isLoading = true,
     this.initializing = true,
     this.showLoader = true,
+    this.appLink = false,
   });
 
   @override
@@ -30,6 +32,7 @@ class FronteggState {
           isAuthenticated == other.isAuthenticated &&
           isLoading == other.isLoading &&
           initializing == other.initializing &&
+          appLink == other.appLink &&
           showLoader == other.showLoader;
 
   @override
@@ -40,6 +43,7 @@ class FronteggState {
       isAuthenticated.hashCode ^
       isLoading.hashCode ^
       initializing.hashCode ^
+      appLink.hashCode ^
       showLoader.hashCode;
 
   Map<String, dynamic> toMap() {
@@ -50,6 +54,7 @@ class FronteggState {
       "isAuthenticated": isAuthenticated,
       "isLoading": isLoading,
       "initializing": initializing,
+      "appLink": appLink,
       "showLoader": showLoader,
     };
   }
@@ -65,6 +70,7 @@ class FronteggState {
       isLoading: map["isLoading"] as bool,
       initializing: map["initializing"] as bool,
       showLoader: map["showLoader"] as bool,
+      appLink: map["appLink"] as bool,
     );
   }
 }

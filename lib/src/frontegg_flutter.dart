@@ -11,10 +11,10 @@ class FronteggFlutter {
   static final _stateChangedSubscription = BehaviorSubject<FronteggState>.seeded(_currentState);
 
   FronteggFlutter() {
-    // _stateStreamSubscription = FronteggPlatform.instance.stateChanged.listen((state) {
-    //   _currentState = FronteggState.fromMap(state as Map<Object?, Object?>);
-    //   _stateChangedSubscription.add(_currentState);
-    // });
+    _stateStreamSubscription = FronteggPlatform.instance.stateChanged.listen((state) {
+      _currentState = FronteggState.fromMap(state as Map<Object?, Object?>);
+      _stateChangedSubscription.add(_currentState);
+    });
   }
 
   Future<void> dispose() async {

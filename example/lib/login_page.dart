@@ -31,12 +31,6 @@ class LoginPage extends StatelessWidget {
               stream: frontegg.stateChanged,
               builder: (BuildContext context, AsyncSnapshot<FronteggState> snapshot) {
                 if (snapshot.hasData) {
-                  return ElevatedButton(
-                    child: const Text("Login"),
-                    onPressed: () {
-                      frontegg.login();
-                    },
-                  );
                   final state = snapshot.data!;
                   if (state.isLoading) {
                     return const CircularProgressIndicator();

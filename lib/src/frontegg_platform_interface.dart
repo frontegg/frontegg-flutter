@@ -15,7 +15,7 @@ abstract class FronteggPlatform extends PlatformInterface {
     _instance = instance;
   }
 
-  // Stream get stateChanged;
+  Stream get stateChanged;
 
   Future<void> login() {
     throw UnimplementedError("login() has not been implemented.");
