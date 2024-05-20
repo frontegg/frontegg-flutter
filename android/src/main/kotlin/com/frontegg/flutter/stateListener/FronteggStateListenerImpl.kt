@@ -12,8 +12,6 @@ import kotlinx.coroutines.launch
 
 class FronteggStateListenerImpl : FronteggStateListener {
     private var disposable: Disposable? = null
-    private var state: FronteggState? = null
-
     private var eventSink: EventChannel.EventSink? = null
 
     override fun dispose() {
@@ -43,7 +41,7 @@ class FronteggStateListenerImpl : FronteggStateListener {
 
 
     private fun notifyChanges() {
-        state = FronteggState(
+        val state = FronteggState(
             accessToken = FronteggAuth.instance.accessToken.value,
             refreshToken = FronteggAuth.instance.refreshToken.value,
             user = FronteggAuth.instance.user.value?.toReadableMap(),
@@ -53,9 +51,7 @@ class FronteggStateListenerImpl : FronteggStateListener {
             showLoader = FronteggAuth.instance.showLoader.value,
         )
 
-        state?.let {
-            sendState(it)
-        }
+        sendState(state)
     }
 
     private fun sendState(state: FronteggState) {

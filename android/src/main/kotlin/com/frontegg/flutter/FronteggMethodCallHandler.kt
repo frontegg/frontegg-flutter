@@ -34,7 +34,7 @@ class FronteggMethodCallHandler(
 
     private fun switchTenant(call: MethodCall, result: MethodChannel.Result) {
         val tenantId =
-            call.argument<String>("tenantId") ?: throw ArgumentNotFindException("tenantId")
+            call.argument<String>("tenantId") ?: throw ArgumentNotFoundException("tenantId")
 
         FronteggAuth.instance.switchTenant(tenantId) {
             result.success(null)
@@ -42,8 +42,8 @@ class FronteggMethodCallHandler(
     }
 
     private fun directLoginAction(call: MethodCall, result: MethodChannel.Result) {
-        val type = call.argument<String>("type") ?: throw ArgumentNotFindException("type")
-        val data = call.argument<String>("data") ?: throw ArgumentNotFindException("data")
+        val type = call.argument<String>("type") ?: throw ArgumentNotFoundException("type")
+        val data = call.argument<String>("data") ?: throw ArgumentNotFoundException("data")
 
         activityProvider.getActivity()?.let {
             FronteggAuth.instance.directLoginAction(it, type, data)
