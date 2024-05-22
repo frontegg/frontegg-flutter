@@ -2,7 +2,7 @@ import "package:flutter/material.dart";
 import "package:frontegg/src/frontegg_flutter.dart";
 
 class FronteggProvider extends InheritedWidget {
-  final _value = FronteggFlutter();
+  final value = FronteggFlutter();
 
   FronteggProvider({
     super.key,
@@ -10,7 +10,7 @@ class FronteggProvider extends InheritedWidget {
   });
 
   @override
-  bool updateShouldNotify(covariant InheritedWidget oldWidget) => false;
+  bool updateShouldNotify(covariant InheritedWidget oldWidget) => this != oldWidget;
 
   static FronteggProvider? maybeOf(BuildContext context) {
     return context.dependOnInheritedWidgetOfExactType<FronteggProvider>();
@@ -19,14 +19,14 @@ class FronteggProvider extends InheritedWidget {
   static FronteggFlutter of(BuildContext context) {
     final FronteggProvider? result = maybeOf(context);
     assert(result != null, "No FronteggProvider found in context");
-    return result!._value;
+    return result!.value;
   }
 
   @override
   InheritedElement createElement() => _FronteggProviderInheritedElement(
         this,
         dispose: () async {
-          await _value.dispose();
+          await value.dispose();
         },
       );
 }

@@ -27,7 +27,7 @@ class FronteggFlutter {
     await FronteggPlatform.instance.login();
   }
 
-  Stream<FronteggState> get stateChanged => _stateChangedSubscription.stream;
+  Stream<FronteggState> get stateChanged => _stateChangedSubscription.stream.distinct();
 
   Future<void> switchTenant(String tenantId) => FronteggPlatform.instance.switchTenant(tenantId);
 
