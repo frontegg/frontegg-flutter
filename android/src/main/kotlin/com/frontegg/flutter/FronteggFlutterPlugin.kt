@@ -17,8 +17,7 @@ class FronteggFlutterPlugin : FlutterPlugin, ActivityAware, ActivityProvider {
 
     private var context: Context? = null
     private var binding: ActivityPluginBinding? = null
-    private val stateListener: FronteggStateListener = FronteggStateListenerImpl()
-
+    private var stateListener: FronteggStateListener? = null
 
     override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
         context = flutterPluginBinding.applicationContext
@@ -27,15 +26,17 @@ class FronteggFlutterPlugin : FlutterPlugin, ActivityAware, ActivityProvider {
         channel = MethodChannel(flutterPluginBinding.binaryMessenger, METHOD_CHANNEL_NAME)
         channel.setMethodCallHandler(FronteggMethodCallHandler(this, constants))
 
-        stateEventChannel = EventChannel(flutterPluginBinding.binaryMessenger, STATE_EVENT_CHANNEL_NAME)
+        stateEventChannel =
+            EventChannel(flutterPluginBinding.binaryMessenger, STATE_EVENT_CHANNEL_NAME)
+        stateListener = FronteggStateListenerImpl(constants)
         stateEventChannel.setStreamHandler(object : EventChannel.StreamHandler {
             override fun onListen(arguments: Any?, events: EventChannel.EventSink?) {
-                stateListener.setEventSink(events)
-                stateListener.subscribe()
+                stateListener?.setEventSink(events)
+                stateListener?.subscribe()
             }
 
             override fun onCancel(arguments: Any?) {
-                stateListener.setEventSink(null)
+                stateListener?.setEventSink(null)
             }
         })
 
@@ -51,7 +52,7 @@ class FronteggFlutterPlugin : FlutterPlugin, ActivityAware, ActivityProvider {
     override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
         channel.setMethodCallHandler(null)
         context = null
-        stateListener.dispose()
+        stateListener?.dispose()
     }
 
     override fun onDetachedFromActivity() {

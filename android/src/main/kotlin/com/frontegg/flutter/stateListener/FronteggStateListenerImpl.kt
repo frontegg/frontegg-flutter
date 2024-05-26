@@ -1,7 +1,7 @@
 package com.frontegg.flutter.stateListener
 
 import com.frontegg.android.FronteggAuth
-import com.frontegg.flutter.ActivityProvider
+import com.frontegg.flutter.FronteggConstants
 import com.frontegg.flutter.toReadableMap
 import io.flutter.plugin.common.EventChannel
 import io.reactivex.rxjava3.core.Observable
@@ -10,7 +10,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-class FronteggStateListenerImpl : FronteggStateListener {
+class FronteggStateListenerImpl(
+    private val constants: FronteggConstants
+) : FronteggStateListener {
     private var disposable: Disposable? = null
     private var eventSink: EventChannel.EventSink? = null
 
@@ -49,6 +51,7 @@ class FronteggStateListenerImpl : FronteggStateListener {
             isLoading = FronteggAuth.instance.isLoading.value,
             initializing = FronteggAuth.instance.initializing.value,
             showLoader = FronteggAuth.instance.showLoader.value,
+            appLink = constants.useAssetsLinks,
         )
 
         sendState(state)

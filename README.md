@@ -499,6 +499,7 @@ class FronteggState {
   final bool isLoading;
   final bool initializing;
   final bool showLoader;
+  final bool appLink;
 }
 ```
 
