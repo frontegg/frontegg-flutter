@@ -13,7 +13,7 @@ class FronteggTenant {
   final DateTime updatedAt;
   final String? website;
 
-  FronteggTenant({
+  const FronteggTenant({
     required this.id,
     required this.name,
     this.creatorEmail,
@@ -26,22 +26,6 @@ class FronteggTenant {
     required this.updatedAt,
     this.website,
   });
-
-  Map<String, dynamic> toMap() {
-    return {
-      "id": id,
-      "tenantId": tenantId,
-      "name": name,
-      "creatorEmail": creatorEmail,
-      "creatorName": creatorName,
-      "vendorId": vendorId,
-      "isReseller": isReseller,
-      "metadata": metadata,
-      "createdAt": createdAt,
-      "updatedAt": updatedAt,
-      "website": website,
-    };
-  }
 
   factory FronteggTenant.fromMap(Map<Object?, Object?> map) {
     return FronteggTenant(
@@ -87,4 +71,9 @@ class FronteggTenant {
       metadata.hashCode ^
       createdAt.hashCode ^
       updatedAt.hashCode;
+
+  @override
+  String toString() {
+    return 'FronteggTenant{id: $id, name: $name, creatorEmail: $creatorEmail, creatorName: $creatorName, tenantId: $tenantId, vendorId: $vendorId, isReseller: $isReseller, metadata: $metadata, createdAt: $createdAt, updatedAt: $updatedAt, website: $website}';
+  }
 }

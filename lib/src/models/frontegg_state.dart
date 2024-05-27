@@ -73,4 +73,9 @@ class FronteggState {
       appLink: map["appLink"] as bool,
     );
   }
+
+  @override
+  String toString() {
+    return 'FronteggState{accessToken: $accessToken, refreshToken: $refreshToken, user: $user, isAuthenticated: $isAuthenticated, isLoading: $isLoading, initializing: $initializing, showLoader: $showLoader, appLink: $appLink}';
+  }
 }

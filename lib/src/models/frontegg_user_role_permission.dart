@@ -10,7 +10,7 @@ class FronteggUserRolePermission {
   final DateTime createdAt;
   final DateTime updatedAt;
 
-  FronteggUserRolePermission({
+  const FronteggUserRolePermission({
     required this.id,
     required this.key,
     required this.name,
@@ -20,19 +20,6 @@ class FronteggUserRolePermission {
     required this.createdAt,
     required this.updatedAt,
   });
-
-  Map<String, dynamic> toMap() {
-    return {
-      "id": id,
-      "key": key,
-      "name": name,
-      "description": description,
-      "categoryId": categoryId,
-      "fePermission": fePermission,
-      "createdAt": createdAt,
-      "updatedAt": updatedAt,
-    };
-  }
 
   factory FronteggUserRolePermission.fromMap(Map<Object?, Object?> map) {
     return FronteggUserRolePermission(
@@ -71,4 +58,9 @@ class FronteggUserRolePermission {
       fePermission.hashCode ^
       createdAt.hashCode ^
       updatedAt.hashCode;
+
+  @override
+  String toString() {
+    return 'FronteggUserRolePermission{id: $id, key: $key, name: $name, description: $description, categoryId: $categoryId, fePermission: $fePermission, createdAt: $createdAt, updatedAt: $updatedAt}';
+  }
 }

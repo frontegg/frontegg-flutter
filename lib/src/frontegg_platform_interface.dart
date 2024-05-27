@@ -6,7 +6,7 @@ abstract class FronteggPlatform extends PlatformInterface {
 
   static final Object _token = Object();
 
-  static FronteggPlatform _instance = MethodChannelFrontegg();
+  static FronteggPlatform _instance = FronteggMethodChannel();
 
   static FronteggPlatform get instance => _instance;
 
@@ -15,7 +15,9 @@ abstract class FronteggPlatform extends PlatformInterface {
     _instance = instance;
   }
 
-  Stream get stateChanged;
+  Stream get stateChanged {
+    throw UnimplementedError("getter stateChanged has not been implemented.");
+  }
 
   Future<void> login() {
     throw UnimplementedError("login() has not been implemented.");

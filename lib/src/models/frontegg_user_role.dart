@@ -1,3 +1,4 @@
+import "package:flutter/foundation.dart";
 import "package:frontegg/src/inner_utils.dart";
 
 class FronteggUserRole {
@@ -12,7 +13,7 @@ class FronteggUserRole {
   final DateTime createdAt;
   final DateTime updatedAt;
 
-  FronteggUserRole({
+  const FronteggUserRole({
     required this.id,
     required this.key,
     required this.isDefault,
@@ -24,21 +25,6 @@ class FronteggUserRole {
     required this.createdAt,
     required this.updatedAt,
   });
-
-  Map<String, dynamic> toMap() {
-    return {
-      "id": id,
-      "key": key,
-      "isDefault": isDefault,
-      "name": name,
-      "description": description,
-      "permissions": permissions,
-      "tenantId": tenantId,
-      "vendorId": vendorId,
-      "createdAt": createdAt,
-      "updatedAt": updatedAt,
-    };
-  }
 
   factory FronteggUserRole.fromMap(Map<Object?, Object?> map) {
     return FronteggUserRole(
@@ -65,7 +51,7 @@ class FronteggUserRole {
           isDefault == other.isDefault &&
           name == other.name &&
           description == other.description &&
-          permissions == other.permissions &&
+          listEquals(permissions, other.permissions) &&
           tenantId == other.tenantId &&
           vendorId == other.vendorId &&
           createdAt == other.createdAt &&
@@ -83,4 +69,9 @@ class FronteggUserRole {
       vendorId.hashCode ^
       createdAt.hashCode ^
       updatedAt.hashCode;
+
+  @override
+  String toString() {
+    return 'FronteggUserRole{id: $id, key: $key, isDefault: $isDefault, name: $name, description: $description, permissions: $permissions, tenantId: $tenantId, vendorId: $vendorId, createdAt: $createdAt, updatedAt: $updatedAt}';
+  }
 }

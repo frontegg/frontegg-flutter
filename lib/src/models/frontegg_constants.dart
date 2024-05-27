@@ -5,7 +5,7 @@ class FronteggConstants {
   final bool? useChromeCustomTabs;
   final String bundleId;
 
-  FronteggConstants({
+  const FronteggConstants({
     required this.baseUrl,
     required this.clientId,
     this.useAssetsLinks,
@@ -32,16 +32,6 @@ class FronteggConstants {
       useChromeCustomTabs.hashCode ^
       bundleId.hashCode;
 
-  Map<String, dynamic> toMap() {
-    return {
-      "baseUrl": baseUrl,
-      "clientId": clientId,
-      "useAssetsLinks": useAssetsLinks,
-      "useChromeCustomTabs": useChromeCustomTabs,
-      "bundleId": bundleId,
-    };
-  }
-
   factory FronteggConstants.fromMap(Map<Object?, Object?> map) {
     return FronteggConstants(
       baseUrl: map["baseUrl"] as String,
@@ -50,5 +40,10 @@ class FronteggConstants {
       useChromeCustomTabs: map["useChromeCustomTabs"] as bool?,
       bundleId: map["bundleId"] as String,
     );
+  }
+
+  @override
+  String toString() {
+    return 'FronteggConstants{baseUrl: $baseUrl, clientId: $clientId, useAssetsLinks: $useAssetsLinks, useChromeCustomTabs: $useChromeCustomTabs, bundleId: $bundleId}';
   }
 }

@@ -1,3 +1,5 @@
+import "package:flutter/foundation.dart";
+
 import "frontegg_tenant.dart";
 import "frontegg_user_role.dart";
 import "frontegg_user_role_permission.dart";
@@ -21,14 +23,14 @@ class FronteggUser {
   final bool verified;
   final bool superUser;
 
-  FronteggUser({
+  const FronteggUser({
     required this.id,
     required this.email,
     required this.mfaEnrolled,
     required this.name,
     required this.profilePictureUrl,
-    required this.phoneNumber,
-    required this.profileImage,
+    this.phoneNumber,
+    this.profileImage,
     required this.roles,
     required this.permissions,
     required this.tenantId,
@@ -36,32 +38,10 @@ class FronteggUser {
     required this.tenants,
     required this.activeTenant,
     required this.activatedForTenant,
-    required this.metadata,
+    this.metadata,
     required this.verified,
     required this.superUser,
   });
-
-  Map<String, dynamic> toMap() {
-    return {
-      "id": id,
-      "email": email,
-      "mfaEnrolled": mfaEnrolled,
-      "name": name,
-      "profilePictureUrl": profilePictureUrl,
-      "phoneNumber": phoneNumber,
-      "profileImage": profileImage,
-      "roles": roles,
-      "permissions": permissions,
-      "tenantId": tenantId,
-      "tenantIds": tenantIds,
-      "tenants": tenants,
-      "activeTenant": activeTenant,
-      "activatedForTenant": activatedForTenant,
-      "metadata": metadata,
-      "verified": verified,
-      "superUser": superUser,
-    };
-  }
 
   factory FronteggUser.fromMap(Map<Object?, Object?> map) {
     return FronteggUser(
@@ -103,11 +83,11 @@ class FronteggUser {
           profilePictureUrl == other.profilePictureUrl &&
           phoneNumber == other.phoneNumber &&
           profileImage == other.profileImage &&
-          roles == other.roles &&
-          permissions == other.permissions &&
+          listEquals(roles, other.roles) &&
+          listEquals(permissions, other.permissions) &&
           tenantId == other.tenantId &&
-          tenantIds == other.tenantIds &&
-          tenants == other.tenants &&
+          listEquals(tenantIds, other.tenantIds) &&
+          listEquals(tenants, other.tenants) &&
           activeTenant == other.activeTenant &&
           activatedForTenant == other.activatedForTenant &&
           metadata == other.metadata &&
@@ -133,4 +113,9 @@ class FronteggUser {
       metadata.hashCode ^
       verified.hashCode ^
       superUser.hashCode;
+
+  @override
+  String toString() {
+    return 'FronteggUser{id: $id, email: $email, mfaEnrolled: $mfaEnrolled, name: $name, profilePictureUrl: $profilePictureUrl, phoneNumber: $phoneNumber, profileImage: $profileImage, roles: ${roles.map((e) => e.toString()).toList()}, permissions: ${permissions.map((e) => e.toString()).toList()}, tenantId: $tenantId, tenantIds: $tenantIds, tenants: ${tenants.map((e) => e.toString()).toList()}, activeTenant: $activeTenant, activatedForTenant: $activatedForTenant, metadata: $metadata, verified: $verified, superUser: $superUser}';
+  }
 }
