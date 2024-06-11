@@ -221,6 +221,24 @@ request to `https://api.frontegg.com/vendors/resources/associated-domains/v1/ios
 In order to use our API’s, follow [this guide](‘https://docs.frontegg.com/reference/getting-started-with-your-api’) to
 generate a vendor token.
 
+
+Next, you will need to add your associated domain to your iOS application. To do so, follow the steps below:
+
+1. Open your project in Xcode.
+2. Select your project in the Project Navigator.
+3. Select your target.
+4. Select the Signing & Capabilities tab.
+5. Expand the Associated Domains section.
+6. Click the + button.
+7. Enter your associated domain in the format `applinks:[YOUR_ASSOCIATED_DOMAIN]`.
+7. Enter your associated domain in the format `webcredentials:[YOUR_ASSOCIATED_DOMAIN]`.
+8. Click Done.
+
+
+`[YOUR_ASSOCIATED_DOMAIN]` is the associated domain that you would like to use with your iOS application.
+For example, if you would like to use `https://example.com` as your associated domain, you would
+enter `applinks:example.com` and `webcredentials:example.com`.
+
 ## Setup Android Project
 
 ### Set minimum sdk version
