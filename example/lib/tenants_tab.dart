@@ -24,7 +24,7 @@ class TenantsTab extends StatelessWidget {
             child: Column(
               children: user.tenants.map(
                 (e) {
-                  final isActive = user.activeTenant.id == e.id;
+                  final isActive = user.activeTenant.tenantId == e.tenantId;
                   return ListTile(
                     title: Row(
                       children: [
@@ -41,7 +41,7 @@ class TenantsTab extends StatelessWidget {
                       ],
                     ),
                     onTap: () {
-                      frontegg.switchTenant(e.id);
+                      frontegg.switchTenant(e.tenantId);
                     },
                   );
                 },
