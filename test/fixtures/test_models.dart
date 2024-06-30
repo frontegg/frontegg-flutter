@@ -1,5 +1,5 @@
-import 'package:frontegg/frontegg_flutter.dart';
-import 'package:frontegg/src/models/frontegg_user_role_permission.dart';
+import 'package:frontegg_flutter/frontegg_flutter.dart';
+import 'package:frontegg_flutter/src/models/frontegg_user_role_permission.dart';
 
 const tFronteggConstants = FronteggConstants(
   baseUrl: "https://base.url.com",

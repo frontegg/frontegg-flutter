@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:frontegg/frontegg_flutter.dart';
-import 'package:frontegg/src/frontegg_platform_interface.dart';
+import 'package:frontegg_flutter/frontegg_flutter.dart';
+import 'package:frontegg_flutter/src/frontegg_platform_interface.dart';
 import 'package:mockito/mockito.dart';
 
 import '../fixtures/test_maps.dart';

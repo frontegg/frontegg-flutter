@@ -5,9 +5,9 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'dart:async' as _i5;
 
-import 'package:frontegg/src/frontegg_flutter.dart' as _i4;
-import 'package:frontegg/src/models/frontegg_constants.dart' as _i3;
-import 'package:frontegg/src/models/frontegg_state.dart' as _i2;
+import 'package:frontegg_flutter/src/frontegg_flutter.dart' as _i4;
+import 'package:frontegg_flutter/src/models/frontegg_constants.dart' as _i3;
+import 'package:frontegg_flutter/src/models/frontegg_state.dart' as _i2;
 import 'package:mockito/mockito.dart' as _i1;
 
 // ignore_for_file: type=lint

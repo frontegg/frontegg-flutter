@@ -1,8 +1,8 @@
 import "dart:async";
 
-import "package:frontegg/src/frontegg_platform_interface.dart";
-import "package:frontegg/src/models/frontegg_constants.dart";
-import "package:frontegg/src/models/frontegg_state.dart";
+import "package:frontegg_flutter/src/frontegg_platform_interface.dart";
+import "package:frontegg_flutter/src/models/frontegg_constants.dart";
+import "package:frontegg_flutter/src/models/frontegg_state.dart";
 import "package:rxdart/rxdart.dart";
 
 class FronteggFlutter {

@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:frontegg/src/models/frontegg_constants.dart';
+import 'package:frontegg_flutter/src/models/frontegg_constants.dart';
 
 import '../../fixtures/test_maps.dart';
 import '../../fixtures/test_models.dart';

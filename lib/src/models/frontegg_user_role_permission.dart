@@ -1,4 +1,4 @@
-import "package:frontegg/src/inner_utils.dart";
+import "package:frontegg_flutter/src/inner_utils.dart";
 
 class FronteggUserRolePermission {
   final String id;

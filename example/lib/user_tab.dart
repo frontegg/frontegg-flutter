@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:frontegg/frontegg_flutter.dart';
+import 'package:frontegg_flutter/frontegg_flutter.dart';
 
 class UserTab extends StatelessWidget {
   const UserTab({

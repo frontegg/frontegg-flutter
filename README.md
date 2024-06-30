@@ -396,7 +396,7 @@ android {
 
 ```dart
 import 'package:flutter/material.dart';
-import 'package:frontegg/frontegg_flutter.dart';
+import 'package:frontegg_flutter/frontegg_flutter.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -417,7 +417,7 @@ don't forget about `dispose` of the `FronteggFlutter`:
 
 ```dart
 import 'package:flutter/material.dart';
-import 'package:frontegg/frontegg_flutter.dart';
+import 'package:frontegg_flutter/frontegg_flutter.dart';
 import 'package:provider/provider.dart';
 
 class MyApp extends StatelessWidget {
@@ -535,7 +535,7 @@ To get a state of the `FronteggFlutter` you have two option:
 2. Listen `stateChanged` stream:
    ```dart
     import 'package:flutter/material.dart';
-    import 'package:frontegg/frontegg_flutter.dart';
+    import 'package:frontegg_flutter/frontegg_flutter.dart';
     import 'package:frontegg_flutter_example/login_page.dart';
     import 'package:frontegg_flutter_example/user_page.dart';
 
