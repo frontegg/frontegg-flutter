@@ -5,7 +5,7 @@ homepage: https://github.com/frontegg/frontegg-flutter
 
 environment:
   sdk: '>=3.3.4 <4.0.0'
-  flutter: '>=3.22.2'
+  flutter: '>=3.3.0'
 
 dependencies:
   flutter:
