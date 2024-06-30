@@ -1,6 +1,6 @@
 name: frontegg
 description: Flutter package for Frontegg services
-version: 0.0.4
+version: 1.0.0
 homepage: https://github.com/frontegg/frontegg-flutter
 
 environment:
