@@ -1,8 +1,9 @@
-name: onPush
+name: "onPush( Build & Test )"
 
 on:
   push:
-
+    branches-ignore:
+      - master
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -28,6 +29,7 @@ jobs:
       - name: Build APK
         working-directory: example
         run: flutter build appbundle --release
+
       - name: Build APK
         working-directory: example
         run: flutter build apk --release
