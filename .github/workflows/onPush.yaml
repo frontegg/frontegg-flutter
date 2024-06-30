@@ -26,7 +26,7 @@ jobs:
       - name: Run tests
         run: flutter test
 
-      - name: Build APK
+      - name: Build AppBundle
         working-directory: example
         run: flutter build appbundle --release
 
@@ -34,6 +34,6 @@ jobs:
         working-directory: example
         run: flutter build apk --release
 
-      - name: Build APK
+      - name: Build iOS
         working-directory: example
-        run: flutter build ios --release --no-codesign
+        run: flutter build ios --no-codesign
