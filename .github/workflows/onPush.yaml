@@ -27,8 +27,11 @@ jobs:
 
       - name: Build APK
         working-directory: example
+        run: flutter build appbundle --release
+      - name: Build APK
+        working-directory: example
         run: flutter build apk --release
 
       - name: Build APK
         working-directory: example
-        run: flutter build ios
+        run: flutter build ios --release --no-codesign
