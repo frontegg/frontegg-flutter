@@ -5,28 +5,8 @@ on:
     tags:
       - 'v[0-9]+.[0-9]+.[0-9]+*'
 
-#jobs:
-#  publish:
-#    permissions:
-#      id-token: write # Required for authentication using OIDC
-#    uses: dart-lang/setup-dart/.github/workflows/publish.yml@v1
 jobs:
   publish:
-    runs-on: ubuntu-latest
     permissions:
       id-token: write # Required for authentication using OIDC
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Set up Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          architecture: x64
-          flutter-version: 3.22.2
-
-      - name: Install dependencies
-        run: flutter pub get
-
-      - name: Publish package
-        run: flutter pub publish --server=https://pub.dev -f
+    uses: dart-lang/setup-dart/.github/workflows/publish.yml@v1
