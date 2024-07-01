@@ -2,6 +2,7 @@ name: frontegg_flutter
 description: Flutter package for Frontegg services
 version: 0.0.5
 homepage: https://github.com/frontegg/frontegg-flutter
+#publish_to: "https://pub.dartlang.org"
 
 environment:
   sdk: '>=3.3.4 <4.0.0'
