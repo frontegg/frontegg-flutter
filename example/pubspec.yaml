@@ -1,6 +1,7 @@
 name: frontegg_flutter_example
 description: "Demonstrates how to use the frontegg plugin."
 publish_to: 'none'
+version: 1.0.0
 
 environment:
   sdk: '>=3.3.4 <4.0.0'
