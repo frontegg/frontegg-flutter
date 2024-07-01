@@ -42,7 +42,18 @@ jobs:
             
             content = content.replace(/version:[ ]+([^\n]+)/g, `version: ${newVersion}`);
             fs.writeFileSync('./pubspec.yaml', content);
+            fs.writeFileSync('version.txt', newVersion);
             return newVersion;
+
+      - name: Update dependencies and lock files
+        run: |
+          flutter pub get
+
+      - name: Update iOS podspec
+        run: |
+          VERSION=$(cat version.txt)
+          sed -i '' "s/^  s.version.*$/  s.version      = '${VERSION}'/" ios/frontegg_flutter.podspec
+
       - name: Commit changes
         shell: bash -ex {0}
         run: |

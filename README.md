@@ -71,7 +71,7 @@ dart pub add frontegg-flutter
 
 ```yaml
 dependencies:
-  frontegg-flutter: ^1.0.0
+  frontegg-flutter: ^0.0.5
 ```
 
 ## Setup iOS Project
