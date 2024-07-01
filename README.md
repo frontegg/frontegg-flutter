@@ -1,4 +1,4 @@
-# @frontegg/flutter
+# frontegg_flutter
 
 Frontegg is a first-of-its-kind full-stack user management platform, empowering software teams with user infrastructure
 features for the product-led era.
@@ -64,14 +64,14 @@ Use a package manager pab to install frontegg Flutter library.
 **Terminal:**
 
 ```bash
-dart pub add frontegg-flutter
+dart pub add frontegg_flutter
 ```
 
 **Or manually:**
 
 ```yaml
 dependencies:
-  frontegg-flutter: ^0.0.5
+  frontegg_flutter: ^0.0.5
 ```
 
 ## Setup iOS Project
