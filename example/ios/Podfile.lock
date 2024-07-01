@@ -26,7 +26,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
-  frontegg_flutter: 965b1b5abb8630fbd328f662e3aa4145c1ddd874
+  frontegg_flutter: 9d2e0b3bc6123b5723e54ebf7c7b68f390707700
   FronteggSwift: 38b780c7d1bf4a708317f86dd5ce2e4e11ce71d2
   integration_test: ce0a3ffa1de96d1a89ca0ac26fca7ea18a749ef4
 
