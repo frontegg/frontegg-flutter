@@ -1,6 +1,7 @@
 name: frontegg_flutter_example
 description: "Demonstrates how to use the frontegg plugin."
 publish_to: 'none'
+version: 1.0.0
 
 environment:
   sdk: '>=3.3.4 <4.0.0'
@@ -8,7 +9,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  frontegg:
+  frontegg_flutter:
     path: ../
 
 dev_dependencies:
@@ -16,7 +17,7 @@ dev_dependencies:
     sdk: flutter
   flutter_test:
     sdk: flutter
-  flutter_lints: ^3.0.0
+  flutter_lints: ^4.0.0
 
 flutter:
   uses-material-design: true

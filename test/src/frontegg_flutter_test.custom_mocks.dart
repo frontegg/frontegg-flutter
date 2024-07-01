@@ -5,7 +5,7 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'dart:async' as _i3;
 
-import 'package:frontegg/src/frontegg_platform_interface.dart' as _i2;
+import 'package:frontegg_flutter/src/frontegg_platform_interface.dart' as _i2;
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:plugin_platform_interface/plugin_platform_interface.dart' as _i3;
 

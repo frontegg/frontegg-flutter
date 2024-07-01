@@ -1,3 +1,5 @@
+## [0.0.5] - Release official version of flutter sdk
+
 ## [0.0.4] - Connecting iOS and Android FronteggSDKs and native methods usage
 
 ## [0.0.3] - Add support for hash routing

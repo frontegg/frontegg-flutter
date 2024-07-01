@@ -1,6 +1,6 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:frontegg/src/frontegg_method_channel.dart';
+import 'package:frontegg_flutter/src/frontegg_method_channel.dart';
 
 import '../fixtures/test_maps.dart';
 

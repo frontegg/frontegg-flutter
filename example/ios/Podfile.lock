@@ -1,6 +1,6 @@
 PODS:
   - Flutter (1.0.0)
-  - frontegg (0.0.4):
+  - frontegg_flutter (0.0.5):
     - Flutter
     - FronteggSwift (~> 1.2.15)
   - FronteggSwift (1.2.15)
@@ -9,7 +9,7 @@ PODS:
 
 DEPENDENCIES:
   - Flutter (from `Flutter`)
-  - frontegg (from `.symlinks/plugins/frontegg/ios`)
+  - frontegg_flutter (from `.symlinks/plugins/frontegg_flutter/ios`)
   - integration_test (from `.symlinks/plugins/integration_test/ios`)
 
 SPEC REPOS:
@@ -19,14 +19,14 @@ SPEC REPOS:
 EXTERNAL SOURCES:
   Flutter:
     :path: Flutter
-  frontegg:
-    :path: ".symlinks/plugins/frontegg/ios"
+  frontegg_flutter:
+    :path: ".symlinks/plugins/frontegg_flutter/ios"
   integration_test:
     :path: ".symlinks/plugins/integration_test/ios"
 
 SPEC CHECKSUMS:
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
-  frontegg: 25eeda85e4e73269a5ef60b7cd46542b9e318c63
+  frontegg_flutter: 9d2e0b3bc6123b5723e54ebf7c7b68f390707700
   FronteggSwift: 38b780c7d1bf4a708317f86dd5ce2e4e11ce71d2
   integration_test: ce0a3ffa1de96d1a89ca0ac26fca7ea18a749ef4
 

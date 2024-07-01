@@ -1,0 +1,39 @@
+name: "onPush( Build & Test )"
+
+on:
+  push:
+    branches-ignore:
+      - master
+jobs:
+  build:
+    runs-on: 'macos-latest-large'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          architecture: x64
+          flutter-version: 3.22.2
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Analyze code
+        run: flutter analyze
+
+      - name: Run tests
+        run: flutter test
+
+      - name: Build AppBundle
+        working-directory: example
+        run: flutter build appbundle --release
+
+      - name: Build APK
+        working-directory: example
+        run: flutter build apk --release
+
+      - name: Build iOS
+        working-directory: example
+        run: flutter build ios --no-codesign

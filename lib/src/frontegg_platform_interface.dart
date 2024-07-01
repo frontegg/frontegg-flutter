@@ -1,4 +1,4 @@
-import "package:frontegg/src/frontegg_method_channel.dart";
+import "package:frontegg_flutter/src/frontegg_method_channel.dart";
 import "package:plugin_platform_interface/plugin_platform_interface.dart";
 
 abstract class FronteggPlatform extends PlatformInterface {

@@ -1,5 +1,5 @@
 import "package:flutter/foundation.dart";
-import "package:frontegg/src/inner_utils.dart";
+import "package:frontegg_flutter/src/inner_utils.dart";
 
 class FronteggUserRole {
   final String id;

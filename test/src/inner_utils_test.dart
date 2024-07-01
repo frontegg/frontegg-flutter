@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:frontegg/src/inner_utils.dart';
+import 'package:frontegg_flutter/src/inner_utils.dart';
 
 void main() {
   const tDataTimeString = "2020-12-08T08:59:25.000Z";

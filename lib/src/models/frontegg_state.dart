@@ -1,4 +1,4 @@
-import 'package:frontegg/frontegg_flutter.dart';
+import 'package:frontegg_flutter/frontegg_flutter.dart';
 
 class FronteggState {
   final String? accessToken;
