@@ -18,6 +18,7 @@ features for the product-led era.
     - [`For Swift:`](#for-swift)
     - [Handle Open App with URL (Objective-C)](#handle-open-app-with-url-objective-c)
     - [Config iOS associated domain](#config-ios-associated-domain)
+    - [Multi-apps iOS Support](#multi-apps-ios-support)
   - [Setup Android Project](#setup-android-project)
     - [Set minimum sdk version](#set-minimum-sdk-version)
     - [Configure build config fields](#configure-build-config-fields)
@@ -55,7 +56,7 @@ from [Frontegg Portal Domain](https://portal.frontegg.com/development/settings/d
 - Replace `IOS_BUNDLE_IDENTIFIER` with your application identifier
 - Replace `FRONTEGG_BASE_URL` with your frontegg base url
 - Replace `ANDROID_PACKAGE_NAME` with your android package name
--
+
 
 ### Add frontegg package to the project
 
@@ -238,6 +239,27 @@ Next, you will need to add your associated domain to your iOS application. To do
 `[YOUR_ASSOCIATED_DOMAIN]` is the associated domain that you would like to use with your iOS application.
 For example, if you would like to use `https://example.com` as your associated domain, you would
 enter `applinks:example.com` and `webcredentials:example.com`.
+
+## Multi-apps iOS Support
+
+This guide outlines the steps to configure your iOS application to support multiple applications.
+
+### Step 1: Modify the Frontegg.plist File
+
+Add `applicationId` to Frontegg.plist file:
+
+```xml
+<plist version="1.0">
+  <dict>
+    <key>applicationId</key>  
+    <string>your-application-id-uuid</string>
+    <key>baseUrl</key>
+    <string>https://your-domain.fronteg.com</string>
+    <key>clientId</key>
+    <string>your-client-id-uuid</string>
+  </dict>
+</plist>
+```
 
 ## Setup Android Project
 
