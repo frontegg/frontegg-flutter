@@ -23,6 +23,9 @@ val Context.constants: FronteggConstants
             val baseUrl = safeGetValueFromBuildConfig(buildConfigClass, "FRONTEGG_DOMAIN", "")
             val clientId = safeGetValueFromBuildConfig(buildConfigClass, "FRONTEGG_CLIENT_ID", "")
 
+            val applicationId =
+                safeGetNullableValueFromBuildConfig(buildConfigClass, "FRONTEGG_APPLICATION_ID", "")
+
             val useAssetsLinks =
                 safeGetValueFromBuildConfig(buildConfigClass, "FRONTEGG_USE_ASSETS_LINKS", true)
             val useChromeCustomTabs = safeGetValueFromBuildConfig(
@@ -32,6 +35,7 @@ val Context.constants: FronteggConstants
             return FronteggConstants(
                 baseUrl = baseUrl,
                 clientId = clientId,
+                applicationId = applicationId,
                 useAssetsLinks = useAssetsLinks,
                 useChromeCustomTabs = useChromeCustomTabs,
                 bundleId = this.packageName,
@@ -41,6 +45,22 @@ val Context.constants: FronteggConstants
             throw e
         }
     }
+
+fun <T> safeGetNullableValueFromBuildConfig(
+    buildConfigClass: Class<*>,
+    name: String,
+    default: T,
+): T? {
+    return try {
+        val field = buildConfigClass.getField(name)
+        field.get(default) as T
+    } catch (e: Exception) {
+        Log.e(
+            TAG, "Field '$name' not found in BuildConfig, return default $default"
+        )
+        null
+    }
+}
 
 
 fun <T> safeGetValueFromBuildConfig(buildConfigClass: Class<*>, name: String, default: T): T {

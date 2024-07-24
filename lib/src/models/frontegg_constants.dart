@@ -1,6 +1,7 @@
 class FronteggConstants {
   final String baseUrl;
   final String clientId;
+  final String? applicationId;
   final bool? useAssetsLinks;
   final bool? useChromeCustomTabs;
   final String bundleId;
@@ -8,6 +9,7 @@ class FronteggConstants {
   const FronteggConstants({
     required this.baseUrl,
     required this.clientId,
+    this.applicationId,
     this.useAssetsLinks,
     this.useChromeCustomTabs,
     required this.bundleId,
@@ -20,6 +22,7 @@ class FronteggConstants {
           runtimeType == other.runtimeType &&
           baseUrl == other.baseUrl &&
           clientId == other.clientId &&
+          applicationId == other.applicationId &&
           useAssetsLinks == other.useAssetsLinks &&
           useChromeCustomTabs == other.useChromeCustomTabs &&
           bundleId == other.bundleId;
@@ -28,6 +31,7 @@ class FronteggConstants {
   int get hashCode =>
       baseUrl.hashCode ^
       clientId.hashCode ^
+      applicationId.hashCode ^
       useAssetsLinks.hashCode ^
       useChromeCustomTabs.hashCode ^
       bundleId.hashCode;
@@ -36,6 +40,7 @@ class FronteggConstants {
     return FronteggConstants(
       baseUrl: map["baseUrl"] as String,
       clientId: map["clientId"] as String,
+      applicationId: map["applicationId"] as String?,
       useAssetsLinks: map["useAssetsLinks"] as bool?,
       useChromeCustomTabs: map["useChromeCustomTabs"] as bool?,
       bundleId: map["bundleId"] as String,
@@ -44,6 +49,6 @@ class FronteggConstants {
 
   @override
   String toString() {
-    return 'FronteggConstants{baseUrl: $baseUrl, clientId: $clientId, useAssetsLinks: $useAssetsLinks, useChromeCustomTabs: $useChromeCustomTabs, bundleId: $bundleId}';
+    return 'FronteggConstants{baseUrl: $baseUrl, clientId: $clientId, applicationId: $applicationId, useAssetsLinks: $useAssetsLinks, useChromeCustomTabs: $useChromeCustomTabs, bundleId: $bundleId}';
   }
 }
