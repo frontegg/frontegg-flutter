@@ -25,6 +25,7 @@ features for the product-led era.
     - [Add permissions to AndroidManifest.xml](#add-permissions-to-androidmanifestxml)
     - [Config Android AssetLinks](#config-android-assetlinks)
     - [Enabling Chrome Custom Tabs for Social Login](#enabling-chrome-custom-tabs-for-social-login)
+    - [Multi-apps Android Support](#multi-apps-android-support)
   - [Usages](#usages)
     - [Wrap your root Widget with FronteggProvider:](#wrap-your-root-widget-with-fronteggprovider)
     - [Access to frontegg instance](#access-to-frontegg-instance)
@@ -409,6 +410,23 @@ android {
     }
     
     
+}
+```
+
+## Multi-apps Android Support
+
+This guide outlines the steps to configure your Android application to support multiple applications.
+
+### Step 1: Modify the Build.gradle file
+
+Add `FRONTEGG_APPLICATION_ID` buildConfigField into the `build.gradle` file:
+
+```groovy
+def fronteggApplicationId = "your-application-id-uuid"
+...
+android {
+    ...
+    buildConfigField "String", 'FRONTEGG_APPLICATION_ID', "\"$fronteggApplicationId\""
 }
 ```
 
