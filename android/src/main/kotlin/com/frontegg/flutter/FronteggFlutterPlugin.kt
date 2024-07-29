@@ -44,6 +44,7 @@ class FronteggFlutterPlugin : FlutterPlugin, ActivityAware, ActivityProvider {
             context = context!!,
             fronteggDomain = constants.baseUrl,
             clientId = constants.clientId,
+            applicationId = constants.applicationId,
             useAssetsLinks = constants.useAssetsLinks,
             useChromeCustomTabs = constants.useChromeCustomTabs,
         )

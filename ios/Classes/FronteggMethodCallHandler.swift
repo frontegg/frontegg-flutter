@@ -33,10 +33,11 @@ class FronteggMethodCallHandler {
         result(nil)
     }
     
-    private func constantsToExport() -> [AnyHashable : Any]! {
+    private func constantsToExport() -> [AnyHashable : Any?]! {
         return [
             "baseUrl": fronteggApp.baseUrl,
             "clientId": fronteggApp.clientId,
+            "applicationId": fronteggApp.applicationId,
             "bundleId": Bundle.main.bundleIdentifier as Any
         ]
     }

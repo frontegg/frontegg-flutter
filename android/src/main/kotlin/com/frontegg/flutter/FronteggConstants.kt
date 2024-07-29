@@ -3,6 +3,7 @@ package com.frontegg.flutter
 data class FronteggConstants(
     val baseUrl: String,
     val clientId: String,
+    val applicationId: String?,
     val useAssetsLinks: Boolean,
     val useChromeCustomTabs: Boolean,
     val bundleId: String
@@ -11,6 +12,7 @@ data class FronteggConstants(
         return mapOf(
             Pair("baseUrl", baseUrl),
             Pair("clientId", clientId),
+            Pair("applicationId", applicationId),
             Pair("useAssetsLinks", useAssetsLinks),
             Pair("useChromeCustomTabs", useChromeCustomTabs),
             Pair("bundleId", bundleId),

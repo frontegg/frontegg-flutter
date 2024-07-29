@@ -18,12 +18,14 @@ features for the product-led era.
     - [`For Swift:`](#for-swift)
     - [Handle Open App with URL (Objective-C)](#handle-open-app-with-url-objective-c)
     - [Config iOS associated domain](#config-ios-associated-domain)
+    - [Multi-apps iOS Support](#multi-apps-ios-support)
   - [Setup Android Project](#setup-android-project)
     - [Set minimum sdk version](#set-minimum-sdk-version)
     - [Configure build config fields](#configure-build-config-fields)
     - [Add permissions to AndroidManifest.xml](#add-permissions-to-androidmanifestxml)
     - [Config Android AssetLinks](#config-android-assetlinks)
     - [Enabling Chrome Custom Tabs for Social Login](#enabling-chrome-custom-tabs-for-social-login)
+    - [Multi-apps Android Support](#multi-apps-android-support)
   - [Usages](#usages)
     - [Wrap your root Widget with FronteggProvider:](#wrap-your-root-widget-with-fronteggprovider)
     - [Access to frontegg instance](#access-to-frontegg-instance)
@@ -55,7 +57,7 @@ from [Frontegg Portal Domain](https://portal.frontegg.com/development/settings/d
 - Replace `IOS_BUNDLE_IDENTIFIER` with your application identifier
 - Replace `FRONTEGG_BASE_URL` with your frontegg base url
 - Replace `ANDROID_PACKAGE_NAME` with your android package name
--
+
 
 ### Add frontegg package to the project
 
@@ -239,6 +241,27 @@ Next, you will need to add your associated domain to your iOS application. To do
 For example, if you would like to use `https://example.com` as your associated domain, you would
 enter `applinks:example.com` and `webcredentials:example.com`.
 
+## Multi-apps iOS Support
+
+This guide outlines the steps to configure your iOS application to support multiple applications.
+
+### Step 1: Modify the Frontegg.plist File
+
+Add `applicationId` to Frontegg.plist file:
+
+```xml
+<plist version="1.0">
+  <dict>
+    <key>applicationId</key>  
+    <string>your-application-id-uuid</string>
+    <key>baseUrl</key>
+    <string>https://your-domain.fronteg.com</string>
+    <key>clientId</key>
+    <string>your-client-id-uuid</string>
+  </dict>
+</plist>
+```
+
 ## Setup Android Project
 
 ### Set minimum sdk version
@@ -387,6 +410,23 @@ android {
     }
     
     
+}
+```
+
+## Multi-apps Android Support
+
+This guide outlines the steps to configure your Android application to support multiple applications.
+
+### Step 1: Modify the Build.gradle file
+
+Add `FRONTEGG_APPLICATION_ID` buildConfigField into the `build.gradle` file:
+
+```groovy
+def fronteggApplicationId = "your-application-id-uuid"
+...
+android {
+    ...
+    buildConfigField "String", 'FRONTEGG_APPLICATION_ID', "\"$fronteggApplicationId\""
 }
 ```
 
