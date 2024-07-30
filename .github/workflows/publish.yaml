@@ -32,4 +32,4 @@ jobs:
       - name: Install Dependencies
         run: flutter pub get
       - name: Flutter Publish dry run
-        run: flutter pub publish --force --dry-run
+        run: flutter pub publish --dry-run
