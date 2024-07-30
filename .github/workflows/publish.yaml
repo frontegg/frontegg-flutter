@@ -11,25 +11,26 @@ jobs:
   publish:
     permissions:
       id-token: write # Required for authentication using OIDC
-    name: 'Publish to pub.dev'
-    runs-on: 'macos-latest-large'
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-      - name: Set up Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          architecture: x64
-          flutter-version: 3.22.2
-
-      - name: Git Identity
-        run: |
-          git config --global user.name 'frontegg'
-          git config --global user.email 'frontegg@users.noreply.github.com'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Install Dependencies
-        run: flutter pub get
-      - name: Flutter Publish dry run
-        run: flutter pub publish --force
+    uses: dart-lang/setup-dart/.github/workflows/publish.yml@v1
+#    name: 'Publish to pub.dev'
+#    runs-on: 'macos-latest-large'
+#    steps:
+#      - name: Checkout code
+#        uses: actions/checkout@v3
+#      - name: Set up Flutter
+#        uses: subosito/flutter-action@v2
+#        with:
+#          architecture: x64
+#          flutter-version: 3.22.2
+#
+#      - name: Git Identity
+#        run: |
+#          git config --global user.name 'frontegg'
+#          git config --global user.email 'frontegg@users.noreply.github.com'
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#
+#      - name: Install Dependencies
+#        run: flutter pub get
+#      - name: Flutter Publish dry run
+#        run: flutter pub publish --force
