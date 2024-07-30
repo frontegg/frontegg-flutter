@@ -34,9 +34,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Setup Pub.dev credentials
-        run: .github/scripts/authorize.sh
-        shell: bash
+      - uses: flutter-actions/setup-pubdev-credentials@v1.0
 
       - name: Install Dependencies
         run: flutter pub get
