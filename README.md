@@ -31,7 +31,8 @@ features for the product-led era.
     - [Switch tenant frontegg](#switch-tenant-frontegg)
     - [Frontegg state](#frontegg-state)
     - [Other frontegg features:](#other-frontegg-features)
-
+  - [Knowing Issues](#knowing-issues)
+      - [Android](#android)
 ## Project Requirements
 
 - Minimum iOS deployment version **=> 14**
@@ -578,4 +579,20 @@ Also frontegg give you next features:
   2. `refreshToken` - refreshes `accessToken` and `refreshToken` only if needed, returns `true` if refreshing succeeds;
   3. `getConstants` - returns `Frontegg Flutter` initialize constants;
   4. `directLoginAction` - direct logs in with `type` and `data`.
-   
+
+
+# Knowing Issues
+
+## Android
+
+If you have experienced with `MissingPluginException`:
+```
+The following MissingPluginException was thrown while activating platform stream on channel frontegg_flutter/state_stream:
+MissingPluginException(No implementation found for method listen on channel frontegg_flutter/state_stream)
+```
+
+Add the line to the `proguard-rules.pro` file:
+
+```
+-keepclasseswithmembers class com.frontegg.** {*;}
+```
