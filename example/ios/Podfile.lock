@@ -26,10 +26,10 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
-  frontegg_flutter: 9d2e0b3bc6123b5723e54ebf7c7b68f390707700
+  frontegg_flutter: eaa577629a5ff05a1db35cb334d9e7f83a81163a
   FronteggSwift: 38b780c7d1bf4a708317f86dd5ce2e4e11ce71d2
-  integration_test: ce0a3ffa1de96d1a89ca0ac26fca7ea18a749ef4
+  integration_test: 252f60fa39af5e17c3aa9899d35d908a0721b573
 
 PODFILE CHECKSUM: 1959d098c91d8a792531a723c4a9d7e9f6a01e38
 
-COCOAPODS: 1.14.3
+COCOAPODS: 1.15.2
