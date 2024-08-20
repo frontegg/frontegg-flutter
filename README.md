@@ -161,18 +161,15 @@ add the following code to.
 
 ### `For Swift:`
 
-1. Open `AppDelegate.m` file and import swift headers:
-
-    ```swift
-    import FronteggSwift
-    ```
-2. Add URL handlers to `AppDelegate.swift`:
+1. Add URL handlers to `AppDelegate.swift`:
     ```swift  
     import UIKit
+    import Flutter
+
     import FronteggSwift
     
-    @UIApplicationMain
-    class AppDelegate: UIResponder, UIApplicationDelegate {
+    @main
+    @objc class AppDelegate: FlutterAppDelegate {
     
         /*
          * Called when the app was launched with a url. Feel free to add additional processing here,
@@ -204,7 +201,7 @@ add the following code to.
     }
     ```
 
-### Handle Open App with URL (Objective-C)
+### Handle Open App with URL
 
 ### Config iOS associated domain
 
