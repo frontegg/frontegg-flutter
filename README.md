@@ -5,7 +5,7 @@ features for the product-led era.
 
 ## Table of Contents
 
-- [@frontegg/flutter](#fronteggflutter)
+- [frontegg\_flutter](#frontegg_flutter)
   - [Table of Contents](#table-of-contents)
   - [Project Requirements](#project-requirements)
   - [Getting Started](#getting-started)
@@ -16,7 +16,7 @@ features for the product-led era.
     - [Handle Open App with URL](#handle-open-app-with-url)
     - [`For Objective-C:`](#for-objective-c)
     - [`For Swift:`](#for-swift)
-    - [Handle Open App with URL (Objective-C)](#handle-open-app-with-url-objective-c)
+    - [Handle Open App with URL](#handle-open-app-with-url-1)
     - [Config iOS associated domain](#config-ios-associated-domain)
   - [Setup Android Project](#setup-android-project)
     - [Set minimum sdk version](#set-minimum-sdk-version)
@@ -31,8 +31,8 @@ features for the product-led era.
     - [Switch tenant frontegg](#switch-tenant-frontegg)
     - [Frontegg state](#frontegg-state)
     - [Other frontegg features:](#other-frontegg-features)
-  - [Knowing Issues](#knowing-issues)
-      - [Android](#android)
+- [Knowing Issues](#knowing-issues)
+  - [Android](#android)
 ## Project Requirements
 
 - Minimum iOS deployment version **=> 14**
@@ -82,7 +82,12 @@ dependencies:
 
 To setup your SwiftUI application to communicate with Frontegg, you have to create a new file named `Frontegg.plist`
 under
-your root project directory, this file will store values to be used variables by Frontegg SDK:
+your ios project directory(for example ios/Runner) and include the file to your XCode project, this file will store values to be used variables by Frontegg SDK:
+
+How it can look:
+![Frontegg.plist example](instruction/frontegg_plist_example.png)
+
+`Frontegg.plist`:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
