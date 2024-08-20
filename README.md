@@ -85,6 +85,7 @@ under
 your ios project directory(for example ios/Runner) and include the file to your XCode project, this file will store values to be used variables by Frontegg SDK:
 
 How it can look:
+
 ![Frontegg.plist example](instruction/frontegg_plist_example.png)
 
 `Frontegg.plist`:
