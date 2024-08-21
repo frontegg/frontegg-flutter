@@ -1,5 +1,6 @@
 package com.frontegg.flutter
 
+import com.frontegg.android.FronteggApp
 import com.frontegg.android.FronteggAuth
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
@@ -10,19 +11,44 @@ import kotlinx.coroutines.launch
 
 class FronteggMethodCallHandler(
     private val activityProvider: ActivityProvider,
-    private val constants: FronteggConstants,
 ) : MethodCallHandler {
 
     override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
         when (call.method) {
+            "init" -> initialize(call, result)
             "login" -> login(result)
             "switchTenant" -> switchTenant(call, result)
             "directLoginAction" -> directLoginAction(call, result)
             "refreshToken" -> refreshToken(result)
             "logout" -> logout(result)
-            "getConstants" -> getConstants(result)
             else -> result.notImplemented()
         }
+    }
+
+    private fun initialize(call: MethodCall, result: MethodChannel.Result) {
+        val baseUrl =
+            call.argument<String>("baseUrl") ?: throw ArgumentNotFoundException("baseUrl")
+        val clientId =
+            call.argument<String>("clientId") ?: throw ArgumentNotFoundException("clientId")
+        val applicationId =
+            call.argument<String>("applicationId")
+
+        val useAssetsLinks =
+            call.argument<Boolean>("useAssetsLinks") ?: true
+
+        val useChromeCustomTabs =
+            call.argument<Boolean>("useChromeCustomTabs") ?: true
+
+        FronteggApp.init(
+            context = activityProvider.getApplicationContext()!!,
+            fronteggDomain = baseUrl,
+            clientId = clientId,
+            useAssetsLinks = useAssetsLinks,
+            useChromeCustomTabs = useChromeCustomTabs,
+            applicationId = applicationId,
+        )
+
+        result.success(null)
     }
 
     private fun login(result: MethodChannel.Result) {
@@ -63,9 +89,5 @@ class FronteggMethodCallHandler(
     private fun logout(result: MethodChannel.Result) {
         FronteggAuth.instance.logout()
         result.success(null)
-    }
-
-    private fun getConstants(result: MethodChannel.Result) {
-        result.success(constants.toMap())
     }
 }

@@ -21,27 +21,4 @@ class FronteggProvider extends InheritedWidget {
     assert(result != null, "No FronteggProvider found in context");
     return result!.value;
   }
-
-  @override
-  InheritedElement createElement() => _FronteggProviderInheritedElement(
-        this,
-        dispose: () async {
-          await value.dispose();
-        },
-      );
-}
-
-class _FronteggProviderInheritedElement extends InheritedElement {
-  final void Function() dispose;
-
-  _FronteggProviderInheritedElement(
-    super.widget, {
-    required this.dispose,
-  });
-
-  @override
-  void unmount() {
-    dispose();
-    super.unmount();
-  }
 }

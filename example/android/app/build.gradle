@@ -56,11 +56,6 @@ android {
                 "frontegg_client_id": fronteggClientId,
                 "auth_activity": "com.frontegg.android.HostedAuthActivity",
         ]
-
-        buildConfigField "String", 'FRONTEGG_DOMAIN', "\"$fronteggDomain\""
-        buildConfigField "String", 'FRONTEGG_CLIENT_ID', "\"$fronteggClientId\""
-        buildConfigField "Boolean", 'FRONTEGG_USE_ASSETS_LINKS', "true"
-        buildConfigField "Boolean", 'FRONTEGG_USE_CHROME_CUSTOM_TABS', "true"
     }
 
     buildTypes {

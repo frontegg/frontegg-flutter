@@ -15,9 +15,9 @@ class FronteggState {
     this.refreshToken,
     this.user,
     this.isAuthenticated = false,
-    this.isLoading = true,
-    this.initializing = true,
-    this.showLoader = true,
+    this.isLoading = false,
+    this.initializing = false,
+    this.showLoader = false,
     this.appLink = false,
   });
 
@@ -70,12 +70,12 @@ class FronteggState {
       isLoading: map["isLoading"] as bool,
       initializing: map["initializing"] as bool,
       showLoader: map["showLoader"] as bool,
-      appLink: map["appLink"] as bool,
+      appLink: map["appLink"] as bool? ?? false,
     );
   }
 
   @override
   String toString() {
-    return 'FronteggState{accessToken: $accessToken, refreshToken: $refreshToken, user: $user, isAuthenticated: $isAuthenticated, isLoading: $isLoading, initializing: $initializing, showLoader: $showLoader, appLink: $appLink}';
+    return 'FronteggState{accessToken: $accessToken, refreshToken: $refreshToken, user: $user, isAuthenticated: $isAuthenticated, isLoading: $isLoading, initializing: $initializing, showLoader: $showLoader}';
   }
 }

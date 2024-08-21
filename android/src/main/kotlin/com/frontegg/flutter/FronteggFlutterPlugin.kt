@@ -21,14 +21,14 @@ class FronteggFlutterPlugin : FlutterPlugin, ActivityAware, ActivityProvider {
 
     override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
         context = flutterPluginBinding.applicationContext
-        val constants = context!!.constants
+//        val constants = context!!.constants
 
         channel = MethodChannel(flutterPluginBinding.binaryMessenger, METHOD_CHANNEL_NAME)
-        channel.setMethodCallHandler(FronteggMethodCallHandler(this, constants))
+        channel.setMethodCallHandler(FronteggMethodCallHandler(this))
 
         stateEventChannel =
             EventChannel(flutterPluginBinding.binaryMessenger, STATE_EVENT_CHANNEL_NAME)
-        stateListener = FronteggStateListenerImpl(constants)
+        stateListener = FronteggStateListenerImpl()
         stateEventChannel.setStreamHandler(object : EventChannel.StreamHandler {
             override fun onListen(arguments: Any?, events: EventChannel.EventSink?) {
                 stateListener?.setEventSink(events)
@@ -39,15 +39,6 @@ class FronteggFlutterPlugin : FlutterPlugin, ActivityAware, ActivityProvider {
                 stateListener?.setEventSink(null)
             }
         })
-
-        FronteggApp.init(
-            context = context!!,
-            fronteggDomain = constants.baseUrl,
-            clientId = constants.clientId,
-            applicationId = constants.applicationId,
-            useAssetsLinks = constants.useAssetsLinks,
-            useChromeCustomTabs = constants.useChromeCustomTabs,
-        )
     }
 
     override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
@@ -75,6 +66,10 @@ class FronteggFlutterPlugin : FlutterPlugin, ActivityAware, ActivityProvider {
 
     override fun getActivity(): Activity? {
         return this.binding?.activity
+    }
+
+    override fun getApplicationContext(): Context? {
+        return context
     }
 
     companion object {

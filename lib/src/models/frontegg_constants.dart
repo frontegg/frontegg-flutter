@@ -2,9 +2,18 @@ class FronteggConstants {
   final String baseUrl;
   final String clientId;
   final String? applicationId;
+
+  /// Android Only
   final bool? useAssetsLinks;
+
+  /// Android Only
   final bool? useChromeCustomTabs;
-  final String bundleId;
+
+  /// iOS Only
+  final bool? handleLoginWithSocialLogin;
+
+  /// iOS Only
+  final bool? handleLoginWithSSO;
 
   const FronteggConstants({
     required this.baseUrl,
@@ -12,7 +21,8 @@ class FronteggConstants {
     this.applicationId,
     this.useAssetsLinks,
     this.useChromeCustomTabs,
-    required this.bundleId,
+    this.handleLoginWithSocialLogin,
+    this.handleLoginWithSSO,
   });
 
   @override
@@ -25,30 +35,63 @@ class FronteggConstants {
           applicationId == other.applicationId &&
           useAssetsLinks == other.useAssetsLinks &&
           useChromeCustomTabs == other.useChromeCustomTabs &&
-          bundleId == other.bundleId;
+          handleLoginWithSocialLogin == other.handleLoginWithSocialLogin &&
+          handleLoginWithSSO == other.handleLoginWithSSO;
 
   @override
   int get hashCode =>
       baseUrl.hashCode ^
       clientId.hashCode ^
-      applicationId.hashCode ^
       useAssetsLinks.hashCode ^
       useChromeCustomTabs.hashCode ^
-      bundleId.hashCode;
+      handleLoginWithSocialLogin.hashCode ^
+      handleLoginWithSSO.hashCode;
 
   factory FronteggConstants.fromMap(Map<Object?, Object?> map) {
     return FronteggConstants(
       baseUrl: map["baseUrl"] as String,
       clientId: map["clientId"] as String,
-      applicationId: map["applicationId"] as String?,
       useAssetsLinks: map["useAssetsLinks"] as bool?,
       useChromeCustomTabs: map["useChromeCustomTabs"] as bool?,
-      bundleId: map["bundleId"] as String,
+      handleLoginWithSocialLogin: map["handleLoginWithSocialLogin"] as bool?,
+      handleLoginWithSSO: map["handleLoginWithSSO"] as bool?,
     );
   }
 
   @override
   String toString() {
-    return 'FronteggConstants{baseUrl: $baseUrl, clientId: $clientId, applicationId: $applicationId, useAssetsLinks: $useAssetsLinks, useChromeCustomTabs: $useChromeCustomTabs, bundleId: $bundleId}';
+    return 'FronteggConstants{baseUrl: $baseUrl, clientId: $clientId, useAssetsLinks: $useAssetsLinks, useChromeCustomTabs: $useChromeCustomTabs}';
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'baseUrl': baseUrl,
+      'clientId': clientId,
+      'useAssetsLinks': useAssetsLinks,
+      'useChromeCustomTabs': useChromeCustomTabs,
+      'applicationId': applicationId,
+      'handleLoginWithSocialLogin': handleLoginWithSocialLogin,
+      'handleLoginWithSSO': handleLoginWithSSO,
+    };
+  }
+
+  FronteggConstants copyWith({
+    String? baseUrl,
+    String? clientId,
+    String? applicationId,
+    bool? useAssetsLinks,
+    bool? useChromeCustomTabs,
+    bool? handleLoginWithSocialLogin,
+    bool? handleLoginWithSSO,
+  }) {
+    return FronteggConstants(
+      baseUrl: baseUrl ?? this.baseUrl,
+      clientId: clientId ?? this.clientId,
+      applicationId: applicationId ?? this.applicationId,
+      useAssetsLinks: useAssetsLinks ?? this.useAssetsLinks,
+      useChromeCustomTabs: useChromeCustomTabs ?? this.useChromeCustomTabs,
+      handleLoginWithSocialLogin: handleLoginWithSocialLogin ?? this.handleLoginWithSocialLogin,
+      handleLoginWithSSO: handleLoginWithSSO ?? this.handleLoginWithSSO,
+    );
   }
 }

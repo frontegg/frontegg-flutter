@@ -7,6 +7,7 @@ class FronteggMethodChannel extends FronteggPlatform {
   static const String methodChannelName = "frontegg_flutter";
   static const String stateEventChannelName = "frontegg_flutter/state_stream";
 
+  static const String initMethodName = "init";
   static const String loginMethodName = "login";
   static const String logoutMethodName = "logout";
   static const String switchTenantMethodName = "switchTenant";
@@ -22,6 +23,9 @@ class FronteggMethodChannel extends FronteggPlatform {
 
   late final Stream<dynamic> _stateChangedEventChanelStream =
       stateChangedEventChanel.receiveBroadcastStream();
+
+  @override
+  Future<void> init(Map<String, dynamic> map) => methodChannel.invokeMethod(initMethodName, map);
 
   @override
   Stream get stateChanged => _stateChangedEventChanelStream;

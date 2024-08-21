@@ -4,13 +4,17 @@ import Flutter
 
 class FronteggMethodCallHandler {
     private var fronteggApp: FronteggApp
+    private var stateListener: FronteggStateListener
     
-    init(fronteggApp: FronteggApp) {
+    init(fronteggApp: FronteggApp, stateListener: FronteggStateListener) {
         self.fronteggApp = fronteggApp
+        self.stateListener = stateListener
     }
     
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         switch call.method {
+        case "init":
+            initialize(call: call, result: result)
         case "login":
             login(result:result)
         case "switchTenant":
@@ -21,25 +25,46 @@ class FronteggMethodCallHandler {
             refreshToken(result: result)
         case "logout":
             logout(result: result)
-        case "getConstants":
-            result(constantsToExport())
+    
         default:
             result(FlutterMethodNotImplemented)
         }
     }
     
-    private func login(result: @escaping FlutterResult) {
-        fronteggApp.auth.login()
+    private func initialize(
+        call: FlutterMethodCall,
+        result: @escaping FlutterResult
+    ) {
+        guard let arguments = call.arguments as? [String: Any?] else {
+            return result(FlutterError(code: "MISSING_PARAMS", message: "Missing argumants", details: nil))
+        }
+        
+        guard let baseUrl = arguments["baseUrl"] as? String else {
+            return result(FlutterError(code: "MISSING_PARAMS", message: "Missing 'baseUrl' argumant", details: nil))
+        }
+        
+        guard let clientId = arguments["clientId"] as? String else {
+            return result(FlutterError(code: "MISSING_PARAMS", message: "Missing 'clientId' argumant", details: nil))
+        }
+        
+        let applicationId = arguments["applicationId"] as? String
+        let handleLoginWithSocialLogin = arguments["handleLoginWithSocialLogin"] as? Bool ?? true
+        let handleLoginWithSSO = arguments["handleLoginWithSSO"] as? Bool ?? false
+        
+        fronteggApp.manualInit(
+            baseUrl: baseUrl,
+            cliendId: clientId,
+            applicationId: applicationId,
+            handleLoginWithSocialLogin: handleLoginWithSocialLogin,
+            handleLoginWithSSO: handleLoginWithSSO
+        )
+        
         result(nil)
     }
     
-    private func constantsToExport() -> [AnyHashable : Any?]! {
-        return [
-            "baseUrl": fronteggApp.baseUrl,
-            "clientId": fronteggApp.clientId,
-            "applicationId": fronteggApp.applicationId,
-            "bundleId": Bundle.main.bundleIdentifier as Any
-        ]
+    private func login(result: @escaping FlutterResult) {
+        fronteggApp.auth.login()
+        result(nil)
     }
     
     private func logout(result: @escaping FlutterResult) {

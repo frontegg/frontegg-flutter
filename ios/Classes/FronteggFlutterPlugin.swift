@@ -9,12 +9,14 @@ public class FronteggFlutterPlugin: NSObject, FlutterPlugin {
     private static var stateListener: FronteggStateListener? = nil
     
     public static func register(with registrar: FlutterPluginRegistrar) {
-        let methodCallHandler = FronteggMethodCallHandler(fronteggApp: fronteggApp)
+        let stateEventChannel = FlutterEventChannel(name: stateEventChanelName, binaryMessenger: registrar.messenger())
+        stateListener = FronteggStateListenerImpl(fronteggApp: fronteggApp)
+        
+        let methodCallHandler = FronteggMethodCallHandler(fronteggApp: fronteggApp, stateListener: stateListener!)
         let channel = FlutterMethodChannel(name: methodChannelName, binaryMessenger: registrar.messenger())
         channel.setMethodCallHandler(methodCallHandler.handle)
         
-        let stateEventChannel = FlutterEventChannel(name: stateEventChanelName, binaryMessenger: registrar.messenger())
-        stateListener = FronteggStateListenerImpl(fronteggApp: fronteggApp)
+        
         let streamHandler = StateStreamHandler(stateListener: stateListener!)
         stateEventChannel.setStreamHandler(streamHandler)
         

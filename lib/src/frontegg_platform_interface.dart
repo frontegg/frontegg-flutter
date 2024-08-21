@@ -15,6 +15,10 @@ abstract class FronteggPlatform extends PlatformInterface {
     _instance = instance;
   }
 
+  Future<void> init(Map<String, dynamic> map) {
+    throw UnimplementedError("getConstants() has not been implemented.");
+  }
+
   Stream get stateChanged {
     throw UnimplementedError("getter stateChanged has not been implemented.");
   }
