@@ -1,3 +1,8 @@
+## v1.0.1
+
+- Add MultiApp support
+- Upgrade iOS SDK for social login fix
+
 ## v1.0.0
 
 Official version of frontegg flutter sdk
