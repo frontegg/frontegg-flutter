@@ -5,7 +5,7 @@ features for the product-led era.
 
 ## Table of Contents
 
-- [@frontegg/flutter](#fronteggflutter)
+- [frontegg\_flutter](#frontegg_flutter)
   - [Table of Contents](#table-of-contents)
   - [Project Requirements](#project-requirements)
   - [Getting Started](#getting-started)
@@ -16,7 +16,7 @@ features for the product-led era.
     - [Handle Open App with URL](#handle-open-app-with-url)
     - [`For Objective-C:`](#for-objective-c)
     - [`For Swift:`](#for-swift)
-    - [Handle Open App with URL (Objective-C)](#handle-open-app-with-url-objective-c)
+    - [Handle Open App with URL](#handle-open-app-with-url-1)
     - [Config iOS associated domain](#config-ios-associated-domain)
     - [Multi-apps iOS Support](#multi-apps-ios-support)
   - [Setup Android Project](#setup-android-project)
@@ -33,7 +33,8 @@ features for the product-led era.
     - [Switch tenant frontegg](#switch-tenant-frontegg)
     - [Frontegg state](#frontegg-state)
     - [Other frontegg features:](#other-frontegg-features)
-
+- [Knowing Issues](#knowing-issues)
+  - [Android](#android)
 ## Project Requirements
 
 - Minimum iOS deployment version **=> 14**
@@ -54,6 +55,7 @@ from [Frontegg Portal Domain](https://portal.frontegg.com/development/settings/d
 - Toggle Hosted login method for Android:
     - Add `{{ANDROID_PACKAGE_NAME}}://{{FRONTEGG_BASE_URL}}/android/oauth/callback`
     - Add `https://{{FRONTEGG_BASE_URL}}/oauth/account/redirect/android/{{ANDROID_PACKAGE_NAME}}`
+- Add `{{FRONTEGG_BASE_URL}}/oauth/authorize`
 - Replace `IOS_BUNDLE_IDENTIFIER` with your application identifier
 - Replace `FRONTEGG_BASE_URL` with your frontegg base url
 - Replace `ANDROID_PACKAGE_NAME` with your android package name
@@ -82,7 +84,13 @@ dependencies:
 
 To setup your SwiftUI application to communicate with Frontegg, you have to create a new file named `Frontegg.plist`
 under
-your root project directory, this file will store values to be used variables by Frontegg SDK:
+your ios project directory(for example ios/Runner) and include the file to your XCode project, this file will store values to be used variables by Frontegg SDK:
+
+How it can look:
+
+![Frontegg.plist example](instruction/frontegg_plist_example.png)
+
+`Frontegg.plist`:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -161,18 +169,15 @@ add the following code to.
 
 ### `For Swift:`
 
-1. Open `AppDelegate.m` file and import swift headers:
-
-    ```swift
-    import FronteggSwift
-    ```
-2. Add URL handlers to `AppDelegate.swift`:
+1. Add URL handlers to `AppDelegate.swift`:
     ```swift  
     import UIKit
+    import Flutter
+
     import FronteggSwift
     
-    @UIApplicationMain
-    class AppDelegate: UIResponder, UIApplicationDelegate {
+    @main
+    @objc class AppDelegate: FlutterAppDelegate {
     
         /*
          * Called when the app was launched with a url. Feel free to add additional processing here,
@@ -204,7 +209,7 @@ add the following code to.
     }
     ```
 
-### Handle Open App with URL (Objective-C)
+### Handle Open App with URL
 
 ### Config iOS associated domain
 
@@ -617,4 +622,20 @@ Also frontegg give you next features:
   2. `refreshToken` - refreshes `accessToken` and `refreshToken` only if needed, returns `true` if refreshing succeeds;
   3. `getConstants` - returns `Frontegg Flutter` initialize constants;
   4. `directLoginAction` - direct logs in with `type` and `data`.
-   
+
+
+# Knowing Issues
+
+## Android
+
+If you have experienced with `MissingPluginException`:
+```
+The following MissingPluginException was thrown while activating platform stream on channel frontegg_flutter/state_stream:
+MissingPluginException(No implementation found for method listen on channel frontegg_flutter/state_stream)
+```
+
+Add the line to the `proguard-rules.pro` file:
+
+```
+-keepclasseswithmembers class com.frontegg.** {*;}
+```
