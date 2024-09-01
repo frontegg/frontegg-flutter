@@ -35,12 +35,21 @@ class LoginPage extends StatelessWidget {
                   if (state.isLoading) {
                     return const CircularProgressIndicator();
                   } else if (!state.initializing && !state.isAuthenticated) {
-                    return ElevatedButton(
-                      child: const Text("Login"),
-                      onPressed: () {
-                        frontegg.login();
-                      },
-                    );
+                    return Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          ElevatedButton(
+                              child: const Text("Login"),
+                              onPressed: () {
+                                frontegg.login();
+                              }),
+                          ElevatedButton(
+                            child: const Text("Login with Google"),
+                            onPressed: () {
+                              frontegg.directLoginAction("social-login", "google");
+                            },
+                          )
+                        ]);
                   }
                 }
                 return const SizedBox();
