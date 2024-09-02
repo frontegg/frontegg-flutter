@@ -79,8 +79,12 @@ class FronteggMethodCallHandler {
         guard let data = arguments["data"] as? String else {
             return result(FlutterError(code: "MISSING_PARAMS", message: "Missing 'data' argumant", details: nil))
         }
-        
-        fronteggApp.auth.directLoginAction(window: nil, type: type, data: data) { _ in
+
+
+        // Retrieve the 'ephemeral' parameter or use the default value of true
+        let ephemeralSession = arguments["ephemeral"] as? Bool ?? true
+
+        fronteggApp.auth.directLoginAction(window: nil, type: type, data: data, ephemeralSession: ephemeralSession) { _ in
             result(nil)
         }
     }

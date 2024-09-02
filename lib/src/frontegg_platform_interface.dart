@@ -27,7 +27,7 @@ abstract class FronteggPlatform extends PlatformInterface {
     throw UnimplementedError("switchTenant() has not been implemented.");
   }
 
-  Future<void> directLoginAction(String type, String data) {
+  Future<void> directLoginAction(String type, String data, {bool ephemeralSession = true}) {
     throw UnimplementedError("directLoginAction() has not been implemented.");
   }
 

@@ -62,6 +62,7 @@ class MockFronteggPlatform extends _i1.Mock
   _i3.Future<void> directLoginAction(
     String? type,
     String? data,
+      {bool ephemeralSession = true}
   ) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -69,6 +70,7 @@ class MockFronteggPlatform extends _i1.Mock
           [
             type,
             data,
+            ephemeralSession
           ],
         ),
         returnValue: _i3.Future<void>.value(),

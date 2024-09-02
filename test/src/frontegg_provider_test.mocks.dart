@@ -100,6 +100,7 @@ class MockFronteggFlutter extends _i1.Mock implements _i4.FronteggFlutter {
   _i5.Future<void> directLoginAction(
     String? type,
     String? data,
+      {bool ephemeralSession = true}
   ) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -107,6 +108,7 @@ class MockFronteggFlutter extends _i1.Mock implements _i4.FronteggFlutter {
           [
             type,
             data,
+            ephemeralSession
           ],
         ),
         returnValue: _i5.Future<void>.value(),
