@@ -19,6 +19,7 @@ features for the product-led era.
     - [Handle Open App with URL](#handle-open-app-with-url-1)
     - [Config iOS associated domain](#config-ios-associated-domain)
     - [Multi-apps iOS Support](#multi-apps-ios-support)
+    - [Logout User after application was uninstall](#logout-user-after-application-was-uninstall)
   - [Setup Android Project](#setup-android-project)
     - [Set minimum sdk version](#set-minimum-sdk-version)
     - [Configure build config fields](#configure-build-config-fields)
@@ -266,6 +267,23 @@ Add `applicationId` to Frontegg.plist file:
   </dict>
 </plist>
 ```
+
+## Logout User after application was uninstall
+
+If you want that user not to keep logged in after reinstalling an application please add the `keepUserLoggedInAfterReinstall` property to the `Frontegg.plist` file:
+
+```xml
+<plist version="1.0">
+  <dict>
+    <key>keepUserLoggedInAfterReinstall</key>
+    <false/>
+    ...
+  </dict>
+</plist>
+```
+
+By default `keepUserLoggedInAfterReinstall` is `true`.
+
 
 ## Setup Android Project
 
