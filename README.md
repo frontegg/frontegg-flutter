@@ -268,7 +268,7 @@ Add `applicationId` to Frontegg.plist file:
 </plist>
 ```
 
-## Logout User after application was uninstall
+### Logout User after application was uninstall
 
 If you want that user not to keep logged in after reinstalling an application please add the `keepUserLoggedInAfterReinstall` property to the `Frontegg.plist` file:
 
