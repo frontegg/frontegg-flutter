@@ -9,6 +9,7 @@ struct FronteggState {
     var initializing: NSNumber
     var showLoader: NSNumber
     var appLink: NSNumber
+    var refreshingToken: NSNumber
     
     public func toMap() -> Dictionary<String, Any?> {
         return [
@@ -20,6 +21,7 @@ struct FronteggState {
             "initializing": initializing,
             "showLoader": showLoader,
             "appLink": appLink,
+            "refreshingToken": refreshingToken,
         ]
     }
 }
