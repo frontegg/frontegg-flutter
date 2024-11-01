@@ -11,6 +11,7 @@ data class FronteggState(
     val initializing: Boolean,
     val showLoader: Boolean,
     val appLink: Boolean,
+    val refreshingToken: Boolean,
 ) {
     fun toMap(): Map<String, Any?> {
         return mapOf(
@@ -22,6 +23,7 @@ data class FronteggState(
             Pair("initializing", initializing),
             Pair("showLoader", showLoader),
             Pair("appLink", appLink),
+            Pair("refreshingToken", refreshingToken),
         )
     }
 
@@ -34,7 +36,8 @@ data class FronteggState(
             isLoading,
             initializing,
             appLink,
-            showLoader
+            showLoader,
+            refreshingToken
         )
     }
 
@@ -49,6 +52,7 @@ data class FronteggState(
                 isLoading == state.isLoading &&
                 initializing == state.initializing &&
                 appLink == state.appLink &&
-                showLoader == state.showLoader;
+                showLoader == state.showLoader &&
+                refreshingToken == state.refreshingToken;
     }
 }
