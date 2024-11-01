@@ -1,5 +1,6 @@
 package com.frontegg.flutter
 
+import com.frontegg.android.FronteggApp
 import com.frontegg.android.FronteggAuth
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
@@ -32,9 +33,15 @@ class FronteggMethodCallHandler(
             FronteggAuth.instance.login(
                 activity = it,
                 loginHint = loginHint,
+                callback = {
+                    result.success(null)
+                }
             )
         }
-        result.success(null)
+        /// Callback never be called if not Embeded Mode
+        if (!FronteggApp.getInstance().isEmbeddedMode) {
+            result.success(null)
+        }
     }
 
     private fun switchTenant(call: MethodCall, result: MethodChannel.Result) {
@@ -66,8 +73,9 @@ class FronteggMethodCallHandler(
     }
 
     private fun logout(result: MethodChannel.Result) {
-        FronteggAuth.instance.logout()
-        result.success(null)
+        FronteggAuth.instance.logout {
+            result.success(null)
+        }
     }
 
     private fun getConstants(result: MethodChannel.Result) {

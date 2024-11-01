@@ -49,8 +49,9 @@ class FronteggMethodCallHandler {
     }
     
     private func logout(result: @escaping FlutterResult) {
-        fronteggApp.auth.logout()
-        result(nil)
+        fronteggApp.auth.logout() { _ in
+            result(nil)
+        }
     }
     
     private func switchTenant(

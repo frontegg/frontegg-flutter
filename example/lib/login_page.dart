@@ -40,8 +40,9 @@ class LoginPage extends StatelessWidget {
                         children: [
                           ElevatedButton(
                               child: const Text("Login"),
-                              onPressed: () {
-                                frontegg.login();
+                              onPressed: () async {
+                                await frontegg.login();
+                                print("Login Finished");
                               }),
                           ElevatedButton(
                             child: const Text("Login with Google"),
