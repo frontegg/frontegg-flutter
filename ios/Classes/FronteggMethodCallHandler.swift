@@ -12,7 +12,7 @@ class FronteggMethodCallHandler {
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         switch call.method {
         case "login":
-            login(result:result)
+            login(call: call,result:result)
         case "switchTenant":
             switchTenant(call: call, result: result)
         case "directLoginAction":
@@ -28,8 +28,14 @@ class FronteggMethodCallHandler {
         }
     }
     
-    private func login(result: @escaping FlutterResult) {
-        fronteggApp.auth.login()
+    private func login(
+        call: FlutterMethodCall,
+        result: @escaping FlutterResult
+    ) {
+        let arguments = call.arguments as? [String: Any?]
+        
+        var loginHint = arguments?["loginHint"] as? String
+        fronteggApp.auth.login(loginHint: loginHint)
         result(nil)
     }
     

@@ -23,9 +23,12 @@ class FronteggFlutter {
 
   FronteggState get currentState => _currentState;
 
-  Future<void> login() async {
-    await FronteggPlatform.instance.login();
-  }
+  Future<void> login({
+    String? loginHint,
+  }) =>
+      FronteggPlatform.instance.login(
+        loginHint: loginHint,
+      );
 
   Stream<FronteggState> get stateChanged => _stateChangedSubscription.stream.distinct();
 
