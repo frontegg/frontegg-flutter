@@ -15,7 +15,7 @@ class FronteggMethodCallHandler(
 
     override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
         when (call.method) {
-            "login" -> login(result)
+            "login" -> login(call, result)
             "switchTenant" -> switchTenant(call, result)
             "directLoginAction" -> directLoginAction(call, result)
             "refreshToken" -> refreshToken(result)
@@ -25,9 +25,14 @@ class FronteggMethodCallHandler(
         }
     }
 
-    private fun login(result: MethodChannel.Result) {
+    private fun login(call: MethodCall, result: MethodChannel.Result) {
+        val loginHint = call.argument<String>("loginHint")
+
         activityProvider.getActivity()?.let {
-            FronteggAuth.instance.login(it)
+            FronteggAuth.instance.login(
+                activity = it,
+                loginHint = loginHint,
+            )
         }
         result.success(null)
     }

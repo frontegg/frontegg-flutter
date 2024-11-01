@@ -19,7 +19,9 @@ abstract class FronteggPlatform extends PlatformInterface {
     throw UnimplementedError("getter stateChanged has not been implemented.");
   }
 
-  Future<void> login() {
+  Future<void> login({
+    String? loginHint,
+  }) {
     throw UnimplementedError("login() has not been implemented.");
   }
 
