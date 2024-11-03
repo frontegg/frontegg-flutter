@@ -34,20 +34,18 @@ class FronteggMethodCallHandler {
     ) {
         let arguments = call.arguments as? [String: Any?]
         
-        var loginHint = arguments?["loginHint"] as? String
+        let loginHint = arguments?["loginHint"] as? String
         // Never get success. Should be fixed on SDK before implemented here
-//        let completion: FronteggAuth.CompletionHandler = { res in
-//            switch (res) {
-//            case .success(_):
-//                result(nil)
-//            case .failure(let error):
-//                result(FlutterError(code: "LOGIN_ERROR", message: error.failureReason ?? "", details: nil))
-//            }
-//            
-//        }
-//        fronteggApp.auth.login(completion, loginHint: loginHint)
-        fronteggApp.auth.login(loginHint: loginHint)
-        result(nil)
+       let completion: FronteggAuth.CompletionHandler = { res in
+           switch (res) {
+           case .success(_):
+               result(nil)
+           case .failure(let error):
+               result(FlutterError(code: "LOGIN_ERROR", message: error.failureReason ?? "", details: nil))
+           }
+
+       }
+       fronteggApp.auth.login(completion, loginHint: loginHint)
     }
     
     private func constantsToExport() -> [AnyHashable : Any?]! {
