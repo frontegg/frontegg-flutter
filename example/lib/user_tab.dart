@@ -49,7 +49,7 @@ class UserTab extends StatelessWidget {
                     ),
                     onPressed: () async {
                       await frontegg.logout();
-                      print("Logout Finished");
+                      debugPrint("Logout Finished");
                     },
                   ),
               ],
