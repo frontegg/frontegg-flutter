@@ -38,10 +38,6 @@ class FronteggMethodCallHandler(
                 }
             )
         }
-        /// Callback never be called if not Embeded Mode
-        if (!FronteggApp.getInstance().isEmbeddedMode) {
-            result.success(null)
-        }
     }
 
     private fun switchTenant(call: MethodCall, result: MethodChannel.Result) {
