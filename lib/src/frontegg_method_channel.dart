@@ -30,7 +30,7 @@ class FronteggMethodChannel extends FronteggPlatform {
   /// A stream that provides broadcast events from the native platform
   /// related to state changes.
   late final Stream<dynamic> _stateChangedEventChanelStream =
-  stateChangedEventChanel.receiveBroadcastStream();
+      stateChangedEventChanel.receiveBroadcastStream();
 
   /// Stream to listen to state changes from the native platform.
   @override
@@ -38,9 +38,19 @@ class FronteggMethodChannel extends FronteggPlatform {
 
   /// Initiates the login process by invoking the native platform's login method.
   ///
+  /// [loginHint]: Prefill string of the Login field.
+  ///
   /// Returns a [Future] that completes when the login process is finished.
   @override
-  Future<void> login() => methodChannel.invokeMethod(loginMethodName);
+  Future<void> login({
+    String? loginHint,
+  }) =>
+      methodChannel.invokeMethod(
+        loginMethodName,
+        {
+          "loginHint": loginHint,
+        },
+      );
 
   /// Switches the current tenant by invoking the native platform's switchTenant method.
   ///
@@ -49,11 +59,11 @@ class FronteggMethodChannel extends FronteggPlatform {
   /// Returns a [Future] that completes when the tenant switch process is finished.
   @override
   Future<void> switchTenant(String tenantId) => methodChannel.invokeMethod(
-    switchTenantMethodName,
-    {
-      "tenantId": tenantId,
-    },
-  );
+        switchTenantMethodName,
+        {
+          "tenantId": tenantId,
+        },
+      );
 
   /// Performs a direct login action by invoking the native platform's directLoginAction method.
   ///
@@ -78,8 +88,7 @@ class FronteggMethodChannel extends FronteggPlatform {
   /// Returns a [Future] that completes with a boolean value indicating
   /// whether the token refresh was successful.
   @override
-  Future<bool?> refreshToken() =>
-      methodChannel.invokeMethod<bool>(refreshTokenMethodName);
+  Future<bool?> refreshToken() => methodChannel.invokeMethod<bool>(refreshTokenMethodName);
 
   /// Logs the user out by invoking the native platform's logout method.
   ///

@@ -123,6 +123,7 @@ const tFronteggState = FronteggState(
   initializing: false,
   showLoader: false,
   appLink: true,
+  refreshingToken: false,
 );
 
 const tLoadingFronteggState = FronteggState(
@@ -134,6 +135,7 @@ const tLoadingFronteggState = FronteggState(
   initializing: false,
   showLoader: true,
   appLink: false,
+  refreshingToken: true,
 );
 
 final tLoadedFronteggState = FronteggState(
@@ -145,4 +147,5 @@ final tLoadedFronteggState = FronteggState(
   initializing: true,
   showLoader: true,
   appLink: false,
+  refreshingToken: false,
 );

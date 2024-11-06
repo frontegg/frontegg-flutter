@@ -1,5 +1,6 @@
 package com.frontegg.flutter
 
+import com.frontegg.android.FronteggApp
 import com.frontegg.android.FronteggAuth
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
@@ -15,7 +16,7 @@ class FronteggMethodCallHandler(
 
     override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
         when (call.method) {
-            "login" -> login(result)
+            "login" -> login(call, result)
             "switchTenant" -> switchTenant(call, result)
             "directLoginAction" -> directLoginAction(call, result)
             "refreshToken" -> refreshToken(result)
@@ -25,11 +26,18 @@ class FronteggMethodCallHandler(
         }
     }
 
-    private fun login(result: MethodChannel.Result) {
+    private fun login(call: MethodCall, result: MethodChannel.Result) {
+        val loginHint = call.argument<String>("loginHint")
+
         activityProvider.getActivity()?.let {
-            FronteggAuth.instance.login(it)
+            FronteggAuth.instance.login(
+                activity = it,
+                loginHint = loginHint,
+                callback = {
+                    result.success(null)
+                }
+            )
         }
-        result.success(null)
     }
 
     private fun switchTenant(call: MethodCall, result: MethodChannel.Result) {
@@ -61,8 +69,9 @@ class FronteggMethodCallHandler(
     }
 
     private fun logout(result: MethodChannel.Result) {
-        FronteggAuth.instance.logout()
-        result.success(null)
+        FronteggAuth.instance.logout {
+            result.success(null)
+        }
     }
 
     private fun getConstants(result: MethodChannel.Result) {

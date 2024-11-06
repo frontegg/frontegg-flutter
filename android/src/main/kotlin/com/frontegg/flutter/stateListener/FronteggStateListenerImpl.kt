@@ -35,6 +35,7 @@ class FronteggStateListenerImpl(
             FronteggAuth.instance.isLoading.observable,
             FronteggAuth.instance.initializing.observable,
             FronteggAuth.instance.showLoader.observable,
+            FronteggAuth.instance.refreshingToken.observable,
         ).subscribe {
             notifyChanges()
         }
@@ -52,6 +53,7 @@ class FronteggStateListenerImpl(
             initializing = FronteggAuth.instance.initializing.value,
             showLoader = FronteggAuth.instance.showLoader.value,
             appLink = constants.useAssetsLinks,
+            refreshingToken = FronteggAuth.instance.refreshingToken.value,
         )
 
         sendState(state)

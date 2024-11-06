@@ -39,10 +39,10 @@ class MockFronteggPlatform extends _i1.Mock
       ) as _i3.Stream<dynamic>);
 
   @override
-  _i3.Future<void> login() => (super.noSuchMethod(
+  _i3.Future<void> login({String? loginHint}) => (super.noSuchMethod(
         Invocation.method(
           #login,
-          [],
+          [loginHint],
         ),
         returnValue: _i3.Future<void>.value(),
         returnValueForMissingStub: _i3.Future<void>.value(),

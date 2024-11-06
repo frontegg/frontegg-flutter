@@ -12,7 +12,7 @@ class FronteggMethodCallHandler {
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         switch call.method {
         case "login":
-            login(result:result)
+            login(call: call,result:result)
         case "switchTenant":
             switchTenant(call: call, result: result)
         case "directLoginAction":
@@ -28,9 +28,24 @@ class FronteggMethodCallHandler {
         }
     }
     
-    private func login(result: @escaping FlutterResult) {
-        fronteggApp.auth.login()
-        result(nil)
+    private func login(
+        call: FlutterMethodCall,
+        result: @escaping FlutterResult
+    ) {
+        let arguments = call.arguments as? [String: Any?]
+        
+        let loginHint = arguments?["loginHint"] as? String
+        // Never get success. Should be fixed on SDK before implemented here
+       let completion: FronteggAuth.CompletionHandler = { res in
+           switch (res) {
+           case .success(_):
+               result(nil)
+           case .failure(let error):
+               result(FlutterError(code: "LOGIN_ERROR", message: error.failureReason ?? "", details: nil))
+           }
+
+       }
+       fronteggApp.auth.login(completion, loginHint: loginHint)
     }
     
     private func constantsToExport() -> [AnyHashable : Any?]! {
@@ -43,8 +58,9 @@ class FronteggMethodCallHandler {
     }
     
     private func logout(result: @escaping FlutterResult) {
-        fronteggApp.auth.logout()
-        result(nil)
+        fronteggApp.auth.logout() { _ in
+            result(nil)
+        }
     }
     
     private func switchTenant(
