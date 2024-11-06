@@ -58,7 +58,7 @@ android {
         // Utils
         implementation 'androidx.core:core-ktx:1.10.0'
         implementation 'io.reactivex.rxjava3:rxkotlin:3.0.1'
-        implementation 'com.google.code.gson:gson:2.8.9'
+        implementation 'com.google.code.gson:gson:2.10.1'
     }
 
     testOptions {
