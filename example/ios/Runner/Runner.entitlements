@@ -4,8 +4,9 @@
 <dict>
 	<key>com.apple.developer.associated-domains</key>
 	<array>
+		<string>webcredentials:autheu.davidantoon.me</string>
+		<string>applinks:autheu.davidantoon.me</string>
 		<string>webcredentials:davidantoon.me</string>
-		<string>applinks:davidantoon.me</string>
 	</array>
 </dict>
 </plist>
