@@ -44,6 +44,10 @@ void main() {
             return null;
           case FronteggMethodChannel.directLoginActionMethodName:
             return null;
+          case FronteggMethodChannel.registerPasskeysMethodName:
+            return null;
+          case FronteggMethodChannel.loginWithPasskeysMethodName:
+            return null;
         }
         throw Exception("${methodCall.method} Not Implemented");
       },
@@ -77,6 +81,14 @@ void main() {
 
   test('directLoginAction(type, data)', () async {
     await platform.directLoginAction("type", "data");
+  });
+
+  test('registerPasskeys()', () async {
+    await platform.registerPasskeys();
+  });
+
+  test('loginWithPasskeys()', () async {
+    await platform.loginWithPasskeys();
   });
 
   group('StateEventChannel', () {
