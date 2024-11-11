@@ -44,6 +44,18 @@ class UserTab extends StatelessWidget {
                 if (state.isLoading) const CircularProgressIndicator(),
                 if (!state.isLoading)
                   ElevatedButton(
+                    child: const Text("Register Passkeys"),
+                    onPressed: () async {
+                      try {
+                        await frontegg.registerPasskeys();
+                        debugPrint("Passkeys registered");
+                      } on FronteggException catch (e) {
+                        debugPrint("Exception: $e");
+                      }
+                    },
+                  ),
+                if (!state.isLoading)
+                  ElevatedButton(
                     child: const Text(
                       "Logout",
                     ),

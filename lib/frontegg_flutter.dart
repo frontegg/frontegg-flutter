@@ -6,3 +6,4 @@ export 'src/models/frontegg_tenant.dart';
 export 'src/models/frontegg_user.dart';
 export 'src/models/frontegg_user_role.dart';
 export 'src/utils.dart';
+export 'src/frontegg_exception.dart';

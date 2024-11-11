@@ -36,21 +36,34 @@ class LoginPage extends StatelessWidget {
                     return const CircularProgressIndicator();
                   } else if (!state.initializing && !state.isAuthenticated) {
                     return Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          ElevatedButton(
-                              child: const Text("Login"),
-                              onPressed: () async {
-                                await frontegg.login();
-                                debugPrint("Login Finished");
-                              }),
-                          ElevatedButton(
-                            child: const Text("Login with Google"),
-                            onPressed: () {
-                              frontegg.directLoginAction("social-login", "google");
-                            },
-                          )
-                        ]);
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ElevatedButton(
+                          child: const Text("Login"),
+                          onPressed: () async {
+                            await frontegg.login();
+                            debugPrint("Login Finished");
+                          },
+                        ),
+                        ElevatedButton(
+                          child: const Text("Login with Google"),
+                          onPressed: () {
+                            frontegg.directLoginAction("social-login", "google");
+                          },
+                        ),
+                        ElevatedButton(
+                          child: const Text("Login with Passkeys"),
+                          onPressed: () async {
+                            try {
+                              await frontegg.loginWithPasskeys();
+                              debugPrint("Login With Passkeys Finished");
+                            } on FronteggException catch (e) {
+                              debugPrint("Exception: $e");
+                            }
+                          },
+                        ),
+                      ],
+                    );
                   }
                 }
                 return const SizedBox();
