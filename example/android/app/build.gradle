@@ -63,6 +63,16 @@ android {
         buildConfigField "Boolean", 'FRONTEGG_USE_CHROME_CUSTOM_TABS', "true"
     }
 
+    signingConfigs {
+        debug {
+            storeFile file("./../../../.github/test-jks/debug.keystore")
+        }
+
+        release {
+            storeFile file("./../../../.github/test-jks/release.keystore")
+        }
+    }
+
     buildTypes {
         release {
             signingConfig signingConfigs.debug
