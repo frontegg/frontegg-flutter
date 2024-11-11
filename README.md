@@ -629,7 +629,9 @@ Also frontegg give you next features:
   1. `logout` - logs out from `FronteggFlutter`;
   2. `refreshToken` - refreshes `accessToken` and `refreshToken` only if needed, returns `true` if refreshing succeeds;
   3. `getConstants` - returns `Frontegg Flutter` initialize constants;
-  4. `directLoginAction` - direct logs in with `type` and `data`.
+  4. `directLoginAction` - direct logs in with `type` and `data`;
+  5. `registerPasskeys` - registers user passkey;
+  6. `loginWithPasskeys` - login with registered user passkey.
 
 
 # Knowing Issues

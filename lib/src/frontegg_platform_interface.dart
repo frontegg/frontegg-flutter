@@ -25,6 +25,14 @@ abstract class FronteggPlatform extends PlatformInterface {
     throw UnimplementedError("login() has not been implemented.");
   }
 
+  Future<void> registerPasskeys() {
+    throw UnimplementedError("registerPasskeys() has not been implemented.");
+  }
+
+  Future<void> loginWithPasskeys() {
+    throw UnimplementedError("loginWithPasskeys() has not been implemented.");
+  }
+
   Future<void> switchTenant(String tenantId) {
     throw UnimplementedError("switchTenant() has not been implemented.");
   }
