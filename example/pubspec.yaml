@@ -19,6 +19,7 @@ dev_dependencies:
     sdk: flutter
   flutter_lints: ^4.0.0
   patrol: ^3.13.1
+  uuid: ^4.5.1
 
 flutter:
   uses-material-design: true
