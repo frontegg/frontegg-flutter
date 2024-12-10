@@ -29,6 +29,8 @@ android {
     namespace "com.frontegg.demo"
     compileSdk 34
     ndkVersion flutter.ndkVersion
+    ndkVersion = "26.1.10909125"
+
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -61,6 +63,23 @@ android {
         buildConfigField "String", 'FRONTEGG_CLIENT_ID', "\"$fronteggClientId\""
         buildConfigField "Boolean", 'FRONTEGG_USE_ASSETS_LINKS', "true"
         buildConfigField "Boolean", 'FRONTEGG_USE_CHROME_CUSTOM_TABS', "true"
+
+        testInstrumentationRunner "pl.leancode.patrol.PatrolJUnitRunner"
+        testInstrumentationRunnerArguments clearPackageData: "true"
+    }
+
+    testOptions {
+        execution "ANDROIDX_TEST_ORCHESTRATOR"
+    }
+
+    signingConfigs {
+        debug {
+            storeFile file("./../../../.github/test-jks/debug.keystore")
+        }
+
+        release {
+            storeFile file("./../../../.github/test-jks/release.keystore")
+        }
     }
 
     signingConfigs {
@@ -81,6 +100,11 @@ android {
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+
+        debug {
+            minifyEnabled false
+            shrinkResources false
+        }
     }
 
     buildFeatures {
@@ -94,4 +118,6 @@ flutter {
     source '../..'
 }
 
-dependencies {}
+dependencies {
+    androidTestUtil "androidx.test:orchestrator:1.5.1"
+}

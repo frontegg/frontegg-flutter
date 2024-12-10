@@ -18,6 +18,14 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^4.0.0
+  patrol: ^3.13.1
 
 flutter:
   uses-material-design: true
+
+patrol:
+  app_name: Frontegg Demo
+  android:
+    package_name: com.frontegg.demo
+  ios:
+    bundle_id: com.frontegg.demo
