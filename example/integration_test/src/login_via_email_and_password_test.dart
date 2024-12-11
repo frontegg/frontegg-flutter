@@ -3,12 +3,24 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:frontegg_flutter_example/main.dart';
 import 'package:patrol/patrol.dart';
 
-import '../fixtures/const.dart';
-
 void main() {
+  late final String email;
+  late final String wrongEmail;
+
+  late final String password;
+  late final String wrongPassword;
+
+  patrolSetUp(() {
+    email = const String.fromEnvironment('LOGIN_EMAIL');
+    password = const String.fromEnvironment('LOGIN_PASSWORD');
+
+    wrongEmail = const String.fromEnvironment('LOGIN_WRONG_EMAIL');
+    wrongPassword = const String.fromEnvironment('LOGIN_WRONG_PASSWORD');
+  });
+
   patrolTest(
     'Success Login via email and password',
-        ($) async {
+    ($) async {
       await $.pumpWidget(const MyApp());
       await $.pumpAndSettle();
 
@@ -16,20 +28,22 @@ void main() {
       await Future.delayed(const Duration(seconds: 5));
 
       await $.native.enterTextByIndex(
-          loginEmail,
-          index: 0,
-          keyboardBehavior: KeyboardBehavior.alternative,
+        email,
+        index: 0,
+        keyboardBehavior: KeyboardBehavior.alternative,
       );
 
+      await $.native.tap(Selector(text: "Continue"));
+
       await $.native.enterTextByIndex(
-          loginPassword,
-          index: 1,
-          keyboardBehavior: KeyboardBehavior.alternative,
+        password,
+        index: 1,
+        keyboardBehavior: KeyboardBehavior.alternative,
       );
 
       await $.native.tap(Selector(text: "Sign in"));
 
-      await $.waitUntilVisible(find.text("Logout"));
+      await $.waitUntilVisible(find.text("Logout"), timeout: const Duration(seconds: 15),);
 
       await $.tap(find.byKey(const ValueKey("LogoutButton")));
       await $.pumpAndSettle();
@@ -38,7 +52,7 @@ void main() {
 
   patrolTest(
     'Failure Login via wrong email and password',
-        ($) async {
+    ($) async {
       await $.pumpWidget(const MyApp());
       await $.pumpAndSettle();
 
@@ -46,13 +60,15 @@ void main() {
       await Future.delayed(const Duration(seconds: 5));
 
       await $.native.enterTextByIndex(
-        loginWrongEmail,
+        wrongEmail,
         index: 0,
         keyboardBehavior: KeyboardBehavior.alternative,
       );
 
+      await $.native.tap(Selector(text: "Continue"));
+
       await $.native.enterTextByIndex(
-        loginPassword,
+        password,
         index: 1,
         keyboardBehavior: KeyboardBehavior.alternative,
       );
@@ -65,7 +81,7 @@ void main() {
 
   patrolTest(
     'Failure Login via email and wrong password',
-        ($) async {
+    ($) async {
       await $.pumpWidget(const MyApp());
       await $.pumpAndSettle();
 
@@ -73,13 +89,15 @@ void main() {
       await Future.delayed(const Duration(seconds: 5));
 
       await $.native.enterTextByIndex(
-        loginEmail,
+        email,
         index: 0,
         keyboardBehavior: KeyboardBehavior.alternative,
       );
 
+      await $.native.tap(Selector(text: "Continue"));
+
       await $.native.enterTextByIndex(
-        loginWrongPassword,
+        wrongPassword,
         index: 1,
         keyboardBehavior: KeyboardBehavior.alternative,
       );

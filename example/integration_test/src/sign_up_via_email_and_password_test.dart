@@ -4,13 +4,24 @@ import 'package:frontegg_flutter_example/main.dart';
 import 'package:patrol/patrol.dart';
 import 'package:uuid/uuid.dart';
 
-import '../fixtures/const.dart';
-
 void main() {
-  late final String userEmail;
+  late final String email;
+  late final String existsEmail;
+
+  late final String password;
+  late final String name;
+  late final String organization;
 
   patrolSetUp(() {
-    userEmail = signUpEmailTemplate.replaceFirst("{uuid}", const Uuid().v4());
+    password = const String.fromEnvironment('LOGIN_PASSWORD');
+    email = const String.fromEnvironment('SIGN_UP_TEMPLATE').replaceFirst(
+      "{uuid}",
+      const Uuid().v4(),
+    );
+
+    name = const String.fromEnvironment('SIGN_UP_NAME');
+    organization = const String.fromEnvironment('SIGN_UP_ORGANIZATION');
+    existsEmail = const String.fromEnvironment('LOGIN_EMAIL');
   });
 
   patrolTest(
@@ -26,29 +37,33 @@ void main() {
       await $.native.waitUntilVisible(Selector(text: "Account sign-up"));
 
       await $.native.enterTextByIndex(
-        userEmail,
+        email,
         index: 0,
         keyboardBehavior: KeyboardBehavior.alternative,
       );
       await $.native.enterTextByIndex(
-        signUpName,
+        name,
         index: 1,
         keyboardBehavior: KeyboardBehavior.alternative,
       );
       await $.native.enterTextByIndex(
-        loginPassword,
+        password,
         index: 2,
         keyboardBehavior: KeyboardBehavior.alternative,
       );
       await $.native.enterTextByIndex(
-        signUpOrganization,
+        organization,
         index: 3,
         keyboardBehavior: KeyboardBehavior.alternative,
       );
 
+      // Hide Keyboard
+      await $.native.tap(Selector(text: "Account sign-up"));
+      await Future.delayed(const Duration(seconds: 1));
+
       await $.native.tap(Selector(text: "Sign up"));
 
-      await $.waitUntilVisible(find.text("Logout"));
+      await $.waitUntilVisible(find.text("Logout"), timeout: const Duration(seconds: 15),);
 
       await $.tap(find.byKey(const ValueKey("LogoutButton")));
       await $.pumpAndSettle();
@@ -68,25 +83,29 @@ void main() {
       await $.native.waitUntilVisible(Selector(text: "Account sign-up"));
 
       await $.native.enterTextByIndex(
-        loginEmail,
+        existsEmail,
         index: 0,
         keyboardBehavior: KeyboardBehavior.alternative,
       );
       await $.native.enterTextByIndex(
-        signUpName,
+        name,
         index: 1,
         keyboardBehavior: KeyboardBehavior.alternative,
       );
       await $.native.enterTextByIndex(
-        loginPassword,
+        password,
         index: 2,
         keyboardBehavior: KeyboardBehavior.alternative,
       );
       await $.native.enterTextByIndex(
-        signUpOrganization,
+        organization,
         index: 3,
         keyboardBehavior: KeyboardBehavior.alternative,
       );
+
+      // Hide Keyboard
+      await $.native.tap(Selector(text: "Account sign-up"));
+      await Future.delayed(const Duration(seconds: 1));
 
       await $.native.tap(Selector(text: "Sign up"));
 
@@ -96,7 +115,7 @@ void main() {
 
   patrolTest(
     'Failure Sign up with invalid Email field',
-        ($) async {
+    ($) async {
       await $.pumpWidget(const MyApp());
       await $.pumpAndSettle();
 
@@ -112,20 +131,24 @@ void main() {
         keyboardBehavior: KeyboardBehavior.alternative,
       );
       await $.native.enterTextByIndex(
-        signUpName,
+        name,
         index: 1,
         keyboardBehavior: KeyboardBehavior.alternative,
       );
       await $.native.enterTextByIndex(
-        loginPassword,
+        password,
         index: 2,
         keyboardBehavior: KeyboardBehavior.alternative,
       );
       await $.native.enterTextByIndex(
-        signUpOrganization,
+        organization,
         index: 3,
         keyboardBehavior: KeyboardBehavior.alternative,
       );
+
+      // Hide Keyboard
+      await $.native.tap(Selector(text: "Account sign-up"));
+      await Future.delayed(const Duration(seconds: 1));
 
       await $.native.tap(Selector(text: "Sign up"));
 
@@ -135,7 +158,7 @@ void main() {
 
   patrolTest(
     'Failure Sign up with empty Name field',
-        ($) async {
+    ($) async {
       await $.pumpWidget(const MyApp());
       await $.pumpAndSettle();
 
@@ -146,7 +169,7 @@ void main() {
       await $.native.waitUntilVisible(Selector(text: "Account sign-up"));
 
       await $.native.enterTextByIndex(
-        loginEmail,
+        email,
         index: 0,
         keyboardBehavior: KeyboardBehavior.alternative,
       );
@@ -156,15 +179,19 @@ void main() {
         keyboardBehavior: KeyboardBehavior.alternative,
       );
       await $.native.enterTextByIndex(
-        loginPassword,
+        password,
         index: 2,
         keyboardBehavior: KeyboardBehavior.alternative,
       );
       await $.native.enterTextByIndex(
-        signUpOrganization,
+        organization,
         index: 3,
         keyboardBehavior: KeyboardBehavior.alternative,
       );
+
+      // Hide Keyboard
+      await $.native.tap(Selector(text: "Account sign-up"));
+      await Future.delayed(const Duration(seconds: 1));
 
       await $.native.tap(Selector(text: "Sign up"));
 
@@ -174,7 +201,7 @@ void main() {
 
   patrolTest(
     'Failure Sign up with empty Password field',
-        ($) async {
+    ($) async {
       await $.pumpWidget(const MyApp());
       await $.pumpAndSettle();
 
@@ -185,12 +212,12 @@ void main() {
       await $.native.waitUntilVisible(Selector(text: "Account sign-up"));
 
       await $.native.enterTextByIndex(
-        loginEmail,
+        email,
         index: 0,
         keyboardBehavior: KeyboardBehavior.alternative,
       );
       await $.native.enterTextByIndex(
-        signUpName,
+        name,
         index: 1,
         keyboardBehavior: KeyboardBehavior.alternative,
       );
@@ -200,10 +227,14 @@ void main() {
         keyboardBehavior: KeyboardBehavior.alternative,
       );
       await $.native.enterTextByIndex(
-        signUpOrganization,
+        organization,
         index: 3,
         keyboardBehavior: KeyboardBehavior.alternative,
       );
+
+      // Hide Keyboard
+      await $.native.tap(Selector(text: "Account sign-up"));
+      await Future.delayed(const Duration(seconds: 1));
 
       await $.native.tap(Selector(text: "Sign up"));
 
@@ -224,17 +255,17 @@ void main() {
       await $.native.waitUntilVisible(Selector(text: "Account sign-up"));
 
       await $.native.enterTextByIndex(
-        loginEmail,
+        email,
         index: 0,
         keyboardBehavior: KeyboardBehavior.alternative,
       );
       await $.native.enterTextByIndex(
-        signUpName,
+        name,
         index: 1,
         keyboardBehavior: KeyboardBehavior.alternative,
       );
       await $.native.enterTextByIndex(
-        loginPassword,
+        password,
         index: 2,
         keyboardBehavior: KeyboardBehavior.alternative,
       );
@@ -243,6 +274,10 @@ void main() {
         index: 3,
         keyboardBehavior: KeyboardBehavior.alternative,
       );
+
+      // Hide Keyboard
+      await $.native.tap(Selector(text: "Account sign-up"));
+      await Future.delayed(const Duration(seconds: 1));
 
       await $.native.tap(Selector(text: "Sign up"));
 

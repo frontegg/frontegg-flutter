@@ -3,9 +3,15 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:frontegg_flutter_example/main.dart';
 import 'package:patrol/patrol.dart';
 
-import '../fixtures/const.dart';
-
 void main() {
+  late final String email;
+  late final String password;
+
+  patrolSetUp(() {
+    email = const String.fromEnvironment('LOGIN_EMAIL');
+    password = const String.fromEnvironment('LOGIN_PASSWORD');
+  });
+
   patrolTest(
     'Success Logout',
     ($) async {
@@ -16,20 +22,25 @@ void main() {
       await Future.delayed(const Duration(seconds: 5));
 
       await $.native.enterTextByIndex(
-        loginEmail,
+        email,
         index: 0,
         keyboardBehavior: KeyboardBehavior.alternative,
       );
 
+      await $.native.tap(Selector(text: "Continue"));
+
       await $.native.enterTextByIndex(
-        loginPassword,
+        password,
         index: 1,
         keyboardBehavior: KeyboardBehavior.alternative,
       );
 
       await $.native.tap(Selector(text: "Sign in"));
 
-      await $.waitUntilVisible(find.text("Logout"));
+      await $.waitUntilVisible(
+        find.text("Logout"),
+        timeout: const Duration(seconds: 15),
+      );
 
       await $.tap(find.byKey(const ValueKey("LogoutButton")));
       await $.pumpAndSettle();
