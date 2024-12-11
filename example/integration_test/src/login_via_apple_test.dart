@@ -46,7 +46,8 @@ void main() {
           ),
         ),
         text: email,
-        keyboardBehavior: KeyboardBehavior.alternative,
+        keyboardBehavior:
+            Platform.isIOS ? KeyboardBehavior.showAndDismiss : KeyboardBehavior.alternative,
       );
       if (Platform.isAndroid) {
         await $.native.tap(Selector(resourceId: "sign-in"));
@@ -63,7 +64,8 @@ void main() {
           ),
         ),
         text: password,
-        keyboardBehavior: KeyboardBehavior.alternative,
+        keyboardBehavior:
+            Platform.isIOS ? KeyboardBehavior.showAndDismiss : KeyboardBehavior.alternative,
       );
       if (Platform.isAndroid) {
         await $.native.tap(Selector(resourceId: "sign-in"));
@@ -71,21 +73,24 @@ void main() {
 
       await $.native.waitUntilVisible(Selector(textStartsWith: "Do you want to continue using"));
       await Future.delayed(const Duration(seconds: 2));
-        await $.native2.tap(
-          NativeSelector(
-            ios: IOSSelector(
-              label: "Continue",
-              instance: 1,
-            ),
-            android: AndroidSelector(
-              textContains: "Continue",
-              isClickable: true,
-            ),
+      await $.native2.tap(
+        NativeSelector(
+          ios: IOSSelector(
+            label: "Continue",
+            instance: 1,
           ),
-        );
+          android: AndroidSelector(
+            textContains: "Continue",
+            isClickable: true,
+          ),
+        ),
+      );
 
       await $.pumpAndSettle();
-      await $.waitUntilVisible(find.text("Logout"), timeout: const Duration(seconds: 15),);
+      await $.waitUntilVisible(
+        find.text("Logout"),
+        timeout: const Duration(seconds: 15),
+      );
 
       await $.tap(find.byKey(const ValueKey("LogoutButton")));
       await $.pumpAndSettle();
