@@ -43,10 +43,12 @@ class _UserPageState extends State<UserPage> {
         },
         items: const [
           BottomNavigationBarItem(
+            key: ValueKey("ProfileTab"),
             icon: Icon(Icons.person),
             label: "Profile",
           ),
           BottomNavigationBarItem(
+            key: ValueKey("TenantTab"),
             icon: Icon(Icons.notifications),
             label: "Tenant",
           ),
