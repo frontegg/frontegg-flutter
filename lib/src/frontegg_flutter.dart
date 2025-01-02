@@ -1,5 +1,7 @@
 import "dart:async";
 
+import "package:flutter/services.dart";
+import "package:frontegg_flutter/src/frontegg_exception.dart";
 import "package:frontegg_flutter/src/frontegg_platform_interface.dart";
 import "package:frontegg_flutter/src/models/frontegg_constants.dart";
 import "package:frontegg_flutter/src/models/frontegg_state.dart";
@@ -29,6 +31,22 @@ class FronteggFlutter {
       FronteggPlatform.instance.login(
         loginHint: loginHint,
       );
+
+  Future<void> registerPasskeys() async {
+    try {
+      await FronteggPlatform.instance.registerPasskeys();
+    } on PlatformException catch (e) {
+      throw FronteggException(message: e.message);
+    }
+  }
+
+  Future<void> loginWithPasskeys() async {
+    try {
+      await FronteggPlatform.instance.loginWithPasskeys();
+    } on PlatformException catch (e) {
+      throw FronteggException(message: e.message);
+    }
+  }
 
   Stream<FronteggState> get stateChanged => _stateChangedSubscription.stream.distinct();
 

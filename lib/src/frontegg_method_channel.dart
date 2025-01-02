@@ -13,6 +13,8 @@ class FronteggMethodChannel extends FronteggPlatform {
 
   // Method names for platform-specific method calls
   static const String loginMethodName = "login";
+  static const String registerPasskeysMethodName = "registerPasskeys";
+  static const String loginWithPasskeysMethodName = "loginWithPasskeys";
   static const String logoutMethodName = "logout";
   static const String switchTenantMethodName = "switchTenant";
   static const String directLoginActionMethodName = "directLoginAction";
@@ -51,6 +53,22 @@ class FronteggMethodChannel extends FronteggPlatform {
           "loginHint": loginHint,
         },
       );
+
+  /// Registers passkeys.
+  ///
+  /// Returns a [Future] that completes when the passkeys are registered.
+  ///
+  /// Throws [FronteggException] if registration is failed.
+  @override
+  Future<void> registerPasskeys() => methodChannel.invokeMethod(registerPasskeysMethodName);
+
+  /// Login with passkeys.
+  ///
+  /// Returns a [Future] that completes when the login process is finished.
+  ///
+  /// Throws [FronteggException] if login is failed.
+  @override
+  Future<void> loginWithPasskeys() => methodChannel.invokeMethod(loginWithPasskeysMethodName);
 
   /// Switches the current tenant by invoking the native platform's switchTenant method.
   ///

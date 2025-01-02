@@ -4,6 +4,7 @@ import Flutter
 
 class FronteggMethodCallHandler {
     private var fronteggApp: FronteggApp
+    private let ERROR_CODE: String = "frontegg.error"
     
     init(fronteggApp: FronteggApp) {
         self.fronteggApp = fronteggApp
@@ -13,6 +14,10 @@ class FronteggMethodCallHandler {
         switch call.method {
         case "login":
             login(call: call,result:result)
+        case "loginWithPasskeys":
+            loginWithPasskeys(result: result)
+        case "registerPasskeys":
+            registerPasskeys(result: result)
         case "switchTenant":
             switchTenant(call: call, result: result)
         case "directLoginAction":
@@ -46,6 +51,37 @@ class FronteggMethodCallHandler {
 
        }
        fronteggApp.auth.login(completion, loginHint: loginHint)
+    }
+    
+    private func loginWithPasskeys(result: @escaping FlutterResult) -> Void {
+        let completion: FronteggAuth.CompletionHandler = { res in
+            switch(res) {
+            case .success(_):
+                result(nil)
+            case .failure(let error):
+                result(FlutterError(
+                    code: self.ERROR_CODE,
+                    message: error.localizedDescription,
+                    details: nil
+                ))
+            }
+        }
+        fronteggApp.auth.loginWithPasskeys(completion)
+    }
+    
+    private func registerPasskeys(result: @escaping FlutterResult) -> Void {
+        let completion: FronteggAuth.ConditionCompletionHandler = { error in
+            if let fronteggError = error {
+                result(FlutterError(
+                    code: self.ERROR_CODE,
+                    message: fronteggError.localizedDescription,
+                    details: nil
+                ))
+            } else {
+                result(nil)
+            }
+        }
+        fronteggApp.auth.registerPasskeys(completion)
     }
     
     private func constantsToExport() -> [AnyHashable : Any?]! {

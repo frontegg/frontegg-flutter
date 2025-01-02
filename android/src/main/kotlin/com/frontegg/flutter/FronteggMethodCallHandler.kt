@@ -1,7 +1,8 @@
 package com.frontegg.flutter
 
-import com.frontegg.android.FronteggApp
+import android.util.Log
 import com.frontegg.android.FronteggAuth
+import com.frontegg.android.exceptions.FronteggException
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
@@ -14,6 +15,10 @@ class FronteggMethodCallHandler(
     private val constants: FronteggConstants,
 ) : MethodCallHandler {
 
+    companion object {
+        private const val ERROR_CODE = "frontegg.error"
+    }
+
     override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
         when (call.method) {
             "login" -> login(call, result)
@@ -22,7 +27,41 @@ class FronteggMethodCallHandler(
             "refreshToken" -> refreshToken(result)
             "logout" -> logout(result)
             "getConstants" -> getConstants(result)
+            "registerPasskeys" -> registerPasskeys(result)
+            "loginWithPasskeys" -> loginWithPasskeys(result)
             else -> result.notImplemented()
+        }
+    }
+
+    private fun registerPasskeys(result: MethodChannel.Result) {
+        activityProvider.getActivity()?.let {
+            FronteggAuth.instance.registerPasskeys(it) {
+                if (it != null) {
+                    result.error(
+                        ERROR_CODE,
+                        if (it.message != null) it.message!! else "",
+                        null,
+                    )
+                } else {
+                    result.success(null)
+                }
+            }
+        }
+    }
+
+    private fun loginWithPasskeys(result: MethodChannel.Result) {
+        activityProvider.getActivity()?.let {
+            FronteggAuth.instance.loginWithPasskeys(it) {
+                if (it != null) {
+                    result.error(
+                        ERROR_CODE,
+                        if (it.message != null) it.message!! else "",
+                        null,
+                    )
+                } else {
+                    result.success(null)
+                }
+            }
         }
     }
 
