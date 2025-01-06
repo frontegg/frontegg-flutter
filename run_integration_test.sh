@@ -42,7 +42,7 @@ fi
 # Android run
 if [ -n "$android_device" ]; then
   echo "Start iOS testing on '$android_device' device..."
-  patrol test -d "$android_device" -t "$test_path" sign_up_via_email_and_password_test.dart
+  patrol test -d "$android_device" -t "$test_path" --uninstall
 fi
 
 
