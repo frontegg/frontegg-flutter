@@ -41,7 +41,7 @@ fi
 
 # Android run
 if [ -n "$android_device" ]; then
-  echo "Start iOS testing on '$android_device' device..."
+  echo "Start Android testing on '$android_device' device..."
   patrol test -d "$android_device" -t "$test_path" --uninstall
 fi
 
