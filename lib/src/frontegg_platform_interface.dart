@@ -52,4 +52,11 @@ abstract class FronteggPlatform extends PlatformInterface {
   Future<Map<Object?, Object?>?> getConstants() {
     throw UnimplementedError("getConstants() has not been implemented.");
   }
+
+  Future<Map<String, Object>?> requestAuthorize({
+    required String refreshToken,
+    String? deviceTokenCookie,
+  }) {
+    throw UnimplementedError("requestAuthorize() has not been implemented.");
+  }
 }

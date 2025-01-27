@@ -48,6 +48,8 @@ void main() {
             return null;
           case FronteggMethodChannel.loginWithPasskeysMethodName:
             return null;
+          case FronteggMethodChannel.requestAuthorizeMethodName:
+            return null;
         }
         throw Exception("${methodCall.method} Not Implemented");
       },
@@ -89,6 +91,10 @@ void main() {
 
   test('loginWithPasskeys()', () async {
     await platform.loginWithPasskeys();
+  });
+
+  test('requestAuthorize(refreshToken, deviceTokenCookie)', () async {
+    await platform.requestAuthorize(refreshToken: "Test Token", deviceTokenCookie: "Test Device Token Cookie");
   });
 
   group('StateEventChannel', () {
