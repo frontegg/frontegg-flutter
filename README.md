@@ -632,6 +632,7 @@ Also frontegg give you next features:
   4. `directLoginAction` - direct logs in with `type` and `data`;
   5. `registerPasskeys` - registers user passkey;
   6. `loginWithPasskeys` - login with registered user passkey.
+  7. `requestAuthorize` - requests authorization using a refresh token and an optional device token cookie.
 
 
 # Knowing Issues
