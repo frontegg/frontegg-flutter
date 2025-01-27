@@ -28,6 +28,8 @@ class FronteggMethodCallHandler {
             logout(result: result)
         case "getConstants":
             result(constantsToExport())
+        case "requestAuthorize":
+            requestAuthorize(call: call, result: result)
         default:
             result(FlutterMethodNotImplemented)
         }
@@ -51,6 +53,36 @@ class FronteggMethodCallHandler {
 
        }
        fronteggApp.auth.login(completion, loginHint: loginHint)
+    }
+    
+    private func requestAuthorize(
+        call: FlutterMethodCall,
+        result: @escaping FlutterResult
+    ) {
+        guard let arguments = call.arguments as? [String: Any?] else {
+            return result(FlutterError(code: "MISSING_PARAMS", message: "Missing argumants", details: nil))
+        }
+        
+        guard let refreshToken = arguments["refreshToken"] as? String else {
+            return result(FlutterError(code: "MISSING_PARAMS", message: "Missing 'refreshToken' argumant", details: nil))
+        }
+        
+        let deviceTokenCookie = arguments["deviceTokenCookie"] as? String
+        
+        let completion: FronteggAuth.CompletionHandler = { res in
+            switch (res) {
+            case .success(let user):
+                var jsonUser: [String: Any]? = nil
+                if let userData = try? JSONEncoder().encode(user) {
+                    jsonUser = try? JSONSerialization.jsonObject(with: userData, options: .allowFragments) as? [String: Any]
+                }
+                result(jsonUser)
+            case .failure(let error):
+                result(FlutterError(code: "REQUEST_AUTHORIZE_ERROR", message: error.failureReason ?? "", details: nil))
+            }
+        }
+        
+        fronteggApp.auth.requestAuthorize(refreshToken: refreshToken, deviceTokenCookie: deviceTokenCookie, completion)
     }
     
     private func loginWithPasskeys(result: @escaping FlutterResult) -> Void {

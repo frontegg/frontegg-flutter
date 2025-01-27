@@ -1,10 +1,8 @@
 import "dart:async";
 
 import "package:flutter/services.dart";
-import "package:frontegg_flutter/src/frontegg_exception.dart";
+import "package:frontegg_flutter/frontegg_flutter.dart";
 import "package:frontegg_flutter/src/frontegg_platform_interface.dart";
-import "package:frontegg_flutter/src/models/frontegg_constants.dart";
-import "package:frontegg_flutter/src/models/frontegg_state.dart";
 import "package:rxdart/rxdart.dart";
 
 class FronteggFlutter {
@@ -65,5 +63,19 @@ class FronteggFlutter {
   Future<FronteggConstants> getConstants() async {
     final constants = await FronteggPlatform.instance.getConstants();
     return FronteggConstants.fromMap(constants!);
+  }
+
+  Future<FronteggUser?> requestAuthorize({
+    required String refreshToken,
+    String? deviceTokenCookie,
+  }) async {
+    final userMap = await FronteggPlatform.instance.requestAuthorize(
+      refreshToken: refreshToken,
+      deviceTokenCookie: deviceTokenCookie,
+    );
+    if (userMap != null) {
+      return FronteggUser.fromMap(userMap);
+    }
+    return null;
   }
 }
