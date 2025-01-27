@@ -59,19 +59,11 @@ class MockFronteggPlatform extends _i1.Mock
       ) as _i3.Future<void>);
 
   @override
-  _i3.Future<void> directLoginAction(
-    String? type,
-    String? data,
-      {bool ephemeralSession = true}
-  ) =>
+  _i3.Future<void> directLoginAction(String? type, String? data, {bool ephemeralSession = true}) =>
       (super.noSuchMethod(
         Invocation.method(
           #directLoginAction,
-          [
-            type,
-            data,
-            ephemeralSession
-          ],
+          [type, data, ephemeralSession],
         ),
         returnValue: _i3.Future<void>.value(),
         returnValueForMissingStub: _i3.Future<void>.value(),
@@ -104,4 +96,22 @@ class MockFronteggPlatform extends _i1.Mock
         ),
         returnValue: _i3.Future<Map<Object?, Object?>?>.value(),
       ) as _i3.Future<Map<Object?, Object?>?>);
+
+  @override
+  _i3.Future<Map<String, Object>?> requestAuthorize({
+    required String refreshToken,
+    String? deviceTokenCookie,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #requestAuthorize,
+          [],
+          {
+            #refreshToken: refreshToken,
+            #deviceTokenCookie: deviceTokenCookie,
+          },
+        ),
+        returnValue: _i3.Future<Map<String, Object>?>.value(),
+        returnValueForMissingStub: _i3.Future<Map<String, Object>?>.value(),
+      ) as _i3.Future<Map<String, Object>?>);
 }

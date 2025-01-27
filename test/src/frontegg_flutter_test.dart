@@ -198,4 +198,29 @@ void main() {
       tStreamController.add(tEmptyFronteggState.toMap());
     });
   });
+
+  group('requestAuthorize(refreshToken, deviceTokenCookie)', () {
+    test('should call FronteggPlatform.instance.requestAuthorize(refreshToken, deviceTokenCookie)',
+        () async {
+      // Arrange
+      when(
+        fronteggPlatform.requestAuthorize(
+          refreshToken: "Test Refresh Token",
+          deviceTokenCookie: "Test Device Token Cookie",
+        ),
+      ).thenAnswer((_) => Future.value());
+      // Act
+      await frontegg.requestAuthorize(
+        refreshToken: "Test Refresh Token",
+        deviceTokenCookie: "Test Device Token Cookie",
+      );
+      // Assert
+      verify(
+        fronteggPlatform.requestAuthorize(
+          refreshToken: "Test Refresh Token",
+          deviceTokenCookie: "Test Device Token Cookie",
+        ),
+      ).called(1);
+    });
+  });
 }
