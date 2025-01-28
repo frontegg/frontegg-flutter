@@ -31,6 +31,6 @@ jobs:
           if [ "$DESCRIPTION" != "null" ]; then
             echo "Pull Request Description: $DESCRIPTION"
           else
-            echo "No description provided in the pull request. The `release/next` branch must provide a description for the correct generation of the `CHANGELOG.md` file."
+            echo "No description provided in the pull request. The 'release/next' branch must provide a description for the correct generation of the 'CHANGELOG.md' file."
             exit 1
           fi
