@@ -1,4 +1,4 @@
-name: "onPush( Build & Test )"
+name: "onPullRequestUpdated"
 
 on:
   pull_request:
