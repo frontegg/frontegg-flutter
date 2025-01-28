@@ -29,7 +29,26 @@ class FronteggMethodCallHandler(
             "getConstants" -> getConstants(result)
             "registerPasskeys" -> registerPasskeys(result)
             "loginWithPasskeys" -> loginWithPasskeys(result)
+            "requestAuthorize" -> requestAuthorize(call, result)
             else -> result.notImplemented()
+        }
+    }
+
+    private fun requestAuthorize(call: MethodCall, result: MethodChannel.Result) {
+        val refreshToken = call.argument<String>("refreshToken") 
+            ?: throw ArgumentNotFoundException("refreshToken")
+        val deviceTokenCookie = call.argument<String>("deviceTokenCookie")
+    
+        FronteggAuth.instance.requestAuthorize(refreshToken, deviceTokenCookie) { authResult ->
+            authResult.onSuccess { user ->
+                result.success(user.toReadableMap())
+            }.onFailure { error ->
+                result.error(
+                    "REQUEST_AUTHORIZE_ERROR",
+                    error.message ?: "Unknown error occurred during authorization",
+                    null
+                )
+            }
         }
     }
 
