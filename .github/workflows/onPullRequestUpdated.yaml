@@ -5,10 +5,7 @@ on:
     types:
       - opened
       - edited
-    branches-ignore:
-      - master
-  push:
-    branches-ignore:
+    branches:
       - master
 jobs:
   build:
