@@ -1,3 +1,6 @@
+## v1.0.7
+- Added `requestAuthorize` method.
+
 ## v1.0.6
 Automate publish versions
 
