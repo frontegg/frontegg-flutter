@@ -20,6 +20,7 @@ class FronteggMethodChannel extends FronteggPlatform {
   static const String directLoginActionMethodName = "directLoginAction";
   static const String refreshTokenMethodName = "refreshToken";
   static const String getConstantsMethodName = "getConstants";
+  static const String requestAuthorizeMethodName = "requestAuthorize";
 
   /// MethodChannel used for invoking platform-specific methods.
   @visibleForTesting
@@ -121,4 +122,20 @@ class FronteggMethodChannel extends FronteggPlatform {
   @override
   Future<Map<Object?, Object?>?> getConstants() =>
       methodChannel.invokeMethod<Map<Object?, Object?>>(getConstantsMethodName);
+
+  /// Requests authorization process with [refreshToken] and [deviceTokenCookie].
+  ///
+  /// Returns a [Future] that completes when the logout process is finished.
+  @override
+  Future<Map<String, Object>?> requestAuthorize({
+    required String refreshToken,
+    String? deviceTokenCookie,
+  }) =>
+      methodChannel.invokeMapMethod<String, Object>(
+        requestAuthorizeMethodName,
+        {
+          "refreshToken": refreshToken,
+          "deviceTokenCookie": deviceTokenCookie,
+        },
+      );
 }

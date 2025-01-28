@@ -53,6 +53,16 @@ class LoginPage extends StatelessWidget {
                           },
                         ),
                         ElevatedButton(
+                          child: const Text("Request Authorized With Tokens"),
+                          onPressed: () async {
+                            final user = await frontegg.requestAuthorize(
+                              refreshToken: "afb750a7-68a1-444b-8c5e-d9276f994fc4",
+                              deviceTokenCookie: "34b61432-86bb-4e0f-97c4-f1c31427c385",
+                            );
+                            debugPrint("Request Authorized With Tokens Finished, Result = $user");
+                          },
+                        ),
+                        ElevatedButton(
                           child: const Text("Login with Passkeys"),
                           onPressed: () async {
                             try {
