@@ -54,11 +54,6 @@ jobs:
           VERSION=$(cat version.txt)
           sed -i '' "s/^  s.version.*$/  s.version      = '${VERSION}'/" ios/frontegg_flutter.podspec
 
-      - name: Commit changes
-        shell: bash -ex {0}
-        run: |
-          git add . && git commit -m "chore(release): publish ${{ steps.incremented-version.outputs.result }}"
-
       - name: Pull Request Description
         id: get_description
         env:
@@ -104,7 +99,31 @@ jobs:
             echo 'DESCRIPTION<<EOF'
             echo "$DESCRIPTION"
             echo 'EOF'
-          } >> $GITHUB_OUTPUT    
+          } >> $GITHUB_OUTPUT
+
+      - name: Update CHANGELOG file
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          if [[ -f "${{ env.CHANGELOG_FILE }}" ]]; then
+            cp "${{ env.CHANGELOG_FILE }}" "${{ env.CHANGELOG_OLD_FILE }}"
+          else
+            echo "WARNING: CHANGELOG_FILE does not exist!"
+          fi
+          
+          
+          # Append PR description to CHANGELOG_FILE safely
+          if [[ -f "${{ env.CHANGELOG_FILE }}" ]]; then
+            echo -e "${{ steps.get_description.outputs.DESCRIPTION }}\n\n$(cat ${{ env.CHANGELOG_FILE }})" > ${{ env.CHANGELOG_FILE }}
+          else
+            echo "${{ steps.get_description.outputs.DESCRIPTION }}" > ${{ env.CHANGELOG_FILE }}
+          fi
+
+      - name: Commit changes
+        shell: bash -ex {0}
+        run: |
+          git add . && git commit -m "chore(release): publish ${{ steps.incremented-version.outputs.result }}"   
 
       - name: Create Release Pull Request
         id: cpr
