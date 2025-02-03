@@ -11,6 +11,9 @@ jobs:
     if: "!contains(join(github.event.pull_request.labels.*.name, ','), 'Release') && github.event.pull_request.merged == true"
     name: 'Create Release Pull Request'
     runs-on: 'macos-latest-large'
+    env:
+      CHANGELOG_FILE: ./CHANGELOG.md
+      CHANGELOG_OLD_FILE: ./CHANGELOG.old.md
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
