@@ -168,7 +168,16 @@ class FronteggMethodCallHandler {
         // Retrieve the 'ephemeral' parameter or use the default value of true
         let ephemeralSession = arguments["ephemeral"] as? Bool ?? true
 
-        fronteggApp.auth.directLoginAction(window: nil, type: type, data: data, ephemeralSession: ephemeralSession) { _ in
+        let additionalQueryParams = arguments["additionalQueryParams"] as? [String: String] ?? [:]
+
+
+        fronteggApp.auth.directLoginAction(
+                window: nil, 
+                type: type, 
+                data: data, 
+                ephemeralSession: ephemeralSession, 
+                additionalQueryParams: additionalQueryParams
+            ) { _ in
             result(nil)
         }
     }

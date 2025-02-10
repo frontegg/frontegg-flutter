@@ -59,7 +59,12 @@ class MockFronteggPlatform extends _i1.Mock
       ) as _i3.Future<void>);
 
   @override
-  _i3.Future<void> directLoginAction(String? type, String? data, {bool ephemeralSession = true}) =>
+  _i3.Future<void> directLoginAction(
+    String? type, 
+    String? data, {
+      bool ephemeralSession = true, 
+      Map<String, String>? additionalQueryParams
+    }) =>
       (super.noSuchMethod(
         Invocation.method(
           #directLoginAction,

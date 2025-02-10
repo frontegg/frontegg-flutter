@@ -92,13 +92,14 @@ class FronteggMethodChannel extends FronteggPlatform {
   ///
   /// Returns a [Future] that completes when the login action is finished.
   @override
-  Future<void> directLoginAction(String type, String data, {bool ephemeralSession = true}) =>
+  Future<void> directLoginAction(String type, String data, {bool ephemeralSession = true, Map<String, String>? additionalQueryParams}) =>
       methodChannel.invokeMethod(
         directLoginActionMethodName,
         {
           "type": type,
           "data": data,
           "ephemeralSession": ephemeralSession,
+          "additionalQueryParams": additionalQueryParams,
         },
       );
 
