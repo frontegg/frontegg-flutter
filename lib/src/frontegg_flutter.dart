@@ -50,8 +50,18 @@ class FronteggFlutter {
 
   Future<void> switchTenant(String tenantId) => FronteggPlatform.instance.switchTenant(tenantId);
 
-  Future<void> directLoginAction(String type, String data, {bool ephemeralSession = true}) =>
-      FronteggPlatform.instance.directLoginAction(type, data, ephemeralSession: ephemeralSession);
+  Future<void> directLoginAction(
+    String type, 
+    String data, {
+      bool ephemeralSession = true, 
+      Map<String, String>? additionalQueryParams,
+    }) =>
+      FronteggPlatform.instance.directLoginAction(
+        type, 
+        data, 
+        ephemeralSession: ephemeralSession, 
+        additionalQueryParams: additionalQueryParams
+      );
 
   Future<bool> refreshToken() async {
     final success = await FronteggPlatform.instance.refreshToken();
