@@ -1,8 +1,3 @@
-# v1.0.8
-- CHANGELOG.md generation automation.
-- added  to 
-- upgraded Frontegg IOS version to 
-
 ## v1.0.7
 - Added `requestAuthorize` method.
 
