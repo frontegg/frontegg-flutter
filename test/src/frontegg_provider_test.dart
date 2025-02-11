@@ -30,7 +30,8 @@ void main() {
       final log = <FronteggProvider>[];
 
       final builder = Builder(builder: (BuildContext context) {
-        final provider = context.dependOnInheritedWidgetOfExactType<FronteggProvider>();
+        final provider =
+            context.dependOnInheritedWidgetOfExactType<FronteggProvider>();
         if (provider != null) {
           log.add(provider);
         }

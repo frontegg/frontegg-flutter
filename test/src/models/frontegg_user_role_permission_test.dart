@@ -10,7 +10,8 @@ void main() {
       "should return a valid model",
       () async {
         // Act
-        final result = FronteggUserRolePermission.fromMap(tFronteggUserRolePermissionMap);
+        final result =
+            FronteggUserRolePermission.fromMap(tFronteggUserRolePermissionMap);
         // Assert
         expect(result, equals(tFronteggUserRolePermission));
       },
