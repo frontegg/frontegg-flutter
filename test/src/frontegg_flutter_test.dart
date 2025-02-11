@@ -84,6 +84,102 @@ void main() {
     });
   });
 
+  group('directLogin()', () {
+    test('should call FronteggPlatform.instance.directLogin()', () async {
+      // Arrange
+      when(fronteggPlatform.directLogin(url: "TestUrl")).thenAnswer((_) => Future.value());
+      // Act
+      await frontegg.directLogin(url: "TestUrl");
+      // Assert
+      verify(fronteggPlatform.directLogin(url: "TestUrl")).called(1);
+    });
+  });
+
+  group('socialLogin()', () {
+    test('should call FronteggPlatform.instance.socialLogin()', () async {
+      // Arrange
+      when(fronteggPlatform.socialLogin(provider: "google")).thenAnswer((_) => Future.value());
+      // Act
+      await frontegg.socialLogin(provider: FronteggSocialProvider.google);
+      // Assert
+      verify(fronteggPlatform.socialLogin(provider: "google")).called(1);
+    });
+
+    test('should call FronteggPlatform.instance.socialLogin(provider: "google")', () async {
+      // Arrange
+      when(fronteggPlatform.socialLogin(provider: "google")).thenAnswer((_) => Future.value());
+      // Act
+      await frontegg.socialLogin(provider: FronteggSocialProvider.google);
+      // Assert
+      verify(fronteggPlatform.socialLogin(provider: "google")).called(1);
+    });
+
+    test('should call FronteggPlatform.instance.socialLogin(provider: "apple")', () async {
+      // Arrange
+      when(fronteggPlatform.socialLogin(provider: "apple")).thenAnswer((_) => Future.value());
+      // Act
+      await frontegg.socialLogin(provider: FronteggSocialProvider.apple);
+      // Assert
+      verify(fronteggPlatform.socialLogin(provider: "apple")).called(1);
+    });
+
+    test('should call FronteggPlatform.instance.socialLogin(provider: "linkedin")', () async {
+      // Arrange
+      when(fronteggPlatform.socialLogin(provider: "linkedin")).thenAnswer((_) => Future.value());
+      // Act
+      await frontegg.socialLogin(provider: FronteggSocialProvider.linkedin);
+      // Assert
+      verify(fronteggPlatform.socialLogin(provider: "linkedin")).called(1);
+    });
+
+    test('should call FronteggPlatform.instance.socialLogin(provider: "facebook")', () async {
+      // Arrange
+      when(fronteggPlatform.socialLogin(provider: "facebook")).thenAnswer((_) => Future.value());
+      // Act
+      await frontegg.socialLogin(provider: FronteggSocialProvider.facebook);
+      // Assert
+      verify(fronteggPlatform.socialLogin(provider: "facebook")).called(1);
+    });
+
+    test('should call FronteggPlatform.instance.socialLogin(provider: "github")', () async {
+      // Arrange
+      when(fronteggPlatform.socialLogin(provider: "github")).thenAnswer((_) => Future.value());
+      // Act
+      await frontegg.socialLogin(provider: FronteggSocialProvider.github);
+      // Assert
+      verify(fronteggPlatform.socialLogin(provider: "github")).called(1);
+    });
+
+    test('should call FronteggPlatform.instance.socialLogin(provider: "microsoft")', () async {
+      // Arrange
+      when(fronteggPlatform.socialLogin(provider: "microsoft")).thenAnswer((_) => Future.value());
+      // Act
+      await frontegg.socialLogin(provider: FronteggSocialProvider.microsoft);
+      // Assert
+      verify(fronteggPlatform.socialLogin(provider: "microsoft")).called(1);
+    });
+
+    test('should call FronteggPlatform.instance.socialLogin(provider: "slack")', () async {
+      // Arrange
+      when(fronteggPlatform.socialLogin(provider: "slack")).thenAnswer((_) => Future.value());
+      // Act
+      await frontegg.socialLogin(provider: FronteggSocialProvider.slack);
+      // Assert
+      verify(fronteggPlatform.socialLogin(provider: "slack")).called(1);
+    });
+  });
+
+  group('customSocialLogin()', () {
+    test('should call FronteggPlatform.instance.customSocialLogin()', () async {
+      // Arrange
+      when(fronteggPlatform.customSocialLogin(id: "Test Id")).thenAnswer((_) => Future.value());
+      // Act
+      await frontegg.customSocialLogin(id: "Test Id");
+      // Assert
+      verify(fronteggPlatform.customSocialLogin(id: "Test Id")).called(1);
+    });
+  });
+
   group('switchTenant()', () {
     test('should call FronteggPlatform.instance.switchTenant()', () async {
       // Arrange
