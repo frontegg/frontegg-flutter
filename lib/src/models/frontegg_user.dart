@@ -4,25 +4,60 @@ import "frontegg_tenant.dart";
 import "frontegg_user_role.dart";
 import "frontegg_user_role_permission.dart";
 
+/// Represents a user in the Frontegg authentication system.
 class FronteggUser {
+  /// Unique identifier for the user.
   final String id;
+
+  /// Email address of the user.
   final String email;
+
+  /// Indicates whether the user has enrolled in multi-factor authentication (MFA).
   final bool mfaEnrolled;
+
+  /// Full name of the user.
   final String name;
+
+  /// URL of the user's profile picture.
   final String profilePictureUrl;
+
+  /// Optional phone number of the user.
   final String? phoneNumber;
+
+  /// Optional profile image URL of the user.
   final String? profileImage;
+
+  /// List of roles assigned to the user.
   final List<FronteggUserRole> roles;
+
+  /// List of permissions assigned to the user.
   final List<FronteggUserRolePermission> permissions;
+
+  /// The tenant ID the user is primarily associated with.
   final String tenantId;
+
+  /// List of tenant IDs the user has access to.
   final List<String> tenantIds;
+
+  /// List of tenants the user belongs to.
   final List<FronteggTenant> tenants;
+
+  /// The currently active tenant for the user.
   final FronteggTenant activeTenant;
+
+  /// Indicates whether the user is activated for the current tenant.
   final bool activatedForTenant;
+
+  /// Optional metadata associated with the user.
   final String? metadata;
+
+  /// Indicates whether the user's email is verified.
   final bool verified;
+
+  /// Indicates whether the user has super-user privileges.
   final bool superUser;
 
+  /// Creates a [FronteggUser] instance with the given parameters.
   const FronteggUser({
     required this.id,
     required this.email,
@@ -56,14 +91,17 @@ class FronteggUser {
           .map((e) => FronteggUserRole.fromMap(e as Map<Object?, Object?>))
           .toList(),
       permissions: (map["permissions"] as List<Object?>)
-          .map((e) => FronteggUserRolePermission.fromMap(e as Map<Object?, Object?>))
+          .map((e) =>
+              FronteggUserRolePermission.fromMap(e as Map<Object?, Object?>))
           .toList(),
       tenantId: map["tenantId"] as String,
-      tenantIds: (map["tenantIds"] as List<Object?>).map((e) => e.toString()).toList(),
+      tenantIds:
+          (map["tenantIds"] as List<Object?>).map((e) => e.toString()).toList(),
       tenants: (map["tenants"] as List<Object?>)
           .map((e) => FronteggTenant.fromMap(e as Map<Object?, Object?>))
           .toList(),
-      activeTenant: FronteggTenant.fromMap(map["activeTenant"] as Map<Object?, Object?>),
+      activeTenant:
+          FronteggTenant.fromMap(map["activeTenant"] as Map<Object?, Object?>),
       activatedForTenant: map["activatedForTenant"] as bool,
       metadata: map["metadata"] as String?,
       verified: map["verified"] as bool,

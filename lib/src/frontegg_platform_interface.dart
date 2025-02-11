@@ -38,7 +38,8 @@ abstract class FronteggPlatform extends PlatformInterface {
   }
 
   Future<void> directLoginAction(String type, String data,
-      {bool ephemeralSession = true, Map<String, String>? additionalQueryParams}) {
+      {bool ephemeralSession = true,
+      Map<String, String>? additionalQueryParams}) {
     throw UnimplementedError("directLoginAction() has not been implemented.");
   }
 

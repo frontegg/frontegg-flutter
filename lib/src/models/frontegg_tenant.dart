@@ -1,18 +1,41 @@
 import "package:frontegg_flutter/src/inner_utils.dart";
 
+/// Represents a tenant in the Frontegg authentication system.
 class FronteggTenant {
+  /// Unique identifier for the tenant.
   final String id;
+
+  /// Name of the tenant.
   final String name;
+
+  /// Email of the tenant's creator, if available.
   final String? creatorEmail;
+
+  /// Name of the tenant's creator, if available.
   final String? creatorName;
+
+  /// Unique identifier for the tenant within the Frontegg system.
   final String tenantId;
+
+  /// Unique identifier for the vendor associated with this tenant.
   final String vendorId;
+
+  /// Indicates whether the tenant is a reseller.
   final bool isReseller;
+
+  /// Metadata associated with the tenant.
   final String metadata;
+
+  /// The date and time when the tenant was created.
   final DateTime createdAt;
+
+  /// The date and time when the tenant was last updated.
   final DateTime updatedAt;
+
+  /// The website URL associated with the tenant, if available.
   final String? website;
 
+  /// Creates a [FronteggTenant] instance with the given parameters.
   const FronteggTenant({
     required this.id,
     required this.name,

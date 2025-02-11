@@ -64,7 +64,8 @@ class FronteggMethodChannel extends FronteggPlatform {
   ///
   /// Throws [FronteggException] if registration is failed.
   @override
-  Future<void> registerPasskeys() => methodChannel.invokeMethod(registerPasskeysMethodName);
+  Future<void> registerPasskeys() =>
+      methodChannel.invokeMethod(registerPasskeysMethodName);
 
   /// Login with passkeys.
   ///
@@ -72,7 +73,8 @@ class FronteggMethodChannel extends FronteggPlatform {
   ///
   /// Throws [FronteggException] if login is failed.
   @override
-  Future<void> loginWithPasskeys() => methodChannel.invokeMethod(loginWithPasskeysMethodName);
+  Future<void> loginWithPasskeys() =>
+      methodChannel.invokeMethod(loginWithPasskeysMethodName);
 
   /// Switches the current tenant by invoking the native platform's switchTenant method.
   ///
@@ -96,7 +98,8 @@ class FronteggMethodChannel extends FronteggPlatform {
   /// Returns a [Future] that completes when the login action is finished.
   @override
   Future<void> directLoginAction(String type, String data,
-          {bool ephemeralSession = true, Map<String, String>? additionalQueryParams}) =>
+          {bool ephemeralSession = true,
+          Map<String, String>? additionalQueryParams}) =>
       methodChannel.invokeMethod(
         directLoginActionMethodName,
         {
@@ -178,7 +181,8 @@ class FronteggMethodChannel extends FronteggPlatform {
   /// Returns a [Future] that completes with a boolean value indicating
   /// whether the token refresh was successful.
   @override
-  Future<bool?> refreshToken() => methodChannel.invokeMethod<bool>(refreshTokenMethodName);
+  Future<bool?> refreshToken() =>
+      methodChannel.invokeMethod<bool>(refreshTokenMethodName);
 
   /// Logs the user out by invoking the native platform's logout method.
   ///
