@@ -29,7 +29,8 @@ class LoginPage extends StatelessWidget {
             alignment: Alignment.center,
             child: StreamBuilder<FronteggState>(
               stream: frontegg.stateChanged,
-              builder: (BuildContext context, AsyncSnapshot<FronteggState> snapshot) {
+              builder: (BuildContext context,
+                  AsyncSnapshot<FronteggState> snapshot) {
                 if (snapshot.hasData) {
                   final state = snapshot.data!;
                   if (state.isLoading) {
@@ -41,14 +42,15 @@ class LoginPage extends StatelessWidget {
                         ElevatedButton(
                           child: const Text("Login"),
                           onPressed: () async {
-                            await frontegg.login();
+                            await frontegg.login(loginHint: "some@mail.com");
                             debugPrint("Login Finished");
                           },
                         ),
                         ElevatedButton(
                           child: const Text("Login with Google"),
                           onPressed: () {
-                            frontegg.socialLogin(provider: FronteggSocialProvider.google);
+                            frontegg.socialLogin(
+                                provider: FronteggSocialProvider.google);
                           },
                         ),
                         ElevatedButton(
@@ -65,8 +67,7 @@ class LoginPage extends StatelessWidget {
                           child: const Text("Custom social login"),
                           onPressed: () {
                             frontegg.customSocialLogin(
-                              id:
-                              "6fbe9b2d-bfce-4804-aa4b-a1503db588ae",
+                              id: "6fbe9b2d-bfce-4804-aa4b-a1503db588ae",
                             );
                           },
                         ),
@@ -74,10 +75,13 @@ class LoginPage extends StatelessWidget {
                           child: const Text("Request Authorized With Tokens"),
                           onPressed: () async {
                             final user = await frontegg.requestAuthorize(
-                              refreshToken: "d6da8424-3205-4dec-9ba9-eb1299dda314",
-                              deviceTokenCookie: "ef5b2160-5b84-4ad9-afc2-e9beafacc778",
+                              refreshToken:
+                                  "d6da8424-3205-4dec-9ba9-eb1299dda314",
+                              deviceTokenCookie:
+                                  "ef5b2160-5b84-4ad9-afc2-e9beafacc778",
                             );
-                            debugPrint("Request Authorized With Tokens Finished, Result = $user");
+                            debugPrint(
+                                "Request Authorized With Tokens Finished, Result = $user");
                           },
                         ),
                         ElevatedButton(
