@@ -1,16 +1,35 @@
 import 'package:frontegg_flutter/frontegg_flutter.dart';
 
+/// Represents the authentication state in the Frontegg system.
 class FronteggState {
+  /// The access token for authenticated requests, or `null` if not authenticated.
   final String? accessToken;
+
+  /// The refresh token used to obtain a new access token, or `null` if not available.
   final String? refreshToken;
+
+  /// The authenticated user details, or `null` if not logged in.
   final FronteggUser? user;
+
+  /// Whether the user is authenticated.
   final bool isAuthenticated;
+
+  /// Whether an authentication-related operation is currently in progress.
   final bool isLoading;
+
+  /// Whether the authentication state is still initializing.
   final bool initializing;
+
+  /// Whether to show a loader (e.g., during authentication transitions).
   final bool showLoader;
+
+  /// Whether the authentication process involves an app link.
   final bool appLink;
+
+  /// Whether the token is currently being refreshed.
   final bool refreshingToken;
 
+  /// Creates a [FronteggState] instance with the given parameters.
   const FronteggState({
     this.accessToken,
     this.refreshToken,
