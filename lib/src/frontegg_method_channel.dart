@@ -18,6 +18,9 @@ class FronteggMethodChannel extends FronteggPlatform {
   static const String logoutMethodName = "logout";
   static const String switchTenantMethodName = "switchTenant";
   static const String directLoginActionMethodName = "directLoginAction";
+  static const String directLoginMethodName = "directLogin";
+  static const String socialLoginMethodName = "socialLogin";
+  static const String customSocialLoginMethodName = "customSocialLogin";
   static const String refreshTokenMethodName = "refreshToken";
   static const String getConstantsMethodName = "getConstants";
   static const String requestAuthorizeMethodName = "requestAuthorize";
@@ -84,20 +87,87 @@ class FronteggMethodChannel extends FronteggPlatform {
         },
       );
 
-  /// Performs a direct login action by invoking the native platform's directLoginAction method.
+  /// Initiates a direct login by invoking the native platform's `directLoginAction` method.
   ///
-  /// [type]: The type of login action to perform.
-  /// [data]: The data associated with the login action.
-  /// [ephemeralSession]: Optional boolean indicating whether the session should be ephemeral (not sharing session with default browser). Defaults to true.
+  /// - [url]: The URL used for the direct login.
+  /// - [ephemeralSession]: (Optional) Whether the session should be ephemeral (i.e., not shared with the default browser). Defaults to `true`.
+  /// - [additionalQueryParams]: (Optional) A map containing additional query parameters. Defaults to `null`.
   ///
   /// Returns a [Future] that completes when the login action is finished.
   @override
-  Future<void> directLoginAction(String type, String data, {bool ephemeralSession = true, Map<String, String>? additionalQueryParams}) =>
+  Future<void> directLoginAction(String type, String data,
+          {bool ephemeralSession = true, Map<String, String>? additionalQueryParams}) =>
       methodChannel.invokeMethod(
         directLoginActionMethodName,
         {
           "type": type,
           "data": data,
+          "ephemeralSession": ephemeralSession,
+          "additionalQueryParams": additionalQueryParams,
+        },
+      );
+
+  /// Initiates a direct login by invoking the native platform's `directLogin` method.
+  ///
+  /// - [url]: The URL used for the direct login.
+  /// - [ephemeralSession]: (Optional) Whether the session should be ephemeral (i.e., not shared with the default browser). Defaults to `true`.
+  /// - [additionalQueryParams]: (Optional) A map containing additional query parameters. Defaults to `null`.
+  ///
+  /// Returns a [Future] that completes when the login action is finished.
+  @override
+  Future<void> directLogin({
+    required String url,
+    bool ephemeralSession = true,
+    Map<String, String>? additionalQueryParams,
+  }) =>
+      methodChannel.invokeMethod(
+        directLoginMethodName,
+        {
+          "url": url,
+          "ephemeralSession": ephemeralSession,
+          "additionalQueryParams": additionalQueryParams,
+        },
+      );
+
+  /// Initiates a direct login by invoking the native platform's `directLogin` method.
+  ///
+  /// - [provider]: The Social Provider used for the Social Login.
+  /// - [ephemeralSession]: (Optional) Whether the session should be ephemeral (i.e., not shared with the default browser). Defaults to `true`.
+  /// - [additionalQueryParams]: (Optional) A map containing additional query parameters. Defaults to `null`.
+  ///
+  /// Returns a [Future] that completes when the login action is finished.
+  @override
+  Future<void> socialLogin({
+    required String provider,
+    bool ephemeralSession = true,
+    Map<String, String>? additionalQueryParams,
+  }) =>
+      methodChannel.invokeMethod(
+        socialLoginMethodName,
+        {
+          "provider": provider,
+          "ephemeralSession": ephemeralSession,
+          "additionalQueryParams": additionalQueryParams,
+        },
+      );
+
+  /// Initiates a Custom Social login by invoking the native platform's `customSocial` method.
+  ///
+  /// - [id]: The ID(UUID) used for the Custom Social Login.
+  /// - [ephemeralSession]: (Optional) Whether the session should be ephemeral (i.e., not shared with the default browser). Defaults to `true`.
+  /// - [additionalQueryParams]: (Optional) A map containing additional query parameters. Defaults to `null`.
+  ///
+  /// Returns a [Future] that completes when the login action is finished.
+  @override
+  Future<void> customSocialLogin({
+    required String id,
+    bool ephemeralSession = true,
+    Map<String, String>? additionalQueryParams,
+  }) =>
+      methodChannel.invokeMethod(
+        customSocialLoginMethodName,
+        {
+          "id": id,
           "ephemeralSession": ephemeralSession,
           "additionalQueryParams": additionalQueryParams,
         },

@@ -5,6 +5,8 @@ import "package:frontegg_flutter/frontegg_flutter.dart";
 import "package:frontegg_flutter/src/frontegg_platform_interface.dart";
 import "package:rxdart/rxdart.dart";
 
+import "models/frontegg_social_provider.dart";
+
 class FronteggFlutter {
   static FronteggState _currentState = const FronteggState();
   StreamSubscription? _stateStreamSubscription;
@@ -50,17 +52,47 @@ class FronteggFlutter {
 
   Future<void> switchTenant(String tenantId) => FronteggPlatform.instance.switchTenant(tenantId);
 
+  @Deprecated("Use directLogin(url), socialLogin(provider), or customSocialLogin(id) instead.")
   Future<void> directLoginAction(
-    String type, 
+    String type,
     String data, {
-      bool ephemeralSession = true, 
-      Map<String, String>? additionalQueryParams,
-    }) =>
-      FronteggPlatform.instance.directLoginAction(
-        type, 
-        data, 
-        ephemeralSession: ephemeralSession, 
-        additionalQueryParams: additionalQueryParams
+    bool ephemeralSession = true,
+    Map<String, String>? additionalQueryParams,
+  }) =>
+      FronteggPlatform.instance.directLoginAction(type, data,
+          ephemeralSession: ephemeralSession, additionalQueryParams: additionalQueryParams);
+
+  Future<void> directLogin({
+    required String url,
+    bool ephemeralSession = true,
+    Map<String, String>? additionalQueryParams,
+  }) =>
+      FronteggPlatform.instance.directLogin(
+        url: url,
+        ephemeralSession: ephemeralSession,
+        additionalQueryParams: additionalQueryParams,
+      );
+
+  Future<void> socialLogin({
+    required FronteggSocialProvider provider,
+    bool ephemeralSession = true,
+    Map<String, String>? additionalQueryParams,
+  }) =>
+      FronteggPlatform.instance.socialLogin(
+        provider: provider.type,
+        ephemeralSession: ephemeralSession,
+        additionalQueryParams: additionalQueryParams,
+      );
+
+  Future<void> customSocialLogin({
+    required String id,
+    bool ephemeralSession = true,
+    Map<String, String>? additionalQueryParams,
+  }) =>
+      FronteggPlatform.instance.customSocialLogin(
+        id: id,
+        ephemeralSession: ephemeralSession,
+        additionalQueryParams: additionalQueryParams,
       );
 
   Future<bool> refreshToken() async {
