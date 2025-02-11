@@ -74,18 +74,6 @@ void main() {
     });
   });
 
-  group('directLoginAction()', () {
-    test('should call FronteggPlatform.instance.directLoginAction()', () async {
-      // Arrange
-      when(fronteggPlatform.directLoginAction("type", "data"))
-          .thenAnswer((_) => Future.value());
-      // Act
-      await frontegg.directLoginAction("type", "data");
-      // Assert
-      verify(fronteggPlatform.directLoginAction("type", "data")).called(1);
-    });
-  });
-
   group('directLogin()', () {
     test('should call FronteggPlatform.instance.directLogin()', () async {
       // Arrange
