@@ -44,7 +44,7 @@ jobs:
             if [[ -f "${{ env.CHANGELOG_OLD_FILE }}" ]]; then
               echo -e "$DESCRIPTION\n\n$(cat ${{ env.CHANGELOG_OLD_FILE }})" > ${{ env.CHANGELOG_FILE }}
             else
-              echo "${{ steps.get_description.outputs.DESCRIPTION }}" > ${{ env.CHANGELOG_FILE }}
+              echo '${{ steps.get_description.outputs.DESCRIPTION }}' > ${{ env.CHANGELOG_FILE }}
             fi
           else
             echo "No description provided in the pull request. The 'release/next' branch must provide a description for correct CHANGELOG.md generation."
