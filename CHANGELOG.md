@@ -1,3 +1,11 @@
+## v1.0.9
+- Deprecated `directLoginAction` method.
+- Added `directLogin(url)`, `socialLogin(provider)`, and `customSocialLogin(id)` methods instead of `directLoginAction` method.
+- Added docs to code.
+- Updated `README.md`. Added `login` with `loginHint` description.
+- Fix `CHANGELOG.md` generation
+- updated workflows Flutter version to `3.27.4`
+
 # v1.0.8
 - CHANGELOG.md generation automation.
 - Added `additionalQueryParams` to `directLoginAction`
