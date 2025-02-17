@@ -4,7 +4,8 @@
 - Added docs to code.
 - Updated `README.md`. Added `login` with `loginHint` description.
 - Fix `CHANGELOG.md` generation
-- updated workflows Flutter version to `3.27.4`
+- Updated workflows Flutter version to `3.27.4`
+- Added unit and integration tests.
 
 # v1.0.8
 - CHANGELOG.md generation automation.
