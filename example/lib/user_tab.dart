@@ -28,7 +28,8 @@ class UserTab extends StatelessWidget {
                 const SizedBox(height: 20),
                 Text(
                   user.name,
-                  style: const TextStyle(fontSize: 21, fontWeight: FontWeight.w600),
+                  style: const TextStyle(
+                      fontSize: 21, fontWeight: FontWeight.w600),
                 ),
                 const SizedBox(height: 4),
                 Text(

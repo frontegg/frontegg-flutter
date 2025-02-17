@@ -1,18 +1,39 @@
 import "package:flutter/foundation.dart";
 import "package:frontegg_flutter/src/inner_utils.dart";
 
+/// Represents a user role in the Frontegg authentication system.
 class FronteggUserRole {
+  /// Unique identifier for the role.
   final String id;
+
+  /// Unique key representing the role.
   final String key;
+
+  /// Indicates whether this role is the default role.
   final bool isDefault;
+
+  /// Name of the role.
   final String name;
+
+  /// Optional description of the role.
   final String? description;
+
+  /// List of permission identifiers associated with this role.
   final List<String> permissions;
+
+  /// Optional tenant ID this role is associated with.
   final String? tenantId;
+
+  /// Unique identifier for the vendor associated with this role.
   final String vendorId;
+
+  /// The date and time when the role was created.
   final DateTime createdAt;
+
+  /// The date and time when the role was last updated.
   final DateTime updatedAt;
 
+  /// Creates a [FronteggUserRole] instance with the given parameters.
   const FronteggUserRole({
     required this.id,
     required this.key,
@@ -33,7 +54,9 @@ class FronteggUserRole {
       isDefault: map["isDefault"] as bool,
       name: map["name"] as String,
       description: map["description"] as String?,
-      permissions: (map["permissions"] as List<Object?>).map((e) => e.toString()).toList(),
+      permissions: (map["permissions"] as List<Object?>)
+          .map((e) => e.toString())
+          .toList(),
       tenantId: map["tenantId"] as String?,
       vendorId: map["vendorId"] as String,
       createdAt: (map["createdAt"] as String).toDateTime(),

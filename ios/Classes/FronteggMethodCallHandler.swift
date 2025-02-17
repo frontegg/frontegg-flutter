@@ -20,8 +20,6 @@ class FronteggMethodCallHandler {
             registerPasskeys(result: result)
         case "switchTenant":
             switchTenant(call: call, result: result)
-        case "directLoginAction":
-            directLoginAction(call: call, result: result)
         case "refreshToken":
             refreshToken(result: result)
         case "logout":
@@ -30,9 +28,152 @@ class FronteggMethodCallHandler {
             result(constantsToExport())
         case "requestAuthorize":
             requestAuthorize(call: call, result: result)
+            
+        case "directLoginAction":
+            directLoginAction(call: call, result: result)
+        case "directLogin":
+            directLogin(call: call, result: result)
+        case "socialLogin":
+            socialLogin(call: call, result: result)
+        case "customSocialLogin":
+            customSocialLogin(call: call, result: result)
+            
+            
         default:
             result(FlutterMethodNotImplemented)
         }
+    }
+    
+    private func directLoginAction(
+        call: FlutterMethodCall,
+        result: @escaping FlutterResult
+    ) {
+        guard let arguments = call.arguments as? [String: Any?] else {
+            return result(FlutterError(code: "MISSING_PARAMS", message: "Missing argumants", details: nil))
+        }
+        
+        guard let type = arguments["type"] as? String else {
+            return result(FlutterError(code: "MISSING_PARAMS", message: "Missing 'type' argumant", details: nil))
+        }
+        
+        guard let data = arguments["data"] as? String else {
+            return result(FlutterError(code: "MISSING_PARAMS", message: "Missing 'data' argumant", details: nil))
+        }
+        
+        
+        // Retrieve the 'ephemeral' parameter or use the default value of true
+        let ephemeralSession = arguments["ephemeral"] as? Bool ?? true
+        
+        let additionalQueryParams = arguments["additionalQueryParams"] as? [String: String] ?? [:]
+        
+        let compelation: FronteggAuth.CompletionHandler = { _ in
+            result(nil)
+        }
+        
+        fronteggApp.auth.directLoginAction(
+            window: nil,
+            type: type,
+            data: data,
+            ephemeralSession: ephemeralSession,
+            _completion: compelation,
+            additionalQueryParams: additionalQueryParams
+        )
+    }
+    
+    private func directLogin(
+        call: FlutterMethodCall,
+        result: @escaping FlutterResult
+    ) {
+        guard let arguments = call.arguments as? [String: Any?] else {
+            return result(FlutterError(code: "MISSING_PARAMS", message: "Missing argumants", details: nil))
+        }
+        
+        guard let url = arguments["url"] as? String else {
+            return result(FlutterError(code: "MISSING_PARAMS", message: "Missing 'url' argumant", details: nil))
+        }
+        
+        // Retrieve the 'ephemeral' parameter or use the default value of true
+        let ephemeralSession = arguments["ephemeral"] as? Bool ?? true
+        
+        let additionalQueryParams = arguments["additionalQueryParams"] as? [String: String] ?? [:]
+        
+        let compelation: FronteggAuth.CompletionHandler = { _ in
+            result(nil)
+        }
+        
+        fronteggApp.auth.directLoginAction(
+            window: nil,
+            type: "direct",
+            data: url,
+            ephemeralSession: ephemeralSession,
+            _completion: compelation,
+            additionalQueryParams: additionalQueryParams
+        )
+    }
+    
+    
+    private func socialLogin(
+        call: FlutterMethodCall,
+        result: @escaping FlutterResult
+    ) {
+        guard let arguments = call.arguments as? [String: Any?] else {
+            return result(FlutterError(code: "MISSING_PARAMS", message: "Missing argumants", details: nil))
+        }
+        
+        guard let provider = arguments["provider"] as? String else {
+            return result(FlutterError(code: "MISSING_PARAMS", message: "Missing 'provider' argumant", details: nil))
+        }
+        
+        // Retrieve the 'ephemeral' parameter or use the default value of true
+        let ephemeralSession = arguments["ephemeral"] as? Bool ?? true
+        
+        let additionalQueryParams = arguments["additionalQueryParams"] as? [String: String] ?? [:]
+        
+        let compelation: FronteggAuth.CompletionHandler = { _ in
+            result(nil)
+        }
+        
+        fronteggApp.auth.directLoginAction(
+            window: nil,
+            type: "social-login",
+            data: provider,
+            ephemeralSession: ephemeralSession,
+            _completion: compelation,
+            additionalQueryParams: additionalQueryParams
+        )
+    }
+    
+    
+    private func customSocialLogin(
+        call: FlutterMethodCall,
+        result: @escaping FlutterResult
+    ) {
+        guard let arguments = call.arguments as? [String: Any?] else {
+            return result(FlutterError(code: "MISSING_PARAMS", message: "Missing argumants", details: nil))
+        }
+        
+        guard let id = arguments["id"] as? String else {
+            return result(FlutterError(code: "MISSING_PARAMS", message: "Missing 'id' argumant", details: nil))
+        }
+        
+        
+        // Retrieve the 'ephemeral' parameter or use the default value of true
+        let ephemeralSession = arguments["ephemeral"] as? Bool ?? true
+        
+        let additionalQueryParams = arguments["additionalQueryParams"] as? [String: String] ?? [:]
+        
+        let compelation: FronteggAuth.CompletionHandler = { _ in
+            result(nil)
+        }
+        
+        fronteggApp.auth.directLoginAction(
+            window: nil,
+            type: "custom-social-login",
+            data: id,
+            ephemeralSession: ephemeralSession,
+            _completion: compelation,
+            additionalQueryParams: additionalQueryParams
+        )
     }
     
     private func login(
@@ -144,31 +285,6 @@ class FronteggMethodCallHandler {
         }
         
         fronteggApp.auth.switchTenant(tenantId: tenantId) { _ in
-            result(nil)
-        }
-    }
-    
-    private func directLoginAction(
-        call: FlutterMethodCall,
-        result: @escaping FlutterResult
-    ) {
-        guard let arguments = call.arguments as? [String: Any?] else {
-            return result(FlutterError(code: "MISSING_PARAMS", message: "Missing argumants", details: nil))
-        }
-        
-        guard let type = arguments["type"] as? String else {
-            return result(FlutterError(code: "MISSING_PARAMS", message: "Missing 'type' argumant", details: nil))
-        }
-        
-        guard let data = arguments["data"] as? String else {
-            return result(FlutterError(code: "MISSING_PARAMS", message: "Missing 'data' argumant", details: nil))
-        }
-
-
-        // Retrieve the 'ephemeral' parameter or use the default value of true
-        let ephemeralSession = arguments["ephemeral"] as? Bool ?? true
-
-        fronteggApp.auth.directLoginAction(window: nil, type: type, data: data, ephemeralSession: ephemeralSession) { _ in
             result(nil)
         }
     }

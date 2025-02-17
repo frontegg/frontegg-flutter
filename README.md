@@ -531,6 +531,29 @@ class MainPage extends StatelessWidget {
 }
 ```
 
+You can prefill the login text field in the login box by adding the loginHint parameter to the login method:
+
+```dart
+class MainPage extends StatelessWidget {
+  const MainPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final frontegg = context.frontegg;
+    return Scaffold(
+      body: Center(
+        child: ElevatedButton(
+          child: const Text("Login"),
+          onPressed: () async {
+            await frontegg.login(loginHint: "some@mail.com");
+          },
+        ),
+      ),
+    );
+  }
+}
+```
+
 ### Switch tenant frontegg
 
 To switch tenant  with frontegg you can use the `context`.`frontegg` accessor and call `switchTenant` method:

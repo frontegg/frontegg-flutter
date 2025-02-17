@@ -1,15 +1,32 @@
 import "package:frontegg_flutter/src/inner_utils.dart";
 
+/// Represents a user role permission in the Frontegg authentication system.
 class FronteggUserRolePermission {
+  /// Unique identifier for the permission.
   final String id;
+
+  /// Unique key representing the permission.
   final String key;
+
+  /// Name of the permission.
   final String name;
+
+  /// Optional description of the permission.
   final String? description;
+
+  /// The category ID this permission belongs to.
   final String categoryId;
+
+  /// Indicates whether this is a frontend-specific permission.
   final bool fePermission;
+
+  /// The date and time when the permission was created.
   final DateTime createdAt;
+
+  /// The date and time when the permission was last updated.
   final DateTime updatedAt;
 
+  /// Creates a [FronteggUserRolePermission] instance with the given parameters.
   const FronteggUserRolePermission({
     required this.id,
     required this.key,

@@ -1,11 +1,24 @@
+/// A class containing constants for configuring Frontegg authentication.
 class FronteggConstants {
+  /// The base URL of the Frontegg authentication server.
   final String baseUrl;
+
+  /// The client ID associated with the Frontegg application.
   final String clientId;
+
+  /// The optional application ID, if applicable.
   final String? applicationId;
+
+  /// Whether to use asset links for authentication. Defaults to `null` (not set).
   final bool? useAssetsLinks;
+
+  /// Whether to use Chrome Custom Tabs for authentication. Defaults to `null` (not set).
   final bool? useChromeCustomTabs;
+
+  /// The bundle ID of the application, used for identifying the app.
   final String bundleId;
 
+  /// Creates a [FronteggConstants] instance with required parameters.
   const FronteggConstants({
     required this.baseUrl,
     required this.clientId,

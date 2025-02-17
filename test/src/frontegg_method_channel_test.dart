@@ -23,12 +23,14 @@ void main() {
 
   final platform = FronteggMethodChannel();
   const channel = MethodChannel(FronteggMethodChannel.methodChannelName);
-  const eventChannel = EventChannel(FronteggMethodChannel.stateEventChannelName);
+  const eventChannel =
+      EventChannel(FronteggMethodChannel.stateEventChannelName);
   final streamHandler = MockStateStreamHandler();
   late final Stream stateEventChannelStream;
 
   setUpAll(() {
-    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(
       channel,
       (MethodCall methodCall) async {
         switch (methodCall.method) {
@@ -43,6 +45,12 @@ void main() {
           case FronteggMethodChannel.switchTenantMethodName:
             return null;
           case FronteggMethodChannel.directLoginActionMethodName:
+            return null;
+          case FronteggMethodChannel.directLoginMethodName:
+            return null;
+          case FronteggMethodChannel.socialLoginMethodName:
+            return null;
+          case FronteggMethodChannel.customSocialLoginMethodName:
             return null;
           case FronteggMethodChannel.registerPasskeysMethodName:
             return null;
@@ -85,6 +93,18 @@ void main() {
     await platform.directLoginAction("type", "data");
   });
 
+  test('directLoginAction(type, data)', () async {
+    await platform.directLoginAction("type", "data");
+  });
+
+  test('socialLogin(provider)', () async {
+    await platform.socialLogin(provider: "google");
+  });
+
+  test('customSocialLogin(id)', () async {
+    await platform.customSocialLogin(id: "Test Id");
+  });
+
   test('registerPasskeys()', () async {
     await platform.registerPasskeys();
   });
@@ -94,7 +114,9 @@ void main() {
   });
 
   test('requestAuthorize(refreshToken, deviceTokenCookie)', () async {
-    await platform.requestAuthorize(refreshToken: "Test Token", deviceTokenCookie: "Test Device Token Cookie");
+    await platform.requestAuthorize(
+        refreshToken: "Test Token",
+        deviceTokenCookie: "Test Device Token Cookie");
   });
 
   group('StateEventChannel', () {
@@ -119,7 +141,8 @@ void main() {
       streamHandler.states?.success(tLoadedFronteggStateMap);
     });
 
-    test('should return valid FronteggState, Loading FronteggState, Loaded FronteggState Maps',
+    test(
+        'should return valid FronteggState, Loading FronteggState, Loaded FronteggState Maps',
         () async {
       // Asser Later
       final expected = [

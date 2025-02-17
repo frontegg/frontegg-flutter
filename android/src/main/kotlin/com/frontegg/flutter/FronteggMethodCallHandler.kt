@@ -1,8 +1,7 @@
 package com.frontegg.flutter
 
-import android.util.Log
+import com.frontegg.android.FronteggApp
 import com.frontegg.android.FronteggAuth
-import com.frontegg.android.exceptions.FronteggException
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
@@ -23,22 +22,97 @@ class FronteggMethodCallHandler(
         when (call.method) {
             "login" -> login(call, result)
             "switchTenant" -> switchTenant(call, result)
-            "directLoginAction" -> directLoginAction(call, result)
             "refreshToken" -> refreshToken(result)
             "logout" -> logout(result)
             "getConstants" -> getConstants(result)
             "registerPasskeys" -> registerPasskeys(result)
             "loginWithPasskeys" -> loginWithPasskeys(result)
             "requestAuthorize" -> requestAuthorize(call, result)
+
+            "directLoginAction" -> directLoginAction(call, result)
+            "directLogin" -> directLogin(call, result)
+            "socialLogin" -> socialLogin(call, result)
+            "customSocialLogin" -> customSocialLogin(call, result)
             else -> result.notImplemented()
         }
     }
 
+    private fun directLoginAction(call: MethodCall, result: MethodChannel.Result) {
+        val type = call.argument<String>("type") ?: throw ArgumentNotFoundException("type")
+        val data = call.argument<String>("data") ?: throw ArgumentNotFoundException("data")
+        if (FronteggApp.getInstance().isEmbeddedMode) {
+            activityProvider.getActivity()?.let {
+                FronteggAuth.instance.directLoginAction(it, type, data) {
+                    result.success(null)
+                }
+            }
+        } else {
+            result.error(
+                "REQUEST_AUTHORIZE_ERROR",
+                "'directLoginAction' can be used only when EmbeddedActivity is enabled.",
+                null,
+            )
+        }
+    }
+
+    private fun directLogin(call: MethodCall, result: MethodChannel.Result) {
+        val url = call.argument<String>("url") ?: throw ArgumentNotFoundException("url")
+        if (FronteggApp.getInstance().isEmbeddedMode) {
+            activityProvider.getActivity()?.let {
+                FronteggAuth.instance.directLoginAction(it, "direct", url) {
+                    result.success(null)
+                }
+            }
+        } else {
+            result.error(
+                "REQUEST_AUTHORIZE_ERROR",
+                "'directLogin' can be used only when EmbeddedActivity is enabled.",
+                null,
+            )
+        }
+    }
+
+    private fun socialLogin(call: MethodCall, result: MethodChannel.Result) {
+        val provider =
+            call.argument<String>("provider") ?: throw ArgumentNotFoundException("provider")
+        if (FronteggApp.getInstance().isEmbeddedMode) {
+            activityProvider.getActivity()?.let {
+                FronteggAuth.instance.directLoginAction(it, "social-login", provider) {
+                    result.success(null)
+                }
+            }
+        } else {
+            result.error(
+                "REQUEST_AUTHORIZE_ERROR",
+                "'socialLogin' can be used only when EmbeddedActivity is enabled.",
+                null,
+            )
+        }
+    }
+
+    private fun customSocialLogin(call: MethodCall, result: MethodChannel.Result) {
+        val id = call.argument<String>("id") ?: throw ArgumentNotFoundException("id")
+
+        if (FronteggApp.getInstance().isEmbeddedMode) {
+            activityProvider.getActivity()?.let {
+                FronteggAuth.instance.directLoginAction(it, "custom-social-login", id) {
+                    result.success(null)
+                }
+            }
+        } else {
+            result.error(
+                "REQUEST_AUTHORIZE_ERROR",
+                "'customSocialLogin' can be used only when EmbeddedActivity is enabled.",
+                null,
+            )
+        }
+    }
+
     private fun requestAuthorize(call: MethodCall, result: MethodChannel.Result) {
-        val refreshToken = call.argument<String>("refreshToken") 
+        val refreshToken = call.argument<String>("refreshToken")
             ?: throw ArgumentNotFoundException("refreshToken")
         val deviceTokenCookie = call.argument<String>("deviceTokenCookie")
-    
+
         FronteggAuth.instance.requestAuthorize(refreshToken, deviceTokenCookie) { authResult ->
             authResult.onSuccess { user ->
                 result.success(user.toReadableMap())
@@ -105,16 +179,6 @@ class FronteggMethodCallHandler(
         FronteggAuth.instance.switchTenant(tenantId) {
             result.success(null)
         }
-    }
-
-    private fun directLoginAction(call: MethodCall, result: MethodChannel.Result) {
-        val type = call.argument<String>("type") ?: throw ArgumentNotFoundException("type")
-        val data = call.argument<String>("data") ?: throw ArgumentNotFoundException("data")
-
-        activityProvider.getActivity()?.let {
-            FronteggAuth.instance.directLoginAction(it, type, data)
-        }
-        result.success(null)
     }
 
     private fun refreshToken(result: MethodChannel.Result) {

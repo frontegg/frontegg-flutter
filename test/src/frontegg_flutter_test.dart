@@ -18,7 +18,8 @@ void main() {
   setUpAll(() {
     fronteggPlatform = MockFronteggPlatform();
     FronteggPlatform.instance = fronteggPlatform;
-    when(fronteggPlatform.stateChanged).thenAnswer((_) => tStreamController.stream);
+    when(fronteggPlatform.stateChanged)
+        .thenAnswer((_) => tStreamController.stream);
     frontegg = FronteggFlutter();
   });
 
@@ -73,21 +74,129 @@ void main() {
     });
   });
 
-  group('directLoginAction()', () {
-    test('should call FronteggPlatform.instance.directLoginAction()', () async {
+  group('directLogin()', () {
+    test('should call FronteggPlatform.instance.directLogin()', () async {
       // Arrange
-      when(fronteggPlatform.directLoginAction("type", "data")).thenAnswer((_) => Future.value());
+      when(fronteggPlatform.directLogin(url: "TestUrl"))
+          .thenAnswer((_) => Future.value());
       // Act
-      await frontegg.directLoginAction("type", "data");
+      await frontegg.directLogin(url: "TestUrl");
       // Assert
-      verify(fronteggPlatform.directLoginAction("type", "data")).called(1);
+      verify(fronteggPlatform.directLogin(url: "TestUrl")).called(1);
+    });
+  });
+
+  group('socialLogin()', () {
+    test('should call FronteggPlatform.instance.socialLogin()', () async {
+      // Arrange
+      when(fronteggPlatform.socialLogin(provider: "google"))
+          .thenAnswer((_) => Future.value());
+      // Act
+      await frontegg.socialLogin(provider: FronteggSocialProvider.google);
+      // Assert
+      verify(fronteggPlatform.socialLogin(provider: "google")).called(1);
+    });
+
+    test(
+        'should call FronteggPlatform.instance.socialLogin(provider: "google")',
+        () async {
+      // Arrange
+      when(fronteggPlatform.socialLogin(provider: "google"))
+          .thenAnswer((_) => Future.value());
+      // Act
+      await frontegg.socialLogin(provider: FronteggSocialProvider.google);
+      // Assert
+      verify(fronteggPlatform.socialLogin(provider: "google")).called(1);
+    });
+
+    test('should call FronteggPlatform.instance.socialLogin(provider: "apple")',
+        () async {
+      // Arrange
+      when(fronteggPlatform.socialLogin(provider: "apple"))
+          .thenAnswer((_) => Future.value());
+      // Act
+      await frontegg.socialLogin(provider: FronteggSocialProvider.apple);
+      // Assert
+      verify(fronteggPlatform.socialLogin(provider: "apple")).called(1);
+    });
+
+    test(
+        'should call FronteggPlatform.instance.socialLogin(provider: "linkedin")',
+        () async {
+      // Arrange
+      when(fronteggPlatform.socialLogin(provider: "linkedin"))
+          .thenAnswer((_) => Future.value());
+      // Act
+      await frontegg.socialLogin(provider: FronteggSocialProvider.linkedin);
+      // Assert
+      verify(fronteggPlatform.socialLogin(provider: "linkedin")).called(1);
+    });
+
+    test(
+        'should call FronteggPlatform.instance.socialLogin(provider: "facebook")',
+        () async {
+      // Arrange
+      when(fronteggPlatform.socialLogin(provider: "facebook"))
+          .thenAnswer((_) => Future.value());
+      // Act
+      await frontegg.socialLogin(provider: FronteggSocialProvider.facebook);
+      // Assert
+      verify(fronteggPlatform.socialLogin(provider: "facebook")).called(1);
+    });
+
+    test(
+        'should call FronteggPlatform.instance.socialLogin(provider: "github")',
+        () async {
+      // Arrange
+      when(fronteggPlatform.socialLogin(provider: "github"))
+          .thenAnswer((_) => Future.value());
+      // Act
+      await frontegg.socialLogin(provider: FronteggSocialProvider.github);
+      // Assert
+      verify(fronteggPlatform.socialLogin(provider: "github")).called(1);
+    });
+
+    test(
+        'should call FronteggPlatform.instance.socialLogin(provider: "microsoft")',
+        () async {
+      // Arrange
+      when(fronteggPlatform.socialLogin(provider: "microsoft"))
+          .thenAnswer((_) => Future.value());
+      // Act
+      await frontegg.socialLogin(provider: FronteggSocialProvider.microsoft);
+      // Assert
+      verify(fronteggPlatform.socialLogin(provider: "microsoft")).called(1);
+    });
+
+    test('should call FronteggPlatform.instance.socialLogin(provider: "slack")',
+        () async {
+      // Arrange
+      when(fronteggPlatform.socialLogin(provider: "slack"))
+          .thenAnswer((_) => Future.value());
+      // Act
+      await frontegg.socialLogin(provider: FronteggSocialProvider.slack);
+      // Assert
+      verify(fronteggPlatform.socialLogin(provider: "slack")).called(1);
+    });
+  });
+
+  group('customSocialLogin()', () {
+    test('should call FronteggPlatform.instance.customSocialLogin()', () async {
+      // Arrange
+      when(fronteggPlatform.customSocialLogin(id: "Test Id"))
+          .thenAnswer((_) => Future.value());
+      // Act
+      await frontegg.customSocialLogin(id: "Test Id");
+      // Assert
+      verify(fronteggPlatform.customSocialLogin(id: "Test Id")).called(1);
     });
   });
 
   group('switchTenant()', () {
     test('should call FronteggPlatform.instance.switchTenant()', () async {
       // Arrange
-      when(fronteggPlatform.switchTenant("tenantId")).thenAnswer((_) => Future.value());
+      when(fronteggPlatform.switchTenant("tenantId"))
+          .thenAnswer((_) => Future.value());
       // Act
       await frontegg.switchTenant("tenantId");
       // Assert
@@ -98,7 +207,8 @@ void main() {
   group('getConstants()', () {
     test('should call FronteggPlatform.instance.getConstants()', () async {
       // Arrange
-      when(fronteggPlatform.getConstants()).thenAnswer((_) async => tFronteggConstantsMap);
+      when(fronteggPlatform.getConstants())
+          .thenAnswer((_) async => tFronteggConstantsMap);
       // Act
       await frontegg.getConstants();
       // Assert
@@ -107,7 +217,8 @@ void main() {
 
     test('should return valid FronteggConstant', () async {
       // Arrange
-      when(fronteggPlatform.getConstants()).thenAnswer((_) async => tFronteggConstantsMap);
+      when(fronteggPlatform.getConstants())
+          .thenAnswer((_) async => tFronteggConstantsMap);
       // Act
       final result = await frontegg.getConstants();
       // Assert
@@ -116,7 +227,8 @@ void main() {
 
     test('should return valid iOS FronteggConstant', () async {
       // Arrange
-      when(fronteggPlatform.getConstants()).thenAnswer((_) async => tIOSFronteggConstantsMap);
+      when(fronteggPlatform.getConstants())
+          .thenAnswer((_) async => tIOSFronteggConstantsMap);
       // Act
       final result = await frontegg.getConstants();
       // Assert
@@ -164,7 +276,8 @@ void main() {
       tStreamController.add(tLoadedFronteggStateMap);
     });
 
-    test('should return valid FronteggState, Loading FronteggState, Loaded FronteggState',
+    test(
+        'should return valid FronteggState, Loading FronteggState, Loaded FronteggState',
         () async {
       tStreamController.add(tEmptyFronteggState.toMap());
       await Future.value();
@@ -200,7 +313,8 @@ void main() {
   });
 
   group('requestAuthorize(refreshToken, deviceTokenCookie)', () {
-    test('should call FronteggPlatform.instance.requestAuthorize(refreshToken, deviceTokenCookie)',
+    test(
+        'should call FronteggPlatform.instance.requestAuthorize(refreshToken, deviceTokenCookie)',
         () async {
       // Arrange
       when(

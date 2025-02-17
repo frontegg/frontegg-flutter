@@ -13,7 +13,8 @@ class MainPage extends StatelessWidget {
       body: Center(
         child: StreamBuilder<FronteggState>(
           stream: frontegg.stateChanged,
-          builder: (BuildContext context, AsyncSnapshot<FronteggState> snapshot) {
+          builder:
+              (BuildContext context, AsyncSnapshot<FronteggState> snapshot) {
             if (snapshot.hasData) {
               final state = snapshot.data!;
               if (state.isAuthenticated && state.user != null) {

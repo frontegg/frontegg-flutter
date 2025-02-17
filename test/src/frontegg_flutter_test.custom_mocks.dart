@@ -7,7 +7,8 @@ import 'dart:async' as _i3;
 
 import 'package:frontegg_flutter/src/frontegg_platform_interface.dart' as _i2;
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:plugin_platform_interface/plugin_platform_interface.dart' as _i3;
+import 'package:plugin_platform_interface/plugin_platform_interface.dart'
+    as _i3;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -59,11 +60,57 @@ class MockFronteggPlatform extends _i1.Mock
       ) as _i3.Future<void>);
 
   @override
-  _i3.Future<void> directLoginAction(String? type, String? data, {bool ephemeralSession = true}) =>
+  _i3.Future<void> directLoginAction(String? type, String? data,
+          {bool ephemeralSession = true,
+          Map<String, String>? additionalQueryParams}) =>
       (super.noSuchMethod(
         Invocation.method(
           #directLoginAction,
-          [type, data, ephemeralSession],
+          [type, data, ephemeralSession, additionalQueryParams],
+        ),
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
+
+  @override
+  _i3.Future<void> directLogin(
+          {required String url,
+          bool ephemeralSession = true,
+          Map<String, String>? additionalQueryParams}) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #directLoginAction,
+          [url, ephemeralSession, additionalQueryParams],
+        ),
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
+
+  @override
+  _i3.Future<void> socialLogin({
+    required String provider,
+    bool ephemeralSession = true,
+    Map<String, String>? additionalQueryParams,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #directLoginAction,
+          [provider, ephemeralSession, additionalQueryParams],
+        ),
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
+
+  @override
+  _i3.Future<void> customSocialLogin({
+    required String id,
+    bool ephemeralSession = true,
+    Map<String, String>? additionalQueryParams,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #directLoginAction,
+          [id, ephemeralSession, additionalQueryParams],
         ),
         returnValue: _i3.Future<void>.value(),
         returnValueForMissingStub: _i3.Future<void>.value(),

@@ -18,6 +18,9 @@ class FronteggMethodChannel extends FronteggPlatform {
   static const String logoutMethodName = "logout";
   static const String switchTenantMethodName = "switchTenant";
   static const String directLoginActionMethodName = "directLoginAction";
+  static const String directLoginMethodName = "directLogin";
+  static const String socialLoginMethodName = "socialLogin";
+  static const String customSocialLoginMethodName = "customSocialLogin";
   static const String refreshTokenMethodName = "refreshToken";
   static const String getConstantsMethodName = "getConstants";
   static const String requestAuthorizeMethodName = "requestAuthorize";
@@ -61,7 +64,8 @@ class FronteggMethodChannel extends FronteggPlatform {
   ///
   /// Throws [FronteggException] if registration is failed.
   @override
-  Future<void> registerPasskeys() => methodChannel.invokeMethod(registerPasskeysMethodName);
+  Future<void> registerPasskeys() =>
+      methodChannel.invokeMethod(registerPasskeysMethodName);
 
   /// Login with passkeys.
   ///
@@ -69,7 +73,8 @@ class FronteggMethodChannel extends FronteggPlatform {
   ///
   /// Throws [FronteggException] if login is failed.
   @override
-  Future<void> loginWithPasskeys() => methodChannel.invokeMethod(loginWithPasskeysMethodName);
+  Future<void> loginWithPasskeys() =>
+      methodChannel.invokeMethod(loginWithPasskeysMethodName);
 
   /// Switches the current tenant by invoking the native platform's switchTenant method.
   ///
@@ -84,21 +89,90 @@ class FronteggMethodChannel extends FronteggPlatform {
         },
       );
 
-  /// Performs a direct login action by invoking the native platform's directLoginAction method.
+  /// Initiates a direct login by invoking the native platform's `directLoginAction` method.
   ///
-  /// [type]: The type of login action to perform.
-  /// [data]: The data associated with the login action.
-  /// [ephemeralSession]: Optional boolean indicating whether the session should be ephemeral (not sharing session with default browser). Defaults to true.
+  /// - [url]: The URL used for the direct login.
+  /// - [ephemeralSession]: (Optional) Whether the session should be ephemeral (i.e., not shared with the default browser). Defaults to `true`.
+  /// - [additionalQueryParams]: (Optional) A map containing additional query parameters. Defaults to `null`.
   ///
   /// Returns a [Future] that completes when the login action is finished.
   @override
-  Future<void> directLoginAction(String type, String data, {bool ephemeralSession = true}) =>
+  Future<void> directLoginAction(String type, String data,
+          {bool ephemeralSession = true,
+          Map<String, String>? additionalQueryParams}) =>
       methodChannel.invokeMethod(
         directLoginActionMethodName,
         {
           "type": type,
           "data": data,
           "ephemeralSession": ephemeralSession,
+          "additionalQueryParams": additionalQueryParams,
+        },
+      );
+
+  /// Initiates a direct login by invoking the native platform's `directLogin` method.
+  ///
+  /// - [url]: The URL used for the direct login.
+  /// - [ephemeralSession]: (Optional) Whether the session should be ephemeral (i.e., not shared with the default browser). Defaults to `true`.
+  /// - [additionalQueryParams]: (Optional) A map containing additional query parameters. Defaults to `null`.
+  ///
+  /// Returns a [Future] that completes when the login action is finished.
+  @override
+  Future<void> directLogin({
+    required String url,
+    bool ephemeralSession = true,
+    Map<String, String>? additionalQueryParams,
+  }) =>
+      methodChannel.invokeMethod(
+        directLoginMethodName,
+        {
+          "url": url,
+          "ephemeralSession": ephemeralSession,
+          "additionalQueryParams": additionalQueryParams,
+        },
+      );
+
+  /// Initiates a direct login by invoking the native platform's `directLogin` method.
+  ///
+  /// - [provider]: The Social Provider used for the Social Login.
+  /// - [ephemeralSession]: (Optional) Whether the session should be ephemeral (i.e., not shared with the default browser). Defaults to `true`.
+  /// - [additionalQueryParams]: (Optional) A map containing additional query parameters. Defaults to `null`.
+  ///
+  /// Returns a [Future] that completes when the login action is finished.
+  @override
+  Future<void> socialLogin({
+    required String provider,
+    bool ephemeralSession = true,
+    Map<String, String>? additionalQueryParams,
+  }) =>
+      methodChannel.invokeMethod(
+        socialLoginMethodName,
+        {
+          "provider": provider,
+          "ephemeralSession": ephemeralSession,
+          "additionalQueryParams": additionalQueryParams,
+        },
+      );
+
+  /// Initiates a Custom Social login by invoking the native platform's `customSocial` method.
+  ///
+  /// - [id]: The ID(UUID) used for the Custom Social Login.
+  /// - [ephemeralSession]: (Optional) Whether the session should be ephemeral (i.e., not shared with the default browser). Defaults to `true`.
+  /// - [additionalQueryParams]: (Optional) A map containing additional query parameters. Defaults to `null`.
+  ///
+  /// Returns a [Future] that completes when the login action is finished.
+  @override
+  Future<void> customSocialLogin({
+    required String id,
+    bool ephemeralSession = true,
+    Map<String, String>? additionalQueryParams,
+  }) =>
+      methodChannel.invokeMethod(
+        customSocialLoginMethodName,
+        {
+          "id": id,
+          "ephemeralSession": ephemeralSession,
+          "additionalQueryParams": additionalQueryParams,
         },
       );
 
@@ -107,7 +181,8 @@ class FronteggMethodChannel extends FronteggPlatform {
   /// Returns a [Future] that completes with a boolean value indicating
   /// whether the token refresh was successful.
   @override
-  Future<bool?> refreshToken() => methodChannel.invokeMethod<bool>(refreshTokenMethodName);
+  Future<bool?> refreshToken() =>
+      methodChannel.invokeMethod<bool>(refreshTokenMethodName);
 
   /// Logs the user out by invoking the native platform's logout method.
   ///
