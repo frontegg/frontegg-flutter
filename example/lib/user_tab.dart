@@ -57,9 +57,8 @@ class UserTab extends StatelessWidget {
                   ),
                 if (!state.isLoading)
                   ElevatedButton(
-                    child: const Text(
-                      "Logout",
-                    ),
+                    key: const ValueKey("LogoutButton"),
+                    child: const Text("Logout"),
                     onPressed: () async {
                       await frontegg.logout();
                       debugPrint("Logout Finished");

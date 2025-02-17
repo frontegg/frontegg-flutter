@@ -26,19 +26,27 @@ class TenantsTab extends StatelessWidget {
                 (e) {
                   final isActive = user.activeTenant.tenantId == e.tenantId;
                   return ListTile(
-                    title: Row(
-                      children: [
-                        Text(e.name),
-                        if (isActive) const SizedBox(width: 10),
-                        if (isActive)
-                          const Text(
-                            "(active)",
-                            style: TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w300,
+                    key: ValueKey(e.tenantId),
+                    title: RichText(
+                      text: TextSpan(
+                        children: [
+                          TextSpan(
+                            text: e.name,
+                            style: const TextStyle(
+                              color: Colors.black,
                             ),
                           ),
-                      ],
+                          if (isActive)
+                            const TextSpan(
+                              text: " (active)",
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w300,
+                                color: Colors.black,
+                              ),
+                            ),
+                        ],
+                      ),
                     ),
                     onTap: () {
                       frontegg.switchTenant(e.tenantId);

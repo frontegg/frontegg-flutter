@@ -40,6 +40,7 @@ class LoginPage extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         ElevatedButton(
+                          key: const ValueKey("LoginButton"),
                           child: const Text("Login"),
                           onPressed: () async {
                             await frontegg.login(loginHint: "some@mail.com");
