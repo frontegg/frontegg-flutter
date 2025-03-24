@@ -1,5 +1,6 @@
 import UIKit
 import Flutter
+import SwiftUI
 
 import FronteggSwift
 
@@ -10,6 +11,9 @@ import FronteggSwift
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
     ) -> Bool {
         GeneratedPluginRegistrant.register(with: self)
+
+        DefaultLoader.customLoaderView = AnyView(Text("Loading..."))
+        
         return super.application(application, didFinishLaunchingWithOptions: launchOptions)
     }
     

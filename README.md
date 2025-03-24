@@ -20,6 +20,7 @@ features for the product-led era.
     - [Config iOS associated domain](#config-ios-associated-domain)
     - [Multi-apps iOS Support](#multi-apps-ios-support)
     - [Logout User after application was uninstall](#logout-user-after-application-was-uninstall)
+    - [Custom Loader](#custom-loader)
   - [Setup Android Project](#setup-android-project)
     - [Set minimum sdk version](#set-minimum-sdk-version)
     - [Configure build config fields](#configure-build-config-fields)
@@ -27,6 +28,7 @@ features for the product-led era.
     - [Config Android AssetLinks](#config-android-assetlinks)
     - [Enabling Chrome Custom Tabs for Social Login](#enabling-chrome-custom-tabs-for-social-login)
     - [Multi-apps Android Support](#multi-apps-android-support)
+    - [Custom Loader](#custom-loader)
   - [Usages](#usages)
     - [Wrap your root Widget with FronteggProvider:](#wrap-your-root-widget-with-fronteggprovider)
     - [Access to frontegg instance](#access-to-frontegg-instance)
@@ -285,6 +287,45 @@ If you want that user not to keep logged in after reinstalling an application pl
 By default `keepUserLoggedInAfterReinstall` is `true`.
 
 
+### Custom Loader
+
+To customize the loader for iOS when using Embedded mode, you can set up a custom loader by modifying your `AppDelegate.swift` file.
+The custom loader will be displayed during authentication processes.
+
+First, ensure that Embedded mode is enabled in your configuration.
+```plist
+ <plist version="1.0">
+<dict>
+	<key>embeddedMode</key>
+	<true/>
+	...
+</dict>
+</plist>
+```
+
+Here's how to implement a custom loader:
+
+```swift
+import SwiftUI
+import FronteggSwift
+
+@main
+@objc class AppDelegate: FlutterAppDelegate {
+    override func application(
+        _ application: UIApplication,
+        didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
+    ) -> Bool {
+         ...
+        // Setup Loader for Frontegg Embedded Loading
+        // Can be any view
+        DefaultLoader.customLoaderView = AnyView(Text("Loading..."))
+        
+        return super.application(application, didFinishLaunchingWithOptions: launchOptions)
+    }
+    ...
+}
+```
+
 ## Setup Android Project
 
 ### Set minimum sdk version
@@ -440,6 +481,39 @@ def fronteggApplicationId = "your-application-id-uuid"
 android {
     ...
     buildConfigField "String", 'FRONTEGG_APPLICATION_ID', "\"$fronteggApplicationId\""
+}
+```
+
+## Custom Loader
+
+To customize the loader for Android when using Embedded Activity mode, you can set up a custom loader by modifying your `MainActivity.kt` file. The custom loader will be displayed during authentication processes.
+
+First, ensure that Embedded Activity mode is enabled in your configuration.
+
+Here's how to implement a custom loader:
+
+```kotlin
+import android.content.res.ColorStateList
+import android.graphics.Color
+import android.os.Bundle
+import android.widget.ProgressBar
+import com.frontegg.android.ui.DefaultLoader
+import io.flutter.embedding.android.FlutterActivity
+
+class MainActivity : FlutterActivity() {
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+
+    // Setup Loader for Frontegg Embedded Activity Loading
+    DefaultLoader.setLoaderProvider {
+      // Can be any view
+      val progressBar = ProgressBar(it)
+      val colorStateList = ColorStateList.valueOf(Color.GREEN)
+      progressBar.indeterminateTintList = colorStateList
+
+      progressBar
+    }
+  }
 }
 ```
 

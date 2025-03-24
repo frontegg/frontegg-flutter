@@ -49,27 +49,32 @@ class LoginPage extends StatelessWidget {
                         ),
                         ElevatedButton(
                           child: const Text("Login with Google"),
-                          onPressed: () {
-                            frontegg.socialLogin(
+                          onPressed: () async {
+                            await frontegg.socialLogin(
                                 provider: FronteggSocialProvider.google);
+                            debugPrint("Login via Google Finished");
                           },
                         ),
                         ElevatedButton(
                           child: const Text("Direct apple login"),
-                          onPressed: () {
-                            frontegg.directLogin(
+                          onPressed: () async {
+                            await frontegg.directLogin(
                               url:
                                   "https://appleid.apple.com/auth/authorize?response_type=code&response_mode=form_post&redirect_uri=https%3A%2F%2Fauth.davidantoon.me%2Fidentity%2Fresources%2Fauth%2Fv2%2Fuser%2Fsso%2Fapple%2Fpostlogin&scope=openid+name+email&state=%7B%22oauthState%22%3A%22eyJGUk9OVEVHR19PQVVUSF9SRURJUkVDVF9BRlRFUl9MT0dJTiI6ImNvbS5mcm9udGVnZy5kZW1vOi8vYXV0aC5kYXZpZGFudG9vbi5tZS9pb3Mvb2F1dGgvY2FsbGJhY2siLCJGUk9OVEVHR19PQVVUSF9TVEFURV9BRlRFUl9MT0dJTiI6IjQ1MDVkMzljLTg0ZTctNDhiZi1hMzY3LTVmMjhmMmZlMWU1YiJ9%22%2C%22provider%22%3A%22apple%22%2C%22appId%22%3A%22%22%2C%22action%22%3A%22login%22%7D&client_id=com.frontegg.demo.client",
                               ephemeralSession: true,
                             );
+
+                            debugPrint("Direct Login Finished");
                           },
                         ),
                         ElevatedButton(
                           child: const Text("Custom social login"),
-                          onPressed: () {
-                            frontegg.customSocialLogin(
+                          onPressed: () async {
+                            await frontegg.customSocialLogin(
                               id: "6fbe9b2d-bfce-4804-aa4b-a1503db588ae",
                             );
+
+                            debugPrint("Custom Social Login Finished");
                           },
                         ),
                         ElevatedButton(
