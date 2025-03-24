@@ -40,7 +40,7 @@ class FronteggMethodCallHandler(
     private fun directLoginAction(call: MethodCall, result: MethodChannel.Result) {
         val type = call.argument<String>("type") ?: throw ArgumentNotFoundException("type")
         val data = call.argument<String>("data") ?: throw ArgumentNotFoundException("data")
-        if (FronteggApp.getInstance().isEmbeddedMode) {
+        if (FronteggApp.getInstance().auth.isEmbeddedMode) {
             activityProvider.getActivity()?.let {
                 FronteggAuth.instance.directLoginAction(it, type, data) {
                     result.success(null)
@@ -57,7 +57,7 @@ class FronteggMethodCallHandler(
 
     private fun directLogin(call: MethodCall, result: MethodChannel.Result) {
         val url = call.argument<String>("url") ?: throw ArgumentNotFoundException("url")
-        if (FronteggApp.getInstance().isEmbeddedMode) {
+        if (FronteggApp.getInstance().auth.isEmbeddedMode) {
             activityProvider.getActivity()?.let {
                 FronteggAuth.instance.directLoginAction(it, "direct", url) {
                     result.success(null)
@@ -75,7 +75,7 @@ class FronteggMethodCallHandler(
     private fun socialLogin(call: MethodCall, result: MethodChannel.Result) {
         val provider =
             call.argument<String>("provider") ?: throw ArgumentNotFoundException("provider")
-        if (FronteggApp.getInstance().isEmbeddedMode) {
+        if (FronteggApp.getInstance().auth.isEmbeddedMode) {
             activityProvider.getActivity()?.let {
                 FronteggAuth.instance.directLoginAction(it, "social-login", provider) {
                     result.success(null)
@@ -93,7 +93,7 @@ class FronteggMethodCallHandler(
     private fun customSocialLogin(call: MethodCall, result: MethodChannel.Result) {
         val id = call.argument<String>("id") ?: throw ArgumentNotFoundException("id")
 
-        if (FronteggApp.getInstance().isEmbeddedMode) {
+        if (FronteggApp.getInstance().auth.isEmbeddedMode) {
             activityProvider.getActivity()?.let {
                 FronteggAuth.instance.directLoginAction(it, "custom-social-login", id) {
                     result.success(null)
