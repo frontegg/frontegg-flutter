@@ -27,9 +27,9 @@ def fronteggClientId = "392b348b-a37c-471f-8f1b-2c35d23aa7e6"
 
 android {
     namespace "com.frontegg.demo"
-    compileSdk 34
+    compileSdk 35
     ndkVersion flutter.ndkVersion
-    ndkVersion = "26.1.10909125"
+    ndkVersion = "26.3.11579264"
 
 
     compileOptions {
@@ -48,7 +48,7 @@ android {
     defaultConfig {
         applicationId "com.frontegg.demo"
         minSdkVersion 26
-        targetSdkVersion 34
+        targetSdkVersion 35
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
 
