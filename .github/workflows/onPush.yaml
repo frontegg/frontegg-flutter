@@ -17,6 +17,9 @@ jobs:
           architecture: x64
           flutter-version: 3.27.4
 
+      - name: Flutter clean
+        run: flutter clean
+
       - name: Install dependencies
         run: flutter pub get
 
