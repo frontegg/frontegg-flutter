@@ -47,7 +47,7 @@ jobs:
 
           cd hosted
           flutter pub get
-          cd..
+          cd ..
 
       - name: Flutter Publish dry run
         run: flutter pub publish --force
