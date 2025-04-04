@@ -1,0 +1,18 @@
+rootProject.buildDir = '../build'
+
+ext {
+    kotlinVersion = "1.7.10"
+    buildToolsVersion = "32.0.0"
+}
+
+subprojects {
+    project.buildDir = "${rootProject.buildDir}/${project.name}"
+}
+
+subprojects {
+    project.evaluationDependsOn(':app')
+}
+
+tasks.register("clean", Delete) {
+    delete rootProject.buildDir
+}
