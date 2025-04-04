@@ -2,6 +2,7 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<!-- Enable embedded mode -->
 	<key>embeddedMode</key>
 	<true/>
 	<key>baseUrl</key>
@@ -10,6 +11,7 @@
     <string>b6adfe4c-d695-4c04-b95f-3ec9fd0c6cca</string>
 	<key>logLevel</key>
 	<string>trace</string>
+	<!-- Keep user logged in after reinstall -->
 	<key>keepUserLoggedInAfterReinstall</key>
 	<false/>
 </dict>
