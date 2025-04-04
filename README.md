@@ -686,8 +686,8 @@ To get a state of the `FronteggFlutter` you have two option:
    ```dart
     import 'package:flutter/material.dart';
     import 'package:frontegg_flutter/frontegg_flutter.dart';
-    import 'package:frontegg_flutter_example/login_page.dart';
-    import 'package:frontegg_flutter_example/user_page.dart';
+    import 'package:frontegg_flutter_embedded_example/login_page.dart';
+    import 'package:frontegg_flutter_embedded_example/user_page.dart';
 
     class MainPage extends StatelessWidget {
       const MainPage({super.key});

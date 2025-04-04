@@ -22,8 +22,10 @@ if (flutterVersionName == null) {
     flutterVersionName = '1.0'
 }
 
-def fronteggDomain = "app-axsx38m96enh.frontegg.com"
-def fronteggClientId = "392b348b-a37c-471f-8f1b-2c35d23aa7e6"
+
+def fronteggDomain = "autheu.davidantoon.me"
+def fronteggClientId = "b6adfe4c-d695-4c04-b95f-3ec9fd0c6cca"
+
 
 android {
     namespace "com.frontegg.demo"

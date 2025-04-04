@@ -1,4 +1,4 @@
-name: frontegg_flutter_example
+name: frontegg_flutter_embedded_example
 description: "Demonstrates how to use the frontegg plugin."
 publish_to: 'none'
 version: 1.0.0
