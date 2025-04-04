@@ -34,7 +34,7 @@ jobs:
           
           cd hosted
           flutter pub get
-          cd..
+          cd ..
 
       - name: Analyze code
         run: flutter analyze
