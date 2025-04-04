@@ -22,10 +22,3 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
-
-patrol:
-  app_name: Frontegg Demo
-  android:
-    package_name: com.frontegg.demo
-  ios:
-    bundle_id: com.frontegg.demo

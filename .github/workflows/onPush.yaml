@@ -21,7 +21,20 @@ jobs:
         run: flutter clean
 
       - name: Install dependencies
-        run: flutter pub get
+        run: |
+          flutter pub get
+          
+          cd application_id
+          flutter pub get
+          cd ..
+          
+          cd embedded
+          flutter pub get
+          cd ..
+          
+          cd hosted
+          flutter pub get
+          cd..
 
       - name: Analyze code
         run: flutter analyze
@@ -30,13 +43,13 @@ jobs:
         run: flutter test
 
       - name: Build AppBundle
-        working-directory: example
+        working-directory: embedded
         run: flutter build appbundle --release
 
       - name: Build APK
-        working-directory: example
+        working-directory: embedded
         run: flutter build apk --release
 
       - name: Build iOS
-        working-directory: example
+        working-directory: embedded
         run: flutter build ios --no-codesign

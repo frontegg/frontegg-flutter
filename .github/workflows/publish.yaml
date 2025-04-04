@@ -33,8 +33,21 @@ jobs:
 
       - uses: flutter-actions/setup-pubdev-credentials@v1.0
 
-      - name: Install Dependencies
-        run: flutter pub get
+      - name: Install dependencies
+        run: |
+          flutter pub get
+
+          cd application_id
+          flutter pub get
+          cd ..
+
+          cd embedded
+          flutter pub get
+          cd ..
+
+          cd hosted
+          flutter pub get
+          cd..
 
       - name: Flutter Publish dry run
         run: flutter pub publish --force
