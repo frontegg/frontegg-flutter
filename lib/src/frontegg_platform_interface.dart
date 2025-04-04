@@ -85,4 +85,16 @@ abstract class FronteggPlatform extends PlatformInterface {
   }) {
     throw UnimplementedError("requestAuthorize() has not been implemented.");
   }
+
+  Future<bool> isSteppedUp({
+    Duration? maxAge,
+  }) {
+    throw UnimplementedError("isSteppedUp() has not been implemented.");
+  }
+
+  Future<void> stepUp({
+    Duration? maxAge,
+  }) {
+    throw UnimplementedError("stepUp() has not been implemented.");
+  }
 }

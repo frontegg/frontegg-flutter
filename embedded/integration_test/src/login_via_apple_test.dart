@@ -46,8 +46,9 @@ void main() {
           ),
         ),
         text: email,
-        keyboardBehavior:
-            Platform.isIOS ? KeyboardBehavior.showAndDismiss : KeyboardBehavior.alternative,
+        keyboardBehavior: Platform.isIOS
+            ? KeyboardBehavior.showAndDismiss
+            : KeyboardBehavior.alternative,
       );
       if (Platform.isAndroid) {
         await $.native.tap(Selector(resourceId: "sign-in"));
@@ -64,14 +65,16 @@ void main() {
           ),
         ),
         text: password,
-        keyboardBehavior:
-            Platform.isIOS ? KeyboardBehavior.showAndDismiss : KeyboardBehavior.alternative,
+        keyboardBehavior: Platform.isIOS
+            ? KeyboardBehavior.showAndDismiss
+            : KeyboardBehavior.alternative,
       );
       if (Platform.isAndroid) {
         await $.native.tap(Selector(resourceId: "sign-in"));
       }
 
-      await $.native.waitUntilVisible(Selector(textStartsWith: "Do you want to continue using"));
+      await $.native.waitUntilVisible(
+          Selector(textStartsWith: "Do you want to continue using"));
       await Future.delayed(const Duration(seconds: 2));
       await $.native2.tap(
         NativeSelector(

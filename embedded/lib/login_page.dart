@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:frontegg_flutter/frontegg_flutter.dart';
 
-/// Login page 
-/// 
+/// Login page
+///
 /// This is a simple login page that allows the user to login with a username and password.
 /// It also allows the user to login with a social provider.
 /// It also allows the user to login with a passkey.
 /// It also allows the user to login with a token.
-/// 
+///
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
 

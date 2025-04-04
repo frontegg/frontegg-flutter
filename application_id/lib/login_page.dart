@@ -37,7 +37,8 @@ class LoginPage extends StatelessWidget {
             // StreamBuilder to listen to the state of the authentication
             child: StreamBuilder<FronteggState>(
               stream: frontegg.stateChanged,
-              builder: (BuildContext context, AsyncSnapshot<FronteggState> snapshot) {
+              builder: (BuildContext context,
+                  AsyncSnapshot<FronteggState> snapshot) {
                 if (snapshot.hasData) {
                   final state = snapshot.data!;
                   if (state.isLoading) {

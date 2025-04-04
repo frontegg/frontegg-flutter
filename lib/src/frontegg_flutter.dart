@@ -284,11 +284,32 @@ class FronteggFlutter {
         return null;
       });
 
+  Future<bool> isSteppedUp({
+    Duration? maxAge,
+  }) =>
+      _runAction(
+        () => FronteggPlatform.instance.isSteppedUp(
+          maxAge: maxAge,
+        ),
+      );
+
+  Future<void> stepUp({
+    Duration? maxAge,
+  }) =>
+      _runAction(() => FronteggPlatform.instance.stepUp(maxAge: maxAge));
+
   Future<T> _runAction<T>(Future<T> Function() action) async {
     try {
       return await action();
     } on PlatformException catch (e) {
-      throw FronteggException(message: e.message);
+      throw FronteggException.fromFailureReason(
+        e.code,
+        message: e.message,
+      );
+    } catch (e) {
+      throw UnknownException(
+        e.toString(),
+      );
     }
   }
 }

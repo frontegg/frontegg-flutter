@@ -4,7 +4,6 @@ import Flutter
 
 class FronteggMethodCallHandler {
     private var fronteggApp: FronteggApp
-    private let ERROR_CODE: String = "frontegg.error"
     
     init(fronteggApp: FronteggApp) {
         self.fronteggApp = fronteggApp
@@ -38,9 +37,51 @@ class FronteggMethodCallHandler {
         case "customSocialLogin":
             customSocialLogin(call: call, result: result)
             
+        case "stepUp":
+            stepUp(call: call, result: result)
+        case "isSteppedUp":
+            isSteppedUp(call: call, result: result)
+            
             
         default:
             result(FlutterMethodNotImplemented)
+        }
+    }
+    
+    private func isSteppedUp(
+        call: FlutterMethodCall,
+        result: @escaping FlutterResult
+    ) {
+        guard let arguments = call.arguments as? [String: Any?] else {
+            return result(FlutterError(code: "MISSING_PARAMS", message: "Missing argumants", details: nil))
+        }
+        
+        let maxAge = arguments["maxAge"] as? TimeInterval
+        
+        let isSteppedUp = fronteggApp.auth.isSteppedUp(maxAge: maxAge)
+        result(isSteppedUp)
+    }
+    
+    private func stepUp(
+        call: FlutterMethodCall,
+        result: @escaping FlutterResult
+    )  {
+        guard let arguments = call.arguments as? [String: Any?] else {
+            return result(FlutterError(code: "MISSING_PARAMS", message: "Missing argumants", details: nil))
+        }
+        let maxAge = arguments["maxAge"] as? TimeInterval
+        
+        let compelation: FronteggAuth.CompletionHandler = { res in
+            switch (res) {
+                case .success(_):
+                    result(nil)
+                case .failure(let error):
+                result(FlutterError(code: error.failureReason ?? "unknown", message: error.localizedDescription, details: nil))
+            }
+        }
+        
+        Task {
+            await fronteggApp.auth.stepUp(maxAge: maxAge, compelation)
         }
     }
     
@@ -189,7 +230,7 @@ class FronteggMethodCallHandler {
            case .success(_):
                result(nil)
            case .failure(let error):
-               result(FlutterError(code: "LOGIN_ERROR", message: error.failureReason ?? "", details: nil))
+               result(FlutterError(code: error.failureReason ?? "unknown", message: error.localizedDescription, details: nil))
            }
 
        }
@@ -219,7 +260,7 @@ class FronteggMethodCallHandler {
                 }
                 result(jsonUser)
             case .failure(let error):
-                result(FlutterError(code: "REQUEST_AUTHORIZE_ERROR", message: error.failureReason ?? "", details: nil))
+                result(FlutterError(code: error.failureReason ?? "unknown", message: error.localizedDescription, details: nil))
             }
         }
         
@@ -232,10 +273,7 @@ class FronteggMethodCallHandler {
             case .success(_):
                 result(nil)
             case .failure(let error):
-                result(FlutterError(
-                    code: self.ERROR_CODE,
-                    message: error.localizedDescription,
-                    details: nil
+                result(FlutterError(code: error.failureReason ?? "unknown", message: error.localizedDescription, details: nil
                 ))
             }
         }
@@ -246,9 +284,7 @@ class FronteggMethodCallHandler {
         let completion: FronteggAuth.ConditionCompletionHandler = { error in
             if let fronteggError = error {
                 result(FlutterError(
-                    code: self.ERROR_CODE,
-                    message: fronteggError.localizedDescription,
-                    details: nil
+                    code: fronteggError.failureReason ?? "unknown", message: fronteggError.localizedDescription, details: nil
                 ))
             } else {
                 result(nil)

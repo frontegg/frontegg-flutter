@@ -24,6 +24,8 @@ class FronteggMethodChannel extends FronteggPlatform {
   static const String refreshTokenMethodName = "refreshToken";
   static const String getConstantsMethodName = "getConstants";
   static const String requestAuthorizeMethodName = "requestAuthorize";
+  static const String stepUpMethodName = "stepUp";
+  static const String isSteppedUpMethodName = "isSteppedUp";
 
   /// MethodChannel used for invoking platform-specific methods.
   @visibleForTesting
@@ -211,6 +213,29 @@ class FronteggMethodChannel extends FronteggPlatform {
         {
           "refreshToken": refreshToken,
           "deviceTokenCookie": deviceTokenCookie,
+        },
+      );
+
+  @override
+  Future<bool> isSteppedUp({
+    Duration? maxAge,
+  }) async =>
+      (await methodChannel.invokeMethod<bool>(
+        isSteppedUpMethodName,
+        {
+          "maxAge": maxAge?.inSeconds,
+        },
+      )) ??
+      false;
+
+  @override
+  Future<void> stepUp({
+    Duration? maxAge,
+  }) =>
+      methodChannel.invokeMethod<bool>(
+        stepUpMethodName,
+        {
+          "maxAge": maxAge?.inSeconds,
         },
       );
 }

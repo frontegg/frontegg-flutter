@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:frontegg_flutter/frontegg_flutter.dart';
 
 /// UserTab
-/// 
+///
 /// This is a stateless widget that builds the user tab.
 /// It is used to display the user's profile information.
-/// 
+///
 class UserTab extends StatelessWidget {
   const UserTab({
     super.key,

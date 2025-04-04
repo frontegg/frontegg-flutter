@@ -2,8 +2,8 @@ PODS:
   - Flutter (1.0.0)
   - frontegg_flutter (1.0.8):
     - Flutter
-    - FronteggSwift (~> 1.2.35)
-  - FronteggSwift (1.2.35)
+    - FronteggSwift (~> 1.2.36)
+  - FronteggSwift (1.2.36)
   - integration_test (0.0.1):
     - Flutter
 
@@ -26,8 +26,8 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
-  frontegg_flutter: e7374ebdced7dc7e5264aa6ef752013f97fe8420
-  FronteggSwift: c90a92236fe137483c090a5066b310d9f534723e
+  frontegg_flutter: a4c4006393ccb5076f7634704cef71625f2efa41
+  FronteggSwift: a2bf35f05a5f597eae1225af332130652ee6b97c
   integration_test: 4a889634ef21a45d28d50d622cf412dc6d9f586e
 
 PODFILE CHECKSUM: c9be09f6a61958d6788db8b9ee489767b65cfa92

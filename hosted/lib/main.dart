@@ -8,7 +8,7 @@ void main() async {
 }
 
 /// MyApp
-/// 
+///
 /// This is the main app that is used to run the app.
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
