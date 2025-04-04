@@ -1,0 +1,129 @@
+plugins {
+    id "com.android.application"
+    id "kotlin-android"
+    id "dev.flutter.flutter-gradle-plugin"
+}
+
+def localProperties = new Properties()
+def localPropertiesFile = rootProject.file('local.properties')
+if (localPropertiesFile.exists()) {
+    localPropertiesFile.withReader('UTF-8') { reader ->
+        localProperties.load(reader)
+    }
+}
+
+def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
+if (flutterVersionCode == null) {
+    flutterVersionCode = '1'
+}
+
+def flutterVersionName = localProperties.getProperty('flutter.versionName')
+if (flutterVersionName == null) {
+    flutterVersionName = '1.0'
+}
+
+
+def fronteggDomain = "autheu.davidantoon.me"
+def fronteggClientId = "b6adfe4c-d695-4c04-b95f-3ec9fd0c6cca"
+def fronteggApplicationId = "f717b75f-e09a-48cc-a84e-e20a8454a9cf"
+
+
+android {
+    namespace "com.frontegg.demo"
+    compileSdk 35
+    ndkVersion flutter.ndkVersion
+    ndkVersion = "26.3.11579264"
+
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+
+    sourceSets {
+        main.java.srcDirs += 'src/main/kotlin'
+    }
+
+    defaultConfig {
+        applicationId "com.frontegg.demo"
+        minSdkVersion 26
+        targetSdkVersion 35
+        versionCode flutterVersionCode.toInteger()
+        versionName flutterVersionName
+
+        manifestPlaceholders = [
+                "package_name" : applicationId,
+                "frontegg_domain" : fronteggDomain,
+                "frontegg_client_id": fronteggClientId,
+
+                "auth_activity": "com.frontegg.android.HostedAuthActivity",
+        ]
+
+        buildConfigField "String", 'FRONTEGG_DOMAIN', "\"$fronteggDomain\""
+        buildConfigField "String", 'FRONTEGG_CLIENT_ID', "\"$fronteggClientId\""
+        // Add application id here
+        buildConfigField "String", 'FRONTEGG_APPLICATION_ID', "\"$fronteggApplicationId\""
+        buildConfigField "Boolean", 'FRONTEGG_USE_ASSETS_LINKS', "true"
+        buildConfigField "Boolean", 'FRONTEGG_USE_CHROME_CUSTOM_TABS', "true"
+
+        testInstrumentationRunner "pl.leancode.patrol.PatrolJUnitRunner"
+        testInstrumentationRunnerArguments clearPackageData: "true"
+    }
+
+    testOptions {
+        execution "ANDROIDX_TEST_ORCHESTRATOR"
+    }
+
+    signingConfigs {
+        debug {
+            storeFile file("./../../../.github/test-jks/debug.keystore")
+        }
+
+        release {
+            storeFile file("./../../../.github/test-jks/release.keystore")
+        }
+    }
+
+    signingConfigs {
+        debug {
+            storeFile file("./../../../.github/test-jks/debug.keystore")
+        }
+
+        release {
+            storeFile file("./../../../.github/test-jks/release.keystore")
+        }
+    }
+
+    buildTypes {
+        release {
+            signingConfig signingConfigs.debug
+
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+
+        debug {
+            minifyEnabled false
+            shrinkResources false
+        }
+    }
+
+    buildFeatures {
+        buildConfig = true
+    }
+
+    buildToolsVersion buildToolsVersion
+}
+
+flutter {
+    source '../..'
+}
+
+dependencies {
+    androidTestUtil "androidx.test:orchestrator:1.5.1"
+}
