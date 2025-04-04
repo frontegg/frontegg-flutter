@@ -63,7 +63,10 @@ void main() {
 
       await $.native.tap(Selector(text: "Sign up"));
 
-      await $.waitUntilVisible(find.text("Logout"), timeout: const Duration(seconds: 15),);
+      await $.waitUntilVisible(
+        find.text("Logout"),
+        timeout: const Duration(seconds: 15),
+      );
 
       await $.tap(find.byKey(const ValueKey("LogoutButton")));
       await $.pumpAndSettle();
@@ -244,7 +247,7 @@ void main() {
 
   patrolTest(
     'Failure Sign up with empty CompanyName field',
-        ($) async {
+    ($) async {
       await $.pumpWidget(const MyApp());
       await $.pumpAndSettle();
 
@@ -281,7 +284,8 @@ void main() {
 
       await $.native.tap(Selector(text: "Sign up"));
 
-      await $.native.waitUntilVisible(Selector(text: "Company name is required"));
+      await $.native
+          .waitUntilVisible(Selector(text: "Company name is required"));
     },
   );
 }

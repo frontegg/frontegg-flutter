@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:frontegg_flutter/frontegg_flutter.dart';
 
 /// UserTab
-/// 
+///
 /// This is a stateless widget that builds the user tab.
 /// It is used to display the user's profile information.
-/// 
+///
 class UserTab extends StatelessWidget {
   const UserTab({
     super.key,
@@ -71,6 +71,25 @@ class UserTab extends StatelessWidget {
                     onPressed: () async {
                       await frontegg.logout();
                       debugPrint("Logout Finished");
+                    },
+                  ),
+                if (!state.isLoading)
+                  // Step up Button
+                  ElevatedButton(
+                    key: const ValueKey("StepUpButton"),
+                    child: const Text("Step Up"),
+                    onPressed: () async {
+                      const maxAge = Duration(seconds: 60);
+                      if (!(await frontegg.isSteppedUp(maxAge: maxAge))) {
+                        try {
+                          await frontegg.stepUp(maxAge: maxAge);
+                          debugPrint("Stepped Up");
+                        } on FronteggException catch (e) {
+                          debugPrint("Exception: $e");
+                        }
+                      } else {
+                        debugPrint("Already Stepped Up");
+                      }
                     },
                   ),
               ],

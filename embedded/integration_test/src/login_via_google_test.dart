@@ -31,7 +31,10 @@ void main() {
       }
       await $.native.tap(Selector(text: email));
 
-      await $.waitUntilVisible(find.text("Logout"), timeout: const Duration(seconds: 15),);
+      await $.waitUntilVisible(
+        find.text("Logout"),
+        timeout: const Duration(seconds: 15),
+      );
 
       await $.tap(find.byKey(const ValueKey("LogoutButton")));
       await $.pumpAndSettle();
