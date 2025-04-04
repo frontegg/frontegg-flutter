@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:frontegg_flutter_example/main.dart';
+import 'package:frontegg_flutter_embedded_example/main.dart';
 import 'package:patrol/patrol.dart';
 import 'package:uuid/uuid.dart';
 

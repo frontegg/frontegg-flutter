@@ -5,9 +5,9 @@
 	<key>embeddedMode</key>
 	<true/>
 	<key>baseUrl</key>
-	<string>https://app-axsx38m96enh.frontegg.com</string>
-	<key>clientId</key>
-	<string>392b348b-a37c-471f-8f1b-2c35d23aa7e6</string>
+    <string>https://autheu.davidantoon.me</string>
+    <key>clientId</key>
+    <string>b6adfe4c-d695-4c04-b95f-3ec9fd0c6cca</string>
 	<key>logLevel</key>
 	<string>trace</string>
 	<key>keepUserLoggedInAfterReinstall</key>

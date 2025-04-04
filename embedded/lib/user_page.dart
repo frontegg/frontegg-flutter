@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontegg_flutter/frontegg_flutter.dart';
-import 'package:frontegg_flutter_example/tenants_tab.dart';
-import 'package:frontegg_flutter_example/user_tab.dart';
+import 'package:frontegg_flutter_embedded_example/tenants_tab.dart';
+import 'package:frontegg_flutter_embedded_example/user_tab.dart';
 
 class UserPage extends StatefulWidget {
   const UserPage({
