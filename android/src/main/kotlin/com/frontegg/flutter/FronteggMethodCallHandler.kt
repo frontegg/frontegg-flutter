@@ -2,12 +2,15 @@ package com.frontegg.flutter
 
 import com.frontegg.android.FronteggApp
 import com.frontegg.android.FronteggAuth
+import com.frontegg.android.exceptions.FronteggException
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlin.time.DurationUnit
+import kotlin.time.toDuration
 
 class FronteggMethodCallHandler(
     private val activityProvider: ActivityProvider,
@@ -33,7 +36,50 @@ class FronteggMethodCallHandler(
             "directLogin" -> directLogin(call, result)
             "socialLogin" -> socialLogin(call, result)
             "customSocialLogin" -> customSocialLogin(call, result)
+
+            "isSteppedUp" -> isSteppedUp(call, result)
+            "stepUp" -> stepUp(call, result)
+
             else -> result.notImplemented()
+        }
+    }
+
+
+    private fun isSteppedUp(call: MethodCall, result: MethodChannel.Result) {
+        val maxAge = call.argument<Int>("maxAge")
+
+        val isSteppedUp = FronteggApp.getInstance().auth.isSteppedUp(
+            maxAge = maxAge?.toDuration(DurationUnit.SECONDS)
+        )
+        result.success(isSteppedUp)
+    }
+
+    private fun stepUp(call: MethodCall, result: MethodChannel.Result) {
+        val maxAge = call.argument<Int>("maxAge")
+
+        activityProvider.getActivity()?.let {
+            FronteggApp.getInstance().auth.stepUp(
+                activity = it,
+                maxAge = maxAge?.toDuration(DurationUnit.SECONDS)
+            ) { error: Exception? ->
+                if (error == null) {
+                    result.success(null)
+                } else {
+                    if (error is FronteggException) {
+                        result.error(
+                            error.message ?: "unknown",
+                            error.message ?: "Unknown error occurred during step up",
+                            null
+                        )
+                    } else {
+                        result.error(
+                            "unknown",
+                            error.localizedMessage ?: "Unknown error occurred during step up",
+                            null
+                        )
+                    }
+                }
+            }
         }
     }
 
@@ -117,26 +163,42 @@ class FronteggMethodCallHandler(
             authResult.onSuccess { user ->
                 result.success(user.toReadableMap())
             }.onFailure { error ->
-                result.error(
-                    "REQUEST_AUTHORIZE_ERROR",
-                    error.message ?: "Unknown error occurred during authorization",
-                    null
-                )
+                if (error is FronteggException) {
+                    result.error(
+                        error.message ?: "unknown",
+                        error.message ?: "Unknown error occurred during step up",
+                        null
+                    )
+                } else {
+                    result.error(
+                        "unknown",
+                        error.localizedMessage ?: "Unknown error occurred during step up",
+                        null
+                    )
+                }
             }
         }
     }
 
     private fun registerPasskeys(result: MethodChannel.Result) {
         activityProvider.getActivity()?.let {
-            FronteggAuth.instance.registerPasskeys(it) {
-                if (it != null) {
-                    result.error(
-                        ERROR_CODE,
-                        if (it.message != null) it.message!! else "",
-                        null,
-                    )
-                } else {
+            FronteggAuth.instance.registerPasskeys(it) { error ->
+                if (error == null) {
                     result.success(null)
+                } else {
+                    if (error is FronteggException) {
+                        result.error(
+                            error.message ?: "unknown",
+                            error.message ?: "Unknown error occurred during step up",
+                            null
+                        )
+                    } else {
+                        result.error(
+                            "unknown",
+                            error.localizedMessage ?: "Unknown error occurred during step up",
+                            null
+                        )
+                    }
                 }
             }
         }
@@ -144,15 +206,23 @@ class FronteggMethodCallHandler(
 
     private fun loginWithPasskeys(result: MethodChannel.Result) {
         activityProvider.getActivity()?.let {
-            FronteggAuth.instance.loginWithPasskeys(it) {
-                if (it != null) {
-                    result.error(
-                        ERROR_CODE,
-                        if (it.message != null) it.message!! else "",
-                        null,
-                    )
-                } else {
+            FronteggAuth.instance.loginWithPasskeys(it) { error ->
+                if (error == null) {
                     result.success(null)
+                } else {
+                    if (error is FronteggException) {
+                        result.error(
+                            error.message ?: "unknown",
+                            error.message ?: "Unknown error occurred during step up",
+                            null
+                        )
+                    } else {
+                        result.error(
+                            "unknown",
+                            error.localizedMessage ?: "Unknown error occurred during step up",
+                            null
+                        )
+                    }
                 }
             }
         }

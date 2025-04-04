@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:frontegg_flutter/frontegg_flutter.dart';
 
 /// TenantsTab
-/// 
+///
 /// This is a stateless widget that builds the tenants tab.
 /// It is used to switch between tenants.
-/// 
+///
 class TenantsTab extends StatelessWidget {
   const TenantsTab({
     super.key,
@@ -28,7 +28,7 @@ class TenantsTab extends StatelessWidget {
               child: CircularProgressIndicator(),
             );
           }
-           // If the user is authenticated and the user is not null, show the tenants tab
+          // If the user is authenticated and the user is not null, show the tenants tab
           return SingleChildScrollView(
             child: Column(
               children: user.tenants.map(
