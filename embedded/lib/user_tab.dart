@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:frontegg_flutter/frontegg_flutter.dart';
 
+/// UserTab
+/// 
+/// This is a stateless widget that builds the user tab.
+/// It is used to display the user's profile information.
+/// 
 class UserTab extends StatelessWidget {
   const UserTab({
     super.key,
@@ -11,12 +16,14 @@ class UserTab extends StatelessWidget {
     final frontegg = context.frontegg;
     final size = MediaQuery.of(context).size;
     return Center(
+      // StreamBuilder to listen to the state of the authentication
       child: StreamBuilder<FronteggState>(
         stream: frontegg.stateChanged,
         builder: (BuildContext context, AsyncSnapshot<FronteggState> snapshot) {
           if (snapshot.hasData && snapshot.data?.user != null) {
             final state = snapshot.data!;
             final user = state.user!;
+            // If the user is authenticated and the user is not null, show the user tab
             return Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
@@ -44,6 +51,7 @@ class UserTab extends StatelessWidget {
                 const SizedBox(height: 40),
                 if (state.isLoading) const CircularProgressIndicator(),
                 if (!state.isLoading)
+                  // Register Passkeys Button
                   ElevatedButton(
                     child: const Text("Register Passkeys"),
                     onPressed: () async {
@@ -56,6 +64,7 @@ class UserTab extends StatelessWidget {
                     },
                   ),
                 if (!state.isLoading)
+                  // Logout Button
                   ElevatedButton(
                     key: const ValueKey("LogoutButton"),
                     child: const Text("Logout"),

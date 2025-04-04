@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:frontegg_flutter/frontegg_flutter.dart';
 
+/// TenantsTab
+/// 
+/// This is a stateless widget that builds the tenants tab.
+/// It is used to switch between tenants.
+/// 
 class TenantsTab extends StatelessWidget {
   const TenantsTab({
     super.key,
@@ -9,6 +14,8 @@ class TenantsTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final frontegg = context.frontegg;
+
+    // StreamBuilder to listen to the state of the authentication
     return StreamBuilder<FronteggState>(
       stream: frontegg.stateChanged,
       builder: (BuildContext context, AsyncSnapshot<FronteggState> snapshot) {
@@ -16,10 +23,12 @@ class TenantsTab extends StatelessWidget {
           final state = snapshot.data!;
           final user = state.user!;
           if (state.isLoading) {
+            // If the app is loading, show a loading indicator
             return const Center(
               child: CircularProgressIndicator(),
             );
           }
+           // If the user is authenticated and the user is not null, show the tenants tab
           return SingleChildScrollView(
             child: Column(
               children: user.tenants.map(
@@ -49,6 +58,7 @@ class TenantsTab extends StatelessWidget {
                       ),
                     ),
                     onTap: () {
+                      // Switch to the tenant by providing the tenant id
                       frontegg.switchTenant(e.tenantId);
                     },
                   );

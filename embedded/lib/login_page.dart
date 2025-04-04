@@ -1,6 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:frontegg_flutter/frontegg_flutter.dart';
 
+/// Login page 
+/// 
+/// This is a simple login page that allows the user to login with a username and password.
+/// It also allows the user to login with a social provider.
+/// It also allows the user to login with a passkey.
+/// It also allows the user to login with a token.
+/// 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
 
@@ -27,6 +34,7 @@ class LoginPage extends StatelessWidget {
           ),
           Align(
             alignment: Alignment.center,
+            // StreamBuilder to listen to the state of the authentication
             child: StreamBuilder<FronteggState>(
               stream: frontegg.stateChanged,
               builder: (BuildContext context,
@@ -39,6 +47,8 @@ class LoginPage extends StatelessWidget {
                     return Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
+                        // Login with email and password
+                        // loginHint is the email of the user (optional)
                         ElevatedButton(
                           key: const ValueKey("LoginButton"),
                           child: const Text("Login"),
@@ -47,6 +57,7 @@ class LoginPage extends StatelessWidget {
                             debugPrint("Login Finished");
                           },
                         ),
+                        // Login with Google Provider
                         ElevatedButton(
                           child: const Text("Login with Google"),
                           onPressed: () async {
@@ -55,6 +66,7 @@ class LoginPage extends StatelessWidget {
                             debugPrint("Login via Google Finished");
                           },
                         ),
+                        // Direct Apple login by providing the url of the apple login page
                         ElevatedButton(
                           child: const Text("Direct apple login"),
                           onPressed: () async {
@@ -67,6 +79,7 @@ class LoginPage extends StatelessWidget {
                             debugPrint("Direct Login Finished");
                           },
                         ),
+                        // Custom social login by providing the id
                         ElevatedButton(
                           child: const Text("Custom social login"),
                           onPressed: () async {
@@ -77,6 +90,7 @@ class LoginPage extends StatelessWidget {
                             debugPrint("Custom Social Login Finished");
                           },
                         ),
+                        // Request Authorized With Tokens
                         ElevatedButton(
                           child: const Text("Request Authorized With Tokens"),
                           onPressed: () async {
@@ -90,6 +104,7 @@ class LoginPage extends StatelessWidget {
                                 "Request Authorized With Tokens Finished, Result = $user");
                           },
                         ),
+                        // Login with Passkeys
                         ElevatedButton(
                           child: const Text("Login with Passkeys"),
                           onPressed: () async {
