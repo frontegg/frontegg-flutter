@@ -1,3 +1,8 @@
+# v1.0.8
+- CHANGELOG.md generation automation.
+- Added `additionalQueryParams` to `directLoginAction`
+- Upgraded Frontegg IOS version to `1.2.32`
+
 ## v1.0.7
 - Added `requestAuthorize` method.
 
