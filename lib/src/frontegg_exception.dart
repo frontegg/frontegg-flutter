@@ -19,58 +19,56 @@ sealed class FronteggException implements Exception {
     String failureReason, {
     String? message,
   }) {
-    switch (failureReason) {
-      case "couldNotExchangeToken":
-        return CouldNotExchangeTokenException(message);
-      case "failedToAuthenticate":
-      case "frontegg.error.failed_to_authenticate":
-        return FailedToAuthenticateException(message);
-      case "failedToRefreshToken":
-        return FailedToRefreshTokenException(message);
-      case "failedToLoadUserData":
-        return FailedToLoadUserDataException(message);
-      case "failedToExtractCode":
-        return FailedToExtractCodeException(message);
-      case "failedToSwitchTenant":
-        return FailedToSwitchTenantException(message);
-      case "codeVerifierNotFound":
-        return CodeVerifierNotFoundException(message);
-      case "couldNotFindRootViewController":
-        return CouldNotFindRootViewControllerException(message);
-      case "invalidPasskeysRequest":
-        return InvalidPasskeysRequestException(message);
-      case "failedToAuthenticateWithPasskeys":
-        return FailedToAuthenticateWithPasskeysException(message);
-      case "operationCanceled":
-        return OperationCanceledException(message);
-      case "mfaRequired":
-      case "frontegg.error.mfa_required":
-        return MfaRequiredException(message);
-      case "notAuthenticated":
-      case "frontegg.error.not_authenticated_error":
-        return NotAuthenticatedException(message);
-      case "failedToMFA":
-        return FailedToMFAException(message);
-      case "invalidResponse":
-        return InvalidResponseException(message);
-      case "other":
-        return OtherException(message);
-      case "frontegg.error.canceled_by_user":
-        return CanceledByUserException(message);
-      case "frontegg.error.cookie_not_found":
-        return CookieNotFoundException(message);
-
-      case "frontegg.error.key_not_found_shared_preferences":
-        return KeyNotFoundSharedPreferencesException(message);
-      case "frontegg.error.failed_to_register_wbeauthn_error":
-        return FailedToRegisterWbeauthnException(message);
-      case "frontegg.error.mfa_not_enrolled":
-        return MfaNotEnrolledException(message);
-
-      case "unknown":
-      case "frontegg.error.unknown":
-      default:
-        return UnknownException(message);
+    print(failureReason);
+    if (failureReason == "couldNotExchangeToken") {
+      return CouldNotExchangeTokenException(message);
+    } else if (failureReason == "failedToAuthenticate" ||
+        failureReason.contains("frontegg.error.failed_to_authenticate")) {
+      return FailedToAuthenticateException(message);
+    } else if (failureReason == "failedToRefreshToken") {
+      return FailedToRefreshTokenException(message);
+    } else if (failureReason == "failedToLoadUserData") {
+      return FailedToLoadUserDataException(message);
+    } else if (failureReason == "failedToExtractCode") {
+      return FailedToExtractCodeException(message);
+    } else if (failureReason == "failedToSwitchTenant") {
+      return FailedToSwitchTenantException(message);
+    } else if (failureReason == "codeVerifierNotFound") {
+      return CodeVerifierNotFoundException(message);
+    } else if (failureReason == "couldNotFindRootViewController") {
+      return CouldNotFindRootViewControllerException(message);
+    } else if (failureReason == "invalidPasskeysRequest") {
+      return InvalidPasskeysRequestException(message);
+    } else if (failureReason == "failedToAuthenticateWithPasskeys") {
+      return FailedToAuthenticateWithPasskeysException(message);
+    } else if (failureReason == "operationCanceled") {
+      return OperationCanceledException(message);
+    } else if (failureReason == "mfaRequired" ||
+        failureReason.contains("frontegg.error.mfa_required")) {
+      return MfaRequiredException(message);
+    } else if (failureReason == "notAuthenticated" ||
+        failureReason.contains("frontegg.error.not_authenticated_error")) {
+      return NotAuthenticatedException(message);
+    } else if (failureReason == "failedToMFA") {
+      return FailedToMFAException(message);
+    } else if (failureReason == "invalidResponse") {
+      return InvalidResponseException(message);
+    } else if (failureReason == "other") {
+      return OtherException(message);
+    } else if (failureReason.contains("frontegg.error.canceled_by_user")) {
+      return CanceledByUserException(message);
+    } else if (failureReason.contains("frontegg.error.cookie_not_found")) {
+      return CookieNotFoundException(message);
+    } else if (failureReason.contains("frontegg.error.key_not_found_shared_preferences")) {
+      return KeyNotFoundSharedPreferencesException(message);
+    } else if (failureReason.contains("frontegg.error.failed_to_register_wbeauthn_error")) {
+      return FailedToRegisterWbeauthnException(message);
+    } else if (failureReason.contains("frontegg.error.mfa_not_enrolled")) {
+      return MfaNotEnrolledException(message);
+    } else if (failureReason == "unknown" || failureReason.contains("frontegg.error.unknown")) {
+      return UnknownException(message);
+    } else {
+      return UnknownException(message);
     }
   }
 }
