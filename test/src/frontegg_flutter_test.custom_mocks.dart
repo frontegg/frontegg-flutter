@@ -7,8 +7,7 @@ import 'dart:async' as _i3;
 
 import 'package:frontegg_flutter/src/frontegg_platform_interface.dart' as _i2;
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:plugin_platform_interface/plugin_platform_interface.dart'
-    as _i3;
+import 'package:plugin_platform_interface/plugin_platform_interface.dart' as _i3;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -61,8 +60,7 @@ class MockFronteggPlatform extends _i1.Mock
 
   @override
   _i3.Future<void> directLoginAction(String? type, String? data,
-          {bool ephemeralSession = true,
-          Map<String, String>? additionalQueryParams}) =>
+          {bool ephemeralSession = true, Map<String, String>? additionalQueryParams}) =>
       (super.noSuchMethod(
         Invocation.method(
           #directLoginAction,
@@ -161,4 +159,30 @@ class MockFronteggPlatform extends _i1.Mock
         returnValue: _i3.Future<Map<String, Object>?>.value(),
         returnValueForMissingStub: _i3.Future<Map<String, Object>?>.value(),
       ) as _i3.Future<Map<String, Object>?>);
+
+  @override
+  _i3.Future<bool> isSteppedUp({Duration? maxAge}) => (super.noSuchMethod(
+        Invocation.method(
+          #isSteppedUp,
+          [],
+          {
+            #maxAge: maxAge,
+          },
+        ),
+        returnValue: _i3.Future.value(true),
+        returnValueForMissingStub: _i3.Future.value(true),
+      ) as _i3.Future<bool>);
+
+  @override
+  _i3.Future<void> stepUp({Duration? maxAge}) => (super.noSuchMethod(
+        Invocation.method(
+          #isSteppedUp,
+          [],
+          {
+            #maxAge: maxAge,
+          },
+        ),
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
 }
