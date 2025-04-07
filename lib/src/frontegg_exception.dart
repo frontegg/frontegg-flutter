@@ -19,7 +19,6 @@ sealed class FronteggException implements Exception {
     String failureReason, {
     String? message,
   }) {
-    print(failureReason);
     if (failureReason == "couldNotExchangeToken") {
       return CouldNotExchangeTokenException(message);
     } else if (failureReason == "failedToAuthenticate" ||
