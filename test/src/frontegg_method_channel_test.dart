@@ -23,14 +23,12 @@ void main() {
 
   final platform = FronteggMethodChannel();
   const channel = MethodChannel(FronteggMethodChannel.methodChannelName);
-  const eventChannel =
-      EventChannel(FronteggMethodChannel.stateEventChannelName);
+  const eventChannel = EventChannel(FronteggMethodChannel.stateEventChannelName);
   final streamHandler = MockStateStreamHandler();
   late final Stream stateEventChannelStream;
 
   setUpAll(() {
-    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-        .setMockMethodCallHandler(
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(
       channel,
       (MethodCall methodCall) async {
         switch (methodCall.method) {
@@ -57,6 +55,10 @@ void main() {
           case FronteggMethodChannel.loginWithPasskeysMethodName:
             return null;
           case FronteggMethodChannel.requestAuthorizeMethodName:
+            return null;
+          case FronteggMethodChannel.isSteppedUpMethodName:
+            return null;
+          case FronteggMethodChannel.stepUpMethodName:
             return null;
         }
         throw Exception("${methodCall.method} Not Implemented");
@@ -115,8 +117,15 @@ void main() {
 
   test('requestAuthorize(refreshToken, deviceTokenCookie)', () async {
     await platform.requestAuthorize(
-        refreshToken: "Test Token",
-        deviceTokenCookie: "Test Device Token Cookie");
+        refreshToken: "Test Token", deviceTokenCookie: "Test Device Token Cookie");
+  });
+
+  test('isSteppedUp()', () async {
+    await platform.isSteppedUp();
+  });
+
+  test('stepUP()', () async {
+    await platform.stepUp();
   });
 
   group('StateEventChannel', () {
@@ -141,8 +150,7 @@ void main() {
       streamHandler.states?.success(tLoadedFronteggStateMap);
     });
 
-    test(
-        'should return valid FronteggState, Loading FronteggState, Loaded FronteggState Maps',
+    test('should return valid FronteggState, Loading FronteggState, Loaded FronteggState Maps',
         () async {
       // Asser Later
       final expected = [
