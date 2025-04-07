@@ -166,13 +166,13 @@ class FronteggMethodCallHandler(
                 if (error is FronteggException) {
                     result.error(
                         error.message ?: "unknown",
-                        error.message ?: "Unknown error occurred during step up",
+                        error.message ?: "Unknown error occurred during authorizetion",
                         null
                     )
                 } else {
                     result.error(
                         "unknown",
-                        error.localizedMessage ?: "Unknown error occurred during step up",
+                        error.localizedMessage ?: "Unknown error occurred during authorizetion",
                         null
                     )
                 }
@@ -189,13 +189,13 @@ class FronteggMethodCallHandler(
                     if (error is FronteggException) {
                         result.error(
                             error.message ?: "unknown",
-                            error.message ?: "Unknown error occurred during step up",
+                            error.message ?: "Unknown error occurred during passkey registration",
                             null
                         )
                     } else {
                         result.error(
                             "unknown",
-                            error.localizedMessage ?: "Unknown error occurred during step up",
+                            error.localizedMessage ?: "Unknown error occurred during passkey registration",
                             null
                         )
                     }
@@ -213,13 +213,13 @@ class FronteggMethodCallHandler(
                     if (error is FronteggException) {
                         result.error(
                             error.message ?: "unknown",
-                            error.message ?: "Unknown error occurred during step up",
+                            error.message ?: "Unknown error occurred during login with passkeys",
                             null
                         )
                     } else {
                         result.error(
                             "unknown",
-                            error.localizedMessage ?: "Unknown error occurred during step up",
+                            error.localizedMessage ?: "Unknown error occurred during login with passkeys",
                             null
                         )
                     }
