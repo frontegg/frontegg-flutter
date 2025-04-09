@@ -124,5 +124,5 @@ dependencies {
     androidTestUtil "androidx.test:orchestrator:1.5.1"
     // Frontegg dependencies
     // Provide com.frontegg.android
-    implementation 'com.frontegg.sdk:android:1.2.35'
+    implementation 'com.frontegg.sdk:android:1.2.38'
 }
