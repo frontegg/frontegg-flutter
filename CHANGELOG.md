@@ -1,3 +1,6 @@
+## v1.0.10
+- Added `step-up` instruction.
+
 ## v1.0.9
 - Deprecated `directLoginAction` method.
 - Added `directLogin(url)`, `socialLogin(provider)`, and `customSocialLogin(id)` methods instead of `directLoginAction` method.
