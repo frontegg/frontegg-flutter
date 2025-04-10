@@ -35,6 +35,7 @@ features for the product-led era.
     - [Login with frontegg](#login-with-frontegg)
     - [Switch tenant frontegg](#switch-tenant-frontegg)
     - [Frontegg state](#frontegg-state)
+    - [Step-up](#step-up)
     - [Other frontegg features:](#other-frontegg-features)
 - [Knowing Issues](#knowing-issues)
   - [Android](#android)
@@ -674,16 +675,16 @@ class FronteggState {
 To get a state of the `FronteggFlutter` you have two option:
 
 1. Get `currentState`:
-   ```dart
+```dart
     @override
-    Widget build(BuildContext context) {
-      final frontegg = context.frontegg;
-      final fronteggState = frontegg.currentState;
-    }
+Widget build(BuildContext context) {
+  final frontegg = context.frontegg;
+  final fronteggState = frontegg.currentState;
+}
     
-   ```
+```
 2. Listen `stateChanged` stream:
-   ```dart
+```dart
     import 'package:flutter/material.dart';
     import 'package:frontegg_flutter/frontegg_flutter.dart';
     import 'package:frontegg_flutter_embedded_example/login_page.dart';
@@ -718,7 +719,46 @@ To get a state of the `FronteggFlutter` you have two option:
         );
       }
     }
-   ```
+```
+
+### Step-up
+
+The `stepUp` and `isSteppedUp` methods allow you to implement Step-Up Authentication, which is a mechanism used to temporarily elevate a user's authentication level for sensitive operations.
+
+## stepUp
+Use `stepUp` to initiate a step-up authentication flow. This might prompt the user for additional verification (e.g., MFA).
+
+```dart
+  await stepUp(maxAge: Duration(minutes: 5));
+```
+`maxAge` (optional): The maximum age for which the elevated access should be considered valid. After this duration, the user may be required to step up again.
+
+## isSteppedUp
+Check whether the user has already completed a step-up recently and is still within the valid period.
+
+```dart
+  final isElevated = await isSteppedUp(maxAge: Duration(minutes: 5));
+  if (isElevated) {
+  // Proceed with sensitive action
+  } else {
+  // Prompt user to step up
+  }
+```
+`maxAge` (optional): Defines how long ago the step-up must have occurred to still be considered valid.
+
+Example Use Case:
+```dart
+  Future<void> performSensitiveAction() async {
+    final steppedUp = await isSteppedUp(maxAge: Duration(minutes: 5));
+    
+    if (!steppedUp) {
+      await stepUp(maxAge: Duration(minutes: 5));
+    }
+    
+    // Continue with the sensitive action
+  }
+```
+These methods wrap calls to `FronteggPlatform`.`instance` and ensure consistent step-up logic throughout your app.
 
 ### Other frontegg features:
 
