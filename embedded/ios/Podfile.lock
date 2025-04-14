@@ -1,26 +1,19 @@
 PODS:
-  - CocoaAsyncSocket (7.6.5)
   - Flutter (1.0.0)
-  - frontegg_flutter (1.0.8):
+  - frontegg_flutter (1.0.9):
     - Flutter
-    - FronteggSwift (~> 1.2.36)
-  - FronteggSwift (1.2.36)
+    - FronteggSwift (~> 1.2.37)
+  - FronteggSwift (1.2.37)
   - integration_test (0.0.1):
     - Flutter
-  - patrol (0.0.1):
-    - CocoaAsyncSocket (~> 7.6)
-    - Flutter
-    - FlutterMacOS
 
 DEPENDENCIES:
   - Flutter (from `Flutter`)
   - frontegg_flutter (from `.symlinks/plugins/frontegg_flutter/ios`)
   - integration_test (from `.symlinks/plugins/integration_test/ios`)
-  - patrol (from `.symlinks/plugins/patrol/darwin`)
 
 SPEC REPOS:
   trunk:
-    - CocoaAsyncSocket
     - FronteggSwift
 
 EXTERNAL SOURCES:
@@ -30,16 +23,12 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/frontegg_flutter/ios"
   integration_test:
     :path: ".symlinks/plugins/integration_test/ios"
-  patrol:
-    :path: ".symlinks/plugins/patrol/darwin"
 
 SPEC CHECKSUMS:
-  CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
-  frontegg_flutter: a4c4006393ccb5076f7634704cef71625f2efa41
-  FronteggSwift: a2bf35f05a5f597eae1225af332130652ee6b97c
+  frontegg_flutter: 6079234bc03672c7af80bca64bc51c65ccf15b28
+  FronteggSwift: 2ae9d71b58e363415fcf6a95f21f8968533d8298
   integration_test: 4a889634ef21a45d28d50d622cf412dc6d9f586e
-  patrol: dd82ffedfee3aba87c1d0ed2daad0b77bfb8ee1f
 
 PODFILE CHECKSUM: c9be09f6a61958d6788db8b9ee489767b65cfa92
 
