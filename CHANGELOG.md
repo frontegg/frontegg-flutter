@@ -1,3 +1,6 @@
+## v1.0.10
+- updated iOS Frontegg SDK up to `1.2.37`. 
+
 ## v1.0.9
 - Deprecated `directLoginAction` method.
 - Added `directLogin(url)`, `socialLogin(provider)`, and `customSocialLogin(id)` methods instead of `directLoginAction` method.
