@@ -142,11 +142,11 @@ This method checks if the user has recently completed a step-up authentication a
 
 ```
 final isElevated = await isSteppedUp(maxAge: Duration(minutes: 5));
-  if (isElevated) {
-  // Proceed with sensitive action
-  } else {
-  // Prompt user to step up
-  }
+if (isElevated) {
+    // Proceed with sensitive action
+} else {
+    // Prompt user to step up
+}
 ```
 
 **Example:**
@@ -154,11 +154,11 @@ final isElevated = await isSteppedUp(maxAge: Duration(minutes: 5));
 ```
 Future<void> performSensitiveAction() async {
     final steppedUp = await isSteppedUp(maxAge: Duration(minutes: 5));
-    
+      
     if (!steppedUp) {
-      await stepUp(maxAge: Duration(minutes: 5));
+        await stepUp(maxAge: Duration(minutes: 5));
     }
-    
+      
     // Continue with the sensitive action
-  }
+}
 ```

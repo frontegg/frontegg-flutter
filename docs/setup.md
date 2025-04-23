@@ -14,13 +14,13 @@ activation.
 2. Send a `POST` request to:
 
 ```
-    https://api.frontegg.com/vendors/resources/associated-domains/v1/ios
+https://api.frontegg.com/vendors/resources/associated-domains/v1/ios
 ```
 
 Request body:
 
 ```json
-    {
+{
   "appId": "{{ASSOCIATED_DOMAIN}}"
 }
 ```
@@ -36,15 +36,14 @@ Request body:
 To review the associated domains configuration, you may send a `GET` request to the same endpoint:
 
 ```
-    https://api.frontegg.com/vendors/resources/associated-domains/v1/ios
+https://api.frontegg.com/vendors/resources/associated-domains/v1/ios
 ```
 
 To update the configuration, first `DELETE` the existing configuration using its configuration ID,
 then create a new configuration via `POST`. For example:
 
 ```
-    https://api.frontegg.com/vendors/resources/associated-domains/v1/ios/{{configurationId}} 
-
+https://api.frontegg.com/vendors/resources/associated-domains/v1/ios/{{configurationId}} 
 ```
 
 ## Configure Android AssetLinks
@@ -58,7 +57,7 @@ a [vendor token to access Frontegg APIs](https://docs.frontegg.com/reference/get
 1. Send a `POST` request to the following Frontegg endpoint:
 
 ```
-   https://api.frontegg.com/vendors/resources/associated-domains/v1/android
+https://api.frontegg.com/vendors/resources/associated-domains/v1/android
 ```
 
 2. Use the following payload:
@@ -87,8 +86,8 @@ a [vendor token to access Frontegg APIs](https://docs.frontegg.com/reference/get
 3. Look for the section with:
 
 ``` bash
-  Variant: debug
-  Config: debug
+Variant: debug
+Config: debug
 ```
 
 4. Copy the SHA-256 value from the output. Make sure the `Variant` and `Config` both equal `debug`.
@@ -117,7 +116,7 @@ Example output:
 1. Run the following command (customize the path and credentials):
 
 ``` bash
-  keytool -list -v -keystore /PATH/file.jks -alias YourAlias -storepass *** -keypass ***
+keytool -list -v -keystore /PATH/file.jks -alias YourAlias -storepass *** -keypass ***
 ```
 
 2. Copy the `SHA-256` value from the output.
@@ -131,21 +130,21 @@ Example output:
 1. **Update Gradle Dependencies**:
    Add the following dependencies in your `android/build.gradle`:
 ```groovy
-   dependencies {
-       implementation 'androidx.browser:browser:1.8.0'
-       implementation 'com.frontegg.sdk:android:1.2.30'
-   }
+dependencies {
+    implementation 'androidx.browser:browser:1.8.0'
+    implementation 'com.frontegg.sdk:android:1.2.30'
+}
 ```
 
 2. **Java Compatibility**: 
     Ensure sourceCompatibility and targetCompatibility are set to Java 8 in android/app/build.gradle**:
 ```groovy
-    android {
-        compileOptions {
-            sourceCompatibility JavaVersion.VERSION_1_8
-            targetCompatibility JavaVersion.VERSION_1_8
-        }
+android {
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
+}
 ```
 
 ### iOS setup
@@ -155,24 +154,24 @@ Example output:
    - Go to the **Signing & Capabilities** tab.
    - Add **Associated Domains** under the **+ Capability** section.
    - Enter the domain for your app in the format:
-     ```
-     webcredentials:[YOUR_DOMAIN]
-     ```
-     Example:
-     ```
-     webcredentials:example.com
-     ```
+```
+webcredentials:[YOUR_DOMAIN]
+```
+Example:
+```
+webcredentials:example.com
+```
 
 2. **Host the WebAuthn Configuration File**:
    - Add a `.well-known/webauthn` JSON file to your domain server with the following structure:
-     ```json
-     {
-       "origins": [
-         "https://example.com",
-         "https://subdomain.example.com"
-       ]
-     }
-     ```
+```json
+{
+  "origins": [
+    "https://example.com",
+    "https://subdomain.example.com"
+  ]
+}
+```
    - Ensure this file is publicly accessible at `https://example.com/.well-known/webauthn`.
 
 3. **Test Associated Domains**:
