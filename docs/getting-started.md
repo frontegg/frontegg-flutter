@@ -156,19 +156,19 @@ a URL, add the following code to your app.
 1. Create `FronteggSwiftAdapter.swift` in your project and add the following code:
 
 ```objective-c
-    //  FronteggSwiftAdapter.swift
+//  FronteggSwiftAdapter.swift
 
-    import Foundation
-    import FronteggSwift
+import Foundation
+import FronteggSwift
 
-    @objc(FronteggSwiftAdapter)
-    public class FronteggSwiftAdapter: NSObject {
-        @objc public static let shared = FronteggSwiftAdapter()
+@objc(FronteggSwiftAdapter)
+public class FronteggSwiftAdapter: NSObject {
+    @objc public static let shared = FronteggSwiftAdapter()
 
-        @objc public func handleOpenUrl(_ url: URL) -> Bool {
-            return FronteggAuth.shared.handleOpenUrl(url)
-        }
+    @objc public func handleOpenUrl(_ url: URL) -> Bool {
+        return FronteggAuth.shared.handleOpenUrl(url)
     }
+}
 ```
 
 2. Open `AppDelegate.m` file and import swift headers:
@@ -180,33 +180,33 @@ a URL, add the following code to your app.
 3. Add URL handlers to `AppDelegate.m`:
 
 ```objective-c
-    #import <[YOUR_PROJECT_NAME]-Swift.h>
+#import <[YOUR_PROJECT_NAME]-Swift.h>
 
-   // ...CODE...
+// ...CODE...
 
-   - (BOOL)application:(UIApplication *)app openURL:(NSURL *)url
-            options:(NSDictionary<UIApplicationOpenURLOptionsKey, id> *)options
-    {
+- (BOOL)application:(UIApplication *)app openURL:(NSURL *)url
+        options:(NSDictionary<UIApplicationOpenURLOptionsKey, id> *)options
+{
 
-      if([[FronteggSwiftAdapter shared] handleOpenUrl:url] ){
-        return TRUE;
-      }
-      return [RCTLinkingManager application:app openURL:url options:options];
+  if([[FronteggSwiftAdapter shared] handleOpenUrl:url] ){
+    return TRUE;
+  }
+  return [RCTLinkingManager application:app openURL:url options:options];
+}
+
+- (BOOL)application:(UIApplication *)application continueUserActivity:(nonnull NSUserActivity *)userActivity
+ restorationHandler:(nonnull void (^)(NSArray<id<UIUserActivityRestoring>> * _Nullable))restorationHandler
+{
+
+  if (userActivity.webpageURL != NULL){
+    if([[FronteggSwiftAdapter shared] handleOpenUrl:userActivity.webpageURL] ){
+      return TRUE;
     }
-
-    - (BOOL)application:(UIApplication *)application continueUserActivity:(nonnull NSUserActivity *)userActivity
-     restorationHandler:(nonnull void (^)(NSArray<id<UIUserActivityRestoring>> * _Nullable))restorationHandler
-    {
-
-      if (userActivity.webpageURL != NULL){
-        if([[FronteggSwiftAdapter shared] handleOpenUrl:userActivity.webpageURL] ){
-          return TRUE;
-        }
-      }
-     return [RCTLinkingManager application:application
-                      continueUserActivity:userActivity
-                        restorationHandler:restorationHandler];
-    }
+  }
+ return [RCTLinkingManager application:application
+                  continueUserActivity:userActivity
+                    restorationHandler:restorationHandler];
+}
 ```
 
 4. Register your domain with Frontegg:
@@ -234,44 +234,44 @@ e. Repeat this step for each Frontegg environment where you want to support URL-
 1. Open `AppDelegate.m` file and import swift headers:
 
 ```swift
-    import FronteggSwift
+import FronteggSwift
 ```
 
 2. Add URL handlers to `AppDelegate.swift`:
 
 ```swift
-    import UIKit
-    import FronteggSwift
+import UIKit
+import FronteggSwift
 
-    @UIApplicationMain
-    class AppDelegate: UIResponder, UIApplicationDelegate {
+@UIApplicationMain
+class AppDelegate: UIResponder, UIApplicationDelegate {
 
-        /*
-         * Called when the app was launched with a url. Feel free to add additional processing here,
-         * but if you want the App API to support tracking app url opens, make sure to keep this call
-         */
-        func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey: Any] = [:]) -> Bool {
+    /*
+     * Called when the app was launched with a url. Feel free to add additional processing here,
+     * but if you want the App API to support tracking app url opens, make sure to keep this call
+     */
+    func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey: Any] = [:]) -> Bool {
 
+        if(FronteggAuth.shared.handleOpenUrl(url)){
+            return true
+        }
+
+        return ApplicationDelegateProxy.shared.application(app, open: url, options: options)
+    }
+
+    /*
+     * Called when the app was launched with an activity, including Universal Links.
+     * Feel free to add additional processing here, but if you want the App API to support
+     * tracking app url opens, make sure to keep this call
+     */
+    func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
+
+        if let url = userActivity.webpageURL {
             if(FronteggAuth.shared.handleOpenUrl(url)){
                 return true
             }
-
-            return ApplicationDelegateProxy.shared.application(app, open: url, options: options)
         }
-
-        /*
-         * Called when the app was launched with an activity, including Universal Links.
-         * Feel free to add additional processing here, but if you want the App API to support
-         * tracking app url opens, make sure to keep this call
-         */
-        func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
-
-            if let url = userActivity.webpageURL {
-                if(FronteggAuth.shared.handleOpenUrl(url)){
-                    return true
-                }
-            }
-            return ApplicationDelegateProxy.shared.application(application, continue: userActivity, restorationHandler: restorationHandler)
-        }
+        return ApplicationDelegateProxy.shared.application(application, continue: userActivity, restorationHandler: restorationHandler)
     }
+}
 ```
