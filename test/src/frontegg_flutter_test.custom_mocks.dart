@@ -7,7 +7,8 @@ import 'dart:async' as _i3;
 
 import 'package:frontegg_flutter/src/frontegg_platform_interface.dart' as _i2;
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:plugin_platform_interface/plugin_platform_interface.dart' as _i3;
+import 'package:plugin_platform_interface/plugin_platform_interface.dart'
+    as _i3;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -60,7 +61,8 @@ class MockFronteggPlatform extends _i1.Mock
 
   @override
   _i3.Future<void> directLoginAction(String? type, String? data,
-          {bool ephemeralSession = true, Map<String, String>? additionalQueryParams}) =>
+          {bool ephemeralSession = true,
+          Map<String, String>? additionalQueryParams}) =>
       (super.noSuchMethod(
         Invocation.method(
           #directLoginAction,
