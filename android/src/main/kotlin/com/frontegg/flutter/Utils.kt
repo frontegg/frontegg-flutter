@@ -31,6 +31,10 @@ val Context.constants: FronteggConstants
             buildConfigClass, "FRONTEGG_USE_CHROME_CUSTOM_TABS", true
         )
 
+        val deepLinkScheme = safeGetValueFromBuildConfig(
+            buildConfigClass, "FRONTEGG_DEEP_LINK_SCHEME", ""
+        )
+
         return FronteggConstants(
             baseUrl = baseUrl,
             clientId = clientId,
@@ -38,6 +42,7 @@ val Context.constants: FronteggConstants
             useAssetsLinks = useAssetsLinks,
             useChromeCustomTabs = useChromeCustomTabs,
             bundleId = this.packageName,
+            deepLinkScheme = deepLinkScheme
         )
     }
 
