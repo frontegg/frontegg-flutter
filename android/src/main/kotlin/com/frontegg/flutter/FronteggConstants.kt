@@ -6,7 +6,8 @@ data class FronteggConstants(
     val applicationId: String?,
     val useAssetsLinks: Boolean,
     val useChromeCustomTabs: Boolean,
-    val bundleId: String
+    val bundleId: String,
+    val deepLinkScheme: String
 ) {
     fun toMap(): Map<String, Any?> {
         return mapOf(
@@ -16,6 +17,7 @@ data class FronteggConstants(
             Pair("useAssetsLinks", useAssetsLinks),
             Pair("useChromeCustomTabs", useChromeCustomTabs),
             Pair("bundleId", bundleId),
+            Pair("deepLinkScheme", deepLinkScheme),
         )
     }
 }

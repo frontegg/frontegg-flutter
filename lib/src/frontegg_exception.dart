@@ -58,13 +58,16 @@ sealed class FronteggException implements Exception {
       return CanceledByUserException(message);
     } else if (failureReason.contains("frontegg.error.cookie_not_found")) {
       return CookieNotFoundException(message);
-    } else if (failureReason.contains("frontegg.error.key_not_found_shared_preferences")) {
+    } else if (failureReason
+        .contains("frontegg.error.key_not_found_shared_preferences")) {
       return KeyNotFoundSharedPreferencesException(message);
-    } else if (failureReason.contains("frontegg.error.failed_to_register_wbeauthn_error")) {
+    } else if (failureReason
+        .contains("frontegg.error.failed_to_register_wbeauthn_error")) {
       return FailedToRegisterWbeauthnException(message);
     } else if (failureReason.contains("frontegg.error.mfa_not_enrolled")) {
       return MfaNotEnrolledException(message);
-    } else if (failureReason == "unknown" || failureReason.contains("frontegg.error.unknown")) {
+    } else if (failureReason == "unknown" ||
+        failureReason.contains("frontegg.error.unknown")) {
       return UnknownException(message);
     } else {
       return UnknownException(message);

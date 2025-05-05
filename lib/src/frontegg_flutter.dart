@@ -284,6 +284,13 @@ class FronteggFlutter {
         return null;
       });
 
+  /// Checks whether step-up authentication has been performed and is still valid.
+  ///
+  /// If [maxAge] is provided, the authentication timestamp is checked
+  /// against the given duration to ensure it is still valid.
+  ///
+  /// Returns a [Future] that completes with `true` if step-up authentication
+  /// is valid, otherwise `false`.
   Future<bool> isSteppedUp({
     Duration? maxAge,
   }) =>
@@ -293,6 +300,12 @@ class FronteggFlutter {
         ),
       );
 
+  /// Initiates a step-up authentication process.
+  ///
+  /// Optionally accepts [maxAge] to define the maximum duration for which
+  /// the authentication should be considered valid.
+  ///
+  /// Returns a [Future] that completes when the authentication process finishes.
   Future<void> stepUp({
     Duration? maxAge,
   }) =>

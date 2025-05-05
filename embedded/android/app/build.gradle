@@ -65,6 +65,7 @@ android {
         buildConfigField "String", 'FRONTEGG_CLIENT_ID', "\"$fronteggClientId\""
         buildConfigField "Boolean", 'FRONTEGG_USE_ASSETS_LINKS', "true"
         buildConfigField "Boolean", 'FRONTEGG_USE_CHROME_CUSTOM_TABS', "true"
+        buildConfigField "String", 'FRONTEGG_DEEP_LINK_SCHEME', "\"test\""
 
         testInstrumentationRunner "pl.leancode.patrol.PatrolJUnitRunner"
         testInstrumentationRunnerArguments clearPackageData: "true"
