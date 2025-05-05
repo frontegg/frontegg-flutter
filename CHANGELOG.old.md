@@ -1,4 +1,8 @@
 ## v1.0.10
+- updated iOS Frontegg SDK up to `1.2.37`.
+- Updated project documentation.
+
+## v1.0.10
 - Added `step-up` instruction.
 
 ## v1.0.9
