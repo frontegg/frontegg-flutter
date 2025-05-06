@@ -1,10 +1,10 @@
 PODS:
   - CocoaAsyncSocket (7.6.5)
   - Flutter (1.0.0)
-  - frontegg_flutter (1.0.10):
+  - frontegg_flutter (1.0.12):
     - Flutter
-    - FronteggSwift (~> 1.2.38)
-  - FronteggSwift (1.2.38)
+    - FronteggSwift (~> 1.2.39)
+  - FronteggSwift (1.2.39)
   - integration_test (0.0.1):
     - Flutter
   - patrol (0.0.1):
@@ -36,8 +36,8 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
-  frontegg_flutter: 26a2845399960e4e42e0d7753b38cd0023a49bdc
-  FronteggSwift: d26ebeed6b44a47d2345fef80d17a718c253c836
+  frontegg_flutter: 6bae02351c621c15c38bbdf96c330245d7e998de
+  FronteggSwift: 02b823276f02f34572b35a84124976961277390e
   integration_test: 252f60fa39af5e17c3aa9899d35d908a0721b573
   patrol: 0564cee315ff6c86fb802b3647db05cc2d3d0624
 
