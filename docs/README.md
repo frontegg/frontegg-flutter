@@ -16,7 +16,7 @@ This repository includes:
 - An [API Reference](/docs/api.md) for detailed SDK functionality
 - [Usage Examples](/docs/usage.md) with common implementation patterns
 - [Advanced Topics](/docs/advanced.md) for complex integration scenarios
-- A [Hosted](./hosted), [Embedded](./embedded), and [Application-Id](./application_id) example projects to help you get started quickly
+- A [Hosted](https://github.com/frontegg/frontegg-flutter/tree/master/hosted), [Embedded](https://github.com/frontegg/frontegg-flutter/tree/master/embedded), and [Application-Id](https://github.com/frontegg/frontegg-flutter/tree/master/application_id) example projects to help you get started quickly
 
 For full documentation, visit the Frontegg Developer Portal:  
 🔗 [https://developers.frontegg.com](https://developers.frontegg.com)
