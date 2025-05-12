@@ -1,3 +1,6 @@
+## v1.0.15
+- Updated README.md
+
 ## v1.0.14
 - Updated Android SDK
 
