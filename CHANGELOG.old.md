@@ -1,3 +1,6 @@
+## v1.0.14
+- Updated Android SDK
+
 ## v1.0.13
 FR-20294 - Add missing login completion call after closing with custom scheme
 
