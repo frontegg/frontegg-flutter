@@ -3,6 +3,7 @@ package com.frontegg.demo
 import android.os.Bundle
 import android.util.Log
 import android.app.Activity
+import io.flutter.embedding.engine.loader.FlutterLoader
 
 class CustomSchemeActivity : Activity() {
 
@@ -14,6 +15,12 @@ class CustomSchemeActivity : Activity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_custom_scheme)
 
+        val loader = FlutterLoader()
+        if (!loader.initialized()) {
+            loader.startInitialization(applicationContext)
+            loader.ensureInitializationComplete(applicationContext, null)
+        }
+
         // Handle the custom scheme URL
         val url = intent?.data?.toString()
         if (url != null) {
@@ -23,7 +30,6 @@ class CustomSchemeActivity : Activity() {
             Log.d(TAG, "No custom scheme URL found")
         }
     }
-
 
 
 }

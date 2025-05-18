@@ -21,6 +21,7 @@ class FronteggFlutterPlugin : FlutterPlugin, ActivityAware, ActivityProvider {
 
     override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
         context = flutterPluginBinding.applicationContext
+
         val constants = context!!.constants
 
         channel = MethodChannel(flutterPluginBinding.binaryMessenger, METHOD_CHANNEL_NAME)
@@ -29,16 +30,6 @@ class FronteggFlutterPlugin : FlutterPlugin, ActivityAware, ActivityProvider {
         stateEventChannel =
             EventChannel(flutterPluginBinding.binaryMessenger, STATE_EVENT_CHANNEL_NAME)
         stateListener = FronteggStateListenerImpl(constants)
-        stateEventChannel.setStreamHandler(object : EventChannel.StreamHandler {
-            override fun onListen(arguments: Any?, events: EventChannel.EventSink?) {
-                stateListener?.setEventSink(events)
-                stateListener?.subscribe()
-            }
-
-            override fun onCancel(arguments: Any?) {
-                stateListener?.setEventSink(null)
-            }
-        })
 
         FronteggApp.init(
             context = context!!,
@@ -49,6 +40,18 @@ class FronteggFlutterPlugin : FlutterPlugin, ActivityAware, ActivityProvider {
             useChromeCustomTabs = constants.useChromeCustomTabs,
             deepLinkScheme = constants.deepLinkScheme
         )
+
+
+        stateEventChannel.setStreamHandler(object : EventChannel.StreamHandler {
+            override fun onListen(arguments: Any?, events: EventChannel.EventSink?) {
+                stateListener?.setEventSink(events)
+                stateListener?.subscribe()
+            }
+
+            override fun onCancel(arguments: Any?) {
+                stateListener?.setEventSink(null)
+            }
+        })
     }
 
     override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
