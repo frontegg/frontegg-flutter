@@ -11,11 +11,11 @@ single SDK.
 
 This repository includes:
 
-- A [Get Started](/docs/getting-started.md) guide for quick integration
-- A [Setup Guide](/docs/setup.md) with detailed setup instructions
-- An [API Reference](/docs/api.md) for detailed SDK functionality
-- [Usage Examples](/docs/usage.md) with common implementation patterns
-- [Advanced Topics](/docs/advanced.md) for complex integration scenarios
+- A [Get Started](https://flutter-guide.frontegg.com/#/getting-started) guide for quick integration
+- A [Setup Guide](https://flutter-guide.frontegg.com/#/setup) with detailed setup instructions
+- An [API Reference](https://flutter-guide.frontegg.com/#/api) for detailed SDK functionality
+- [Usage Examples](https://flutter-guide.frontegg.com/#/usage) with common implementation patterns
+- [Advanced Topics](https://flutter-guide.frontegg.com/#/advanced) for complex integration scenarios
 - A [Hosted](https://github.com/frontegg/frontegg-flutter/tree/master/hosted), [Embedded](https://github.com/frontegg/frontegg-flutter/tree/master/embedded), and [Application-Id](https://github.com/frontegg/frontegg-flutter/tree/master/application_id) example projects to help you get started quickly
 
 For full documentation, visit the Frontegg Developer Portal:  
