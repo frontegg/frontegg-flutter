@@ -11,6 +11,9 @@ dependencies:
     sdk: flutter
   frontegg_flutter:
     path: ../
+  google_fonts: ^6.2.1
+  url_launcher: ^6.3.1
+  fluttertoast: ^8.2.12
 
 dev_dependencies:
   integration_test:
@@ -23,6 +26,12 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+
+  assets:
+    - assets/frontegg-logo.png
+    - assets/github-icon.png
+    - assets/flutter-icon.png
+    - assets/slack-icon.png
 
 patrol:
   app_name: Frontegg Demo
