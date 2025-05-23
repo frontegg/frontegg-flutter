@@ -1,3 +1,9 @@
+## v1.0.15
+- Updated README.md
+- Updated README.md
+- subscribe to channel after frontegg initialized
+- upgrage native librarys
+
 ## v1.0.14
 - Updated Android SDK
 
