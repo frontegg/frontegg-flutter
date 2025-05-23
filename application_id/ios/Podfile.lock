@@ -2,8 +2,8 @@ PODS:
   - Flutter (1.0.0)
   - frontegg_flutter (1.0.10):
     - Flutter
-    - FronteggSwift (~> 1.2.39)
-  - FronteggSwift (1.2.39)
+    - FronteggSwift (~> 1.2.43)
+  - FronteggSwift (1.2.43)
   - integration_test (0.0.1):
     - Flutter
 
