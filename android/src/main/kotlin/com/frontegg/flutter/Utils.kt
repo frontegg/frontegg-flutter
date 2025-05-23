@@ -35,6 +35,9 @@ val Context.constants: FronteggConstants
             buildConfigClass, "FRONTEGG_DEEP_LINK_SCHEME", ""
         )
 
+        val useDiskCacheWebview =
+            safeGetValueFromBuildConfig(buildConfigClass, "FRONTEGG_USE_DISK_CACHE_WEBVIEW", false)
+
         return FronteggConstants(
             baseUrl = baseUrl,
             clientId = clientId,
@@ -42,7 +45,8 @@ val Context.constants: FronteggConstants
             useAssetsLinks = useAssetsLinks,
             useChromeCustomTabs = useChromeCustomTabs,
             bundleId = this.packageName,
-            deepLinkScheme = deepLinkScheme
+            deepLinkScheme = deepLinkScheme,
+            useDiskCacheWebview = useDiskCacheWebview,
         )
     }
 

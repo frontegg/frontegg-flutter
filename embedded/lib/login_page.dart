@@ -54,7 +54,7 @@ class LoginPage extends StatelessWidget {
                           child: const Text("Login"),
                           onPressed: () async {
                             try {
-                              await frontegg.login(loginHint: "some@mail.com");
+                              await frontegg.login();
                               debugPrint("Login Finished");
                             } catch (e) {
                               debugPrint("Login failed $e");

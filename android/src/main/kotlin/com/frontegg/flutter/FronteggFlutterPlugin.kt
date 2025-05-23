@@ -44,7 +44,9 @@ class FronteggFlutterPlugin : FlutterPlugin, ActivityAware, ActivityProvider {
                 applicationId = constants.applicationId,
                 useAssetsLinks = constants.useAssetsLinks,
                 useChromeCustomTabs = constants.useChromeCustomTabs,
-                deepLinkScheme = constants.deepLinkScheme
+                deepLinkScheme = constants.deepLinkScheme,
+                useDiskCacheWebview = constants.useDiskCacheWebview
+
             )
         }
 
