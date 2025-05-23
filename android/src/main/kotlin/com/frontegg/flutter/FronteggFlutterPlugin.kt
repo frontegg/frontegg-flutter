@@ -31,15 +31,22 @@ class FronteggFlutterPlugin : FlutterPlugin, ActivityAware, ActivityProvider {
             EventChannel(flutterPluginBinding.binaryMessenger, STATE_EVENT_CHANNEL_NAME)
         stateListener = FronteggStateListenerImpl(constants)
 
-        FronteggApp.init(
-            context = context!!,
-            fronteggDomain = constants.baseUrl,
-            clientId = constants.clientId,
-            applicationId = constants.applicationId,
-            useAssetsLinks = constants.useAssetsLinks,
-            useChromeCustomTabs = constants.useChromeCustomTabs,
-            deepLinkScheme = constants.deepLinkScheme
-        )
+
+        try{
+            // 1) Reflectively load & init FlutterLoader once
+            FronteggApp.getInstance()
+        }catch (e:Exception) {
+            // FlutterLoader isn’t on the classpath → nothing to do
+            FronteggApp.init(
+                context = context!!,
+                fronteggDomain = constants.baseUrl,
+                clientId = constants.clientId,
+                applicationId = constants.applicationId,
+                useAssetsLinks = constants.useAssetsLinks,
+                useChromeCustomTabs = constants.useChromeCustomTabs,
+                deepLinkScheme = constants.deepLinkScheme
+            )
+        }
 
 
         stateEventChannel.setStreamHandler(object : EventChannel.StreamHandler {
