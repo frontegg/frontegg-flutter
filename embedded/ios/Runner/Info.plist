@@ -31,7 +31,7 @@
 			<string>fronteggdemo</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>kptlrs</string>
+				<string>test</string>
 			</array>
 		</dict>
 	</array>
