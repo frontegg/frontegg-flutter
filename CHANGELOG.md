@@ -53,12 +53,6 @@
 
   * Addressed crashes tied to authentication state and view lifecycle.
 
----
-
-### 🔍 Summary
-
-This release delivers increased performance, reliability, and cross-platform alignment—especially for hybrid apps embedding hosted login or using deep native integrations.
-
 ## v1.0.14
 - Updated Android SDK
 
