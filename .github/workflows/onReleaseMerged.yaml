@@ -56,7 +56,7 @@ jobs:
 
 
       - name: Push tag
-        if: steps.tag_check.outputs.exists == 'false'
+        if: steps.tag_check.outputs.exists_tag == 'false'
         run: |
           TAG=v${{ steps.set_current_version.outputs.CURRENT_VERSION }}
           git tag $TAG
