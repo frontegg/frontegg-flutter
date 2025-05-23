@@ -65,16 +65,13 @@ jobs:
       - name: Create Release
         id: create_release
         if: steps.tag_check.outputs.exists_tag == 'false'
-        uses: actions/create-release@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: v${{ steps.set_current_version.outputs.CURRENT_VERSION }}
-          release_name: ${{ github.event.pull_request.title }}
-          body: |
-            ${{ github.event.pull_request.body }}
-          draft: false
-          prerelease: false
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_NOTES: ${{ github.event.pull_request.body }}
+          TAG_NAME: "v${{ steps.set_current_version.outputs.CURRENT_VERSION }}"
+          RELEASE_TITLE: ${{ github.event.pull_request.title }}
+        run: |
+          gh release create "$TAG_NAME" --latest --notes "$RELEASE_NOTES" --title "$RELEASE_TITLE"
 
       - uses: actions/github-script@0.8.0
         with:
