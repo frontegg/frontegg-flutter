@@ -12,7 +12,7 @@ import FronteggSwift
     ) -> Bool {
         GeneratedPluginRegistrant.register(with: self)
 
-//        DefaultLoader.customLoaderView = AnyView(Text("Loading..."))
+        DefaultLoader.customLoaderView = AnyView(Text("Loading..."))
         
         return super.application(application, didFinishLaunchingWithOptions: launchOptions)
     }
