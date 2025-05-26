@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:frontegg_flutter/frontegg_flutter.dart';
-import 'package:frontegg_flutter_embedded_example/login_page.dart';
-import 'package:frontegg_flutter_embedded_example/user_page.dart';
+
+import 'login_page.dart';
+import 'user_page.dart';
 
 /// Main page
 class MainPage extends StatelessWidget {
@@ -15,8 +16,7 @@ class MainPage extends StatelessWidget {
         // StreamBuilder to listen to the state of the authentication
         child: StreamBuilder<FronteggState>(
           stream: frontegg.stateChanged,
-          builder:
-              (BuildContext context, AsyncSnapshot<FronteggState> snapshot) {
+          builder: (BuildContext context, AsyncSnapshot<FronteggState> snapshot) {
             if (snapshot.hasData) {
               final state = snapshot.data!;
               if (state.isAuthenticated && state.user != null) {
