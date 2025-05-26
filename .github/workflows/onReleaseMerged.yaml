@@ -55,6 +55,13 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 
+      - name: Push tag
+        if: steps.tag_check.outputs.exists == 'false'
+        run: |
+          TAG=v${{ steps.set_current_version.outputs.CURRENT_VERSION }}
+          git tag $TAG
+          git push origin $TAG
+
       - name: Create Release
         id: create_release
         if: steps.tag_check.outputs.exists_tag == 'false'
@@ -68,18 +75,6 @@ jobs:
             ${{ github.event.pull_request.body }}
           draft: false
           prerelease: false
-
-      - name: Trigger workflow after tagging
-        uses: actions/github-script@v6
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            await github.rest.actions.createWorkflowDispatch({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              workflow_id: "publish.yaml",
-              ref: "master"
-            });
 
       - uses: actions/github-script@0.8.0
         with:

@@ -4,7 +4,7 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'frontegg_flutter'
-  s.version      = '1.0.14'
+  s.version      = '1.0.15'
   s.summary          = 'A new Flutter plugin project.'
   s.description      = <<-DESC
 A new Flutter plugin project.
@@ -15,7 +15,7 @@ A new Flutter plugin project.
   s.source           = { :path => '.' }
   s.source_files = 'Classes/**/*'
   s.dependency 'Flutter'
-  s.dependency 'FronteggSwift', '~> 1.2.39'
+  s.dependency 'FronteggSwift', '~> 1.2.43'
   s.platform = :ios, '14.0'
 
   # Flutter.framework does not contain a i386 slice.

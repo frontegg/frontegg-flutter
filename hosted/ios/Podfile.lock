@@ -5,8 +5,8 @@ PODS:
     - Flutter
   - frontegg_flutter (1.0.14):
     - Flutter
-    - FronteggSwift (~> 1.2.39)
-  - FronteggSwift (1.2.39)
+    - FronteggSwift (~> 1.2.43)
+  - FronteggSwift (1.2.43)
   - integration_test (0.0.1):
     - Flutter
   - path_provider_foundation (0.0.1):

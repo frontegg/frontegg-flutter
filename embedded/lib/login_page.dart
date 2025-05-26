@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontegg_flutter/frontegg_flutter.dart';
 
-import 'widgets/footer.dart';
-import 'widgets/frontegg_app_bar.dart';
-
 /// Login page
 ///
 /// This is a simple login page that allows the user to login with a username and password.
@@ -100,9 +97,12 @@ class Body extends StatelessWidget {
                       key: const ValueKey('LoginButton'),
                       child: const Text('Sign in'),
                       onPressed: () async {
-                        await frontegg.login(loginHint: 'some@mail.com');
-
-                        debugPrint('Login Finished');
+                        try {
+                          await frontegg.login();
+                          debugPrint("Login Finished");
+                        } catch (e) {
+                          debugPrint("Login failed $e");
+                        }
                       },
                     ),
                     const SizedBox(height: 8),

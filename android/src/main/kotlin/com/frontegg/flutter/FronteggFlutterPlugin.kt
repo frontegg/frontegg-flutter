@@ -21,6 +21,7 @@ class FronteggFlutterPlugin : FlutterPlugin, ActivityAware, ActivityProvider {
 
     override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
         context = flutterPluginBinding.applicationContext
+
         val constants = context!!.constants
 
         channel = MethodChannel(flutterPluginBinding.binaryMessenger, METHOD_CHANNEL_NAME)
@@ -29,6 +30,27 @@ class FronteggFlutterPlugin : FlutterPlugin, ActivityAware, ActivityProvider {
         stateEventChannel =
             EventChannel(flutterPluginBinding.binaryMessenger, STATE_EVENT_CHANNEL_NAME)
         stateListener = FronteggStateListenerImpl(constants)
+
+
+        try{
+            // 1) Reflectively load & init FlutterLoader once
+            FronteggApp.getInstance()
+        }catch (e:Exception) {
+            // FlutterLoader isn’t on the classpath → nothing to do
+            FronteggApp.init(
+                context = context!!,
+                fronteggDomain = constants.baseUrl,
+                clientId = constants.clientId,
+                applicationId = constants.applicationId,
+                useAssetsLinks = constants.useAssetsLinks,
+                useChromeCustomTabs = constants.useChromeCustomTabs,
+                deepLinkScheme = constants.deepLinkScheme,
+                useDiskCacheWebview = constants.useDiskCacheWebview
+
+            )
+        }
+
+
         stateEventChannel.setStreamHandler(object : EventChannel.StreamHandler {
             override fun onListen(arguments: Any?, events: EventChannel.EventSink?) {
                 stateListener?.setEventSink(events)
@@ -39,16 +61,6 @@ class FronteggFlutterPlugin : FlutterPlugin, ActivityAware, ActivityProvider {
                 stateListener?.setEventSink(null)
             }
         })
-
-        FronteggApp.init(
-            context = context!!,
-            fronteggDomain = constants.baseUrl,
-            clientId = constants.clientId,
-            applicationId = constants.applicationId,
-            useAssetsLinks = constants.useAssetsLinks,
-            useChromeCustomTabs = constants.useChromeCustomTabs,
-            deepLinkScheme = constants.deepLinkScheme
-        )
     }
 
     override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
