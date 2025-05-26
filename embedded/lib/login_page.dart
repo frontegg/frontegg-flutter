@@ -16,7 +16,6 @@ class LoginPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
     final frontegg = context.frontegg;
 
     return Scaffold(
@@ -112,7 +111,8 @@ class Body extends StatelessWidget {
                       child: const Text('Login with Google'),
                       onPressed: () async {
                         await frontegg.socialLogin(
-                            provider: FronteggSocialProvider.google);
+                          provider: FronteggSocialProvider.google,
+                        );
 
                         debugPrint('Login via Google Finished');
                       },
@@ -154,7 +154,8 @@ class Body extends StatelessWidget {
                         );
 
                         debugPrint(
-                            'Request Authorized With Tokens Finished, Result = $user');
+                          'Request Authorized With Tokens Finished, Result = $user',
+                        );
                       },
                     ),
                     const SizedBox(height: 8),

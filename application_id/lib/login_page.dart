@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:frontegg_flutter/frontegg_flutter.dart';
 
+import 'widgets/footer.dart';
+import 'widgets/frontegg_app_bar.dart';
+
 /// Login page
 ///
 /// This is a simple login page that allows the user to login with a username and password.
@@ -16,56 +19,99 @@ class LoginPage extends StatelessWidget {
     final frontegg = context.frontegg;
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Frontegg Example App"),
-        centerTitle: true,
-      ),
+      appBar: const FronteggAppBar(),
       body: Stack(
         children: [
+          StreamBuilder<FronteggState>(
+            stream: frontegg.stateChanged,
+            builder:
+                (BuildContext context, AsyncSnapshot<FronteggState> snapshot) {
+              if (!snapshot.hasData) {
+                return const SizedBox.expand(
+                  child: Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                );
+              }
+              final state = snapshot.data!;
+              if (state.isLoading) {
+                return const SizedBox.expand(
+                  child: Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                );
+              } else if (!state.initializing && !state.isAuthenticated) {
+                return const Body();
+              }
+              return const SizedBox();
+            },
+          ),
           const Align(
-            alignment: Alignment.topCenter,
-            child: Padding(
-              padding: EdgeInsets.only(top: 40),
-              child: Text(
-                'Not Authenticated',
-                style: TextStyle(fontSize: 24),
+            alignment: Alignment.bottomRight,
+            child: Footer(),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Body of the login page
+class Body extends StatelessWidget {
+  const Body({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+    final frontegg = context.frontegg;
+
+    return SingleChildScrollView(
+      physics: const AlwaysScrollableScrollPhysics(),
+      child: Padding(
+        padding: const EdgeInsets.all(24.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            const SizedBox(height: 50),
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(24.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Text(
+                      '🤗',
+                      style: TextStyle(fontSize: 40),
+                    ),
+                    const SizedBox(height: 16),
+                    Text('Welcome!', style: textTheme.headlineMedium),
+                    const SizedBox(height: 8),
+                    Text(
+                      'This is Frontegg\'s sample app that will let you experiment with our authentication flows.',
+                      style: textTheme.bodyMedium,
+                    ),
+                    const SizedBox(height: 16),
+                    // Login with email and password
+                    // loginHint is the email of the user (optional)
+                    ElevatedButton(
+                      key: const ValueKey('LoginButton'),
+                      child: const Text('Sign in'),
+                      onPressed: () async {
+                        await frontegg.login(loginHint: 'some@mail.com');
+
+                        debugPrint('Login Finished');
+                      },
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-          Align(
-            alignment: Alignment.center,
-            // StreamBuilder to listen to the state of the authentication
-            child: StreamBuilder<FronteggState>(
-              stream: frontegg.stateChanged,
-              builder: (BuildContext context,
-                  AsyncSnapshot<FronteggState> snapshot) {
-                if (snapshot.hasData) {
-                  final state = snapshot.data!;
-                  if (state.isLoading) {
-                    return const CircularProgressIndicator();
-                  } else if (!state.initializing && !state.isAuthenticated) {
-                    return Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        // Login with email and password
-                        // loginHint is the email of the user (optional)
-                        ElevatedButton(
-                          key: const ValueKey("LoginButton"),
-                          child: const Text("Login"),
-                          onPressed: () async {
-                            await frontegg.login();
-                            debugPrint("Login Finished");
-                          },
-                        ),
-                      ],
-                    );
-                  }
-                }
-                return const SizedBox();
-              },
-            ),
-          )
-        ],
+            const SizedBox(height: 220),
+          ],
+        ),
       ),
     );
   }

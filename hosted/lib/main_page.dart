@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:frontegg_flutter/frontegg_flutter.dart';
-import 'package:frontegg_flutter_hosted_example/login_page.dart';
-import 'package:frontegg_flutter_hosted_example/user_page.dart';
+
+import 'login_page.dart';
+import 'user_page.dart';
 
 /// Main page
 class MainPage extends StatelessWidget {

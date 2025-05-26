@@ -108,15 +108,18 @@ class _UserPageState extends State<UserPage> {
                                         );
                                         if (isSteppedUp) {
                                           _showSuccessMessage(
-                                              "You are already stepped up");
+                                            "You are already stepped up",
+                                          );
                                         } else {
                                           try {
                                             await frontegg.stepUp();
                                             _showSuccessMessage(
-                                                "Action completed successfully");
+                                              "Action completed successfully",
+                                            );
                                           } catch (e) {
                                             _showFailureMessage(
-                                                "Failed to step up: $e");
+                                              "Failed to step up: $e",
+                                            );
                                           }
                                         }
                                       },
@@ -262,7 +265,11 @@ class UserInfo extends StatelessWidget {
               children: [
                 Padding(
                   padding: const EdgeInsets.only(
-                      left: 8.0, right: 12.0, top: 4.0, bottom: 4.0),
+                    left: 8.0,
+                    right: 12.0,
+                    top: 4.0,
+                    bottom: 4.0,
+                  ),
                   child: CircleAvatar(
                     backgroundImage: NetworkImage(user.profilePictureUrl),
                     radius: 12,
@@ -449,8 +456,11 @@ class TenantInfo extends StatelessWidget {
                         ),
                       ),
                       trailingIcon: tenant == activeTenant
-                          ? const Icon(Icons.check,
-                              color: primaryColor, size: 20)
+                          ? const Icon(
+                              Icons.check,
+                              color: primaryColor,
+                              size: 20,
+                            )
                           : null,
                       label: tenant.name,
                     ),
