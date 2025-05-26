@@ -25,7 +25,8 @@ class LoginPage extends StatelessWidget {
         children: [
           StreamBuilder<FronteggState>(
             stream: frontegg.stateChanged,
-            builder: (BuildContext context, AsyncSnapshot<FronteggState> snapshot) {
+            builder:
+                (BuildContext context, AsyncSnapshot<FronteggState> snapshot) {
               if (!snapshot.hasData) {
                 return const SizedBox.expand(
                   child: Center(
@@ -110,7 +111,8 @@ class Body extends StatelessWidget {
                     ElevatedButton(
                       child: const Text('Login with Google'),
                       onPressed: () async {
-                        await frontegg.socialLogin(provider: FronteggSocialProvider.google);
+                        await frontegg.socialLogin(
+                            provider: FronteggSocialProvider.google);
 
                         debugPrint('Login via Google Finished');
                       },
@@ -147,10 +149,12 @@ class Body extends StatelessWidget {
                       onPressed: () async {
                         final user = await frontegg.requestAuthorize(
                           refreshToken: 'd6da8424-3205-4dec-9ba9-eb1299dda314',
-                          deviceTokenCookie: 'ef5b2160-5b84-4ad9-afc2-e9beafacc778',
+                          deviceTokenCookie:
+                              'ef5b2160-5b84-4ad9-afc2-e9beafacc778',
                         );
 
-                        debugPrint('Request Authorized With Tokens Finished, Result = $user');
+                        debugPrint(
+                            'Request Authorized With Tokens Finished, Result = $user');
                       },
                     ),
                     const SizedBox(height: 8),

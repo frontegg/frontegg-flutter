@@ -48,10 +48,12 @@ class Footer extends StatelessWidget {
                   const SizedBox(height: 8),
                   TextButton(
                     onPressed: () {
-                      launchUrl('https://frontegg-prod.frontegg.com/oauth/account/sign-up');
+                      launchUrl(
+                          'https://frontegg-prod.frontegg.com/oauth/account/sign-up');
                     },
                     style: TextButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 4, vertical: 4),
                       minimumSize: const Size(0, 0),
                       tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     ),

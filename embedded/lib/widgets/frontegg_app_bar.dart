@@ -45,7 +45,8 @@ class FronteggAppBar extends StatelessWidget implements PreferredSizeWidget {
                     frontegg.logout();
                   },
                   style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 2),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 30, vertical: 2),
                     backgroundColor: backgroundColor,
                     foregroundColor: textColor,
                     maximumSize: const Size(120, 32),

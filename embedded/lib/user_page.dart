@@ -68,7 +68,8 @@ class _UserPageState extends State<UserPage> {
                           padding: const EdgeInsets.symmetric(horizontal: 24),
                           child: Card(
                             child: Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 13.5),
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 13.5),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -77,7 +78,8 @@ class _UserPageState extends State<UserPage> {
                                       padding: const EdgeInsets.all(24),
                                       child: Text(
                                         "Hello, ${user.name.split(" ")[0]}!",
-                                        style: textTheme.headlineSmall?.copyWith(
+                                        style:
+                                            textTheme.headlineSmall?.copyWith(
                                           color: const Color(0xFF202020),
                                         ),
                                       ),
@@ -100,17 +102,21 @@ class _UserPageState extends State<UserPage> {
                                     child: ElevatedButton(
                                       onPressed: () async {
                                         const maxAge = Duration(minutes: 1);
-                                        final isSteppedUp = await frontegg.isSteppedUp(
+                                        final isSteppedUp =
+                                            await frontegg.isSteppedUp(
                                           maxAge: maxAge,
                                         );
                                         if (isSteppedUp) {
-                                          _showSuccessMessage("You are already stepped up");
+                                          _showSuccessMessage(
+                                              "You are already stepped up");
                                         } else {
                                           try {
                                             await frontegg.stepUp();
-                                            _showSuccessMessage("Action completed successfully");
+                                            _showSuccessMessage(
+                                                "Action completed successfully");
                                           } catch (e) {
-                                            _showFailureMessage("Failed to step up: $e");
+                                            _showFailureMessage(
+                                                "Failed to step up: $e");
                                           }
                                         }
                                       },
@@ -255,7 +261,8 @@ class UserInfo extends StatelessWidget {
             Row(
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(left: 8.0, right: 12.0, top: 4.0, bottom: 4.0),
+                  padding: const EdgeInsets.only(
+                      left: 8.0, right: 12.0, top: 4.0, bottom: 4.0),
                   child: CircleAvatar(
                     backgroundImage: NetworkImage(user.profilePictureUrl),
                     radius: 12,
@@ -410,8 +417,10 @@ class TenantInfo extends StatelessWidget {
               menuStyle: const MenuStyle(
                 backgroundColor: WidgetStatePropertyAll(Colors.white),
                 surfaceTintColor: WidgetStatePropertyAll(Colors.transparent),
-                minimumSize: WidgetStatePropertyAll(Size.fromWidth(double.infinity)),
-                maximumSize: WidgetStatePropertyAll(Size.fromWidth(double.infinity)),
+                minimumSize:
+                    WidgetStatePropertyAll(Size.fromWidth(double.infinity)),
+                maximumSize:
+                    WidgetStatePropertyAll(Size.fromWidth(double.infinity)),
               ),
               dropdownMenuEntries: tenants
                   .map(
@@ -420,7 +429,8 @@ class TenantInfo extends StatelessWidget {
                       labelWidget: Text(
                         tenant.name,
                         style: textTheme.bodyLarge?.copyWith(
-                          fontWeight: tenant == activeTenant ? FontWeight.w600 : null,
+                          fontWeight:
+                              tenant == activeTenant ? FontWeight.w600 : null,
                           color: tenant == activeTenant ? primaryColor : null,
                         ),
                       ),
@@ -439,7 +449,8 @@ class TenantInfo extends StatelessWidget {
                         ),
                       ),
                       trailingIcon: tenant == activeTenant
-                          ? const Icon(Icons.check, color: primaryColor, size: 20)
+                          ? const Icon(Icons.check,
+                              color: primaryColor, size: 20)
                           : null,
                       label: tenant.name,
                     ),

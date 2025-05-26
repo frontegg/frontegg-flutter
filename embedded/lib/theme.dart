@@ -71,7 +71,8 @@ final elevatedButtonTheme = ElevatedButtonThemeData(
       vertical: 9,
       horizontal: 24,
     ),
-    textStyle: GoogleFonts.manrope(fontSize: 16, fontWeight: FontWeight.w600, letterSpacing: 0.01),
+    textStyle: GoogleFonts.manrope(
+        fontSize: 16, fontWeight: FontWeight.w600, letterSpacing: 0.01),
   ),
 );
 
