@@ -88,5 +88,5 @@ final appTheme = ThemeData.light().copyWith(
   elevatedButtonTheme: elevatedButtonTheme,
   progressIndicatorTheme: const ProgressIndicatorThemeData(
     color: primaryColor,
-  )
+  ),
 );

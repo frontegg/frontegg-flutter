@@ -32,6 +32,7 @@ flutter:
     - assets/github-icon.png
     - assets/flutter-icon.png
     - assets/slack-icon.png
+    - assets/menu-icon.png
 
 patrol:
   app_name: Frontegg Demo

@@ -1,3 +1,5 @@
+import 'package:flutter/cupertino.dart';
+import 'package:frontegg_flutter/frontegg_flutter.dart';
 import 'package:url_launcher/url_launcher.dart' as url_launcher;
 
 Future<bool> launchUrl(
@@ -17,5 +19,12 @@ Future<bool> launchUrl(
     }
   } on FormatException catch (_) {
     return false;
+  }
+}
+
+extension BuildContextEx on BuildContext {
+  Future<bool> get isDefaultCredentials async {
+    final constants = await frontegg.getConstants();
+    return constants.baseUrl == "https://autheu.davidantoon.me";
   }
 }
