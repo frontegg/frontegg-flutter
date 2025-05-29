@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:frontegg_flutter/frontegg_flutter.dart';
 
+import 'widgets/footer.dart';
+import 'widgets/frontegg_app_bar.dart';
+
 /// Login page
 ///
 /// This is a simple login page that allows the user to login with a username and password.
