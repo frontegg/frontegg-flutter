@@ -299,21 +299,21 @@ class UserInfo extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "Name:",
+                          "Name",
                           style: textTheme.bodyLarge?.copyWith(
                             fontWeight: FontWeight.w600,
                           ),
                         ),
                         const SizedBox(height: 16),
                         Text(
-                          "Email:",
+                          "Email",
                           style: textTheme.bodyLarge?.copyWith(
                             fontWeight: FontWeight.w600,
                           ),
                         ),
                         const SizedBox(height: 16),
                         Text(
-                          "Roles:",
+                          "Roles",
                           style: textTheme.bodyLarge?.copyWith(
                             fontWeight: FontWeight.w600,
                           ),
@@ -491,7 +491,7 @@ class TenantInfo extends StatelessWidget {
                           width: 30,
                           height: 30,
                           child: Text(
-                            "ID:",
+                            "ID",
                             style: textTheme.bodyLarge?.copyWith(
                               fontWeight: FontWeight.w600,
                             ),
@@ -499,14 +499,14 @@ class TenantInfo extends StatelessWidget {
                         ),
                         const SizedBox(height: 10),
                         Text(
-                          "Website:",
+                          "Website",
                           style: textTheme.bodyLarge?.copyWith(
                             fontWeight: FontWeight.w600,
                           ),
                         ),
                         const SizedBox(height: 16),
                         Text(
-                          "Creator:",
+                          "Creator",
                           style: textTheme.bodyLarge?.copyWith(
                             fontWeight: FontWeight.w600,
                           ),
