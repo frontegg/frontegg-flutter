@@ -63,13 +63,15 @@ void main() {
       await $.tap(find.byKey(ValueKey(tenantId2)));
       await $.pumpAndSettle();
       await $.waitUntilVisible(
-          find.textContaining("$tenantName2 (active)", findRichText: true));
+        find.textContaining("$tenantName2 (active)", findRichText: true),
+      );
 
       // Switch tenant 1
       await $.tap(find.byKey(ValueKey(tenantId1)));
       await $.pumpAndSettle();
       await $.waitUntilVisible(
-          find.textContaining("$tenantName1 (active)", findRichText: true));
+        find.textContaining("$tenantName1 (active)", findRichText: true),
+      );
 
       // Logout
       await $.tap(find.byKey(const ValueKey("ProfileTab")));

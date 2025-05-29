@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:frontegg_flutter/frontegg_flutter.dart';
-import 'package:frontegg_flutter_embedded_example/main_page.dart';
+
+import 'main_page.dart';
+import 'theme.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -16,6 +18,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      themeMode: ThemeMode.light,
+      theme: appTheme,
       // Wrap the MainPage with the FronteggProvider to Frontegg SDK access
       home: FronteggProvider(
         child: const MainPage(),

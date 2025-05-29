@@ -74,7 +74,8 @@ void main() {
       }
 
       await $.native.waitUntilVisible(
-          Selector(textStartsWith: "Do you want to continue using"));
+        Selector(textStartsWith: "Do you want to continue using"),
+      );
       await Future.delayed(const Duration(seconds: 2));
       await $.native2.tap(
         NativeSelector(
