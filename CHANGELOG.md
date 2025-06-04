@@ -1,3 +1,6 @@
+## v1.0.16
+- Updated example projects UI
+
 ## v1.0.15
 
 ### 🔄 Integration Enhancements

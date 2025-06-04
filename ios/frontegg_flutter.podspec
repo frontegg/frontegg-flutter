@@ -4,7 +4,7 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'frontegg_flutter'
-  s.version      = '1.0.15'
+  s.version      = '1.0.16'
   s.summary          = 'A new Flutter plugin project.'
   s.description      = <<-DESC
 A new Flutter plugin project.
