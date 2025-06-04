@@ -1,34 +1,64 @@
 PODS:
+  - CocoaAsyncSocket (7.6.5)
   - Flutter (1.0.0)
-  - frontegg_flutter (1.0.10):
+  - fluttertoast (0.0.2):
+    - Flutter
+  - frontegg_flutter (1.0.15):
     - Flutter
     - FronteggSwift (~> 1.2.43)
   - FronteggSwift (1.2.43)
   - integration_test (0.0.1):
     - Flutter
+  - path_provider_foundation (0.0.1):
+    - Flutter
+    - FlutterMacOS
+  - patrol (0.0.1):
+    - CocoaAsyncSocket (~> 7.6)
+    - Flutter
+    - FlutterMacOS
+  - url_launcher_ios (0.0.1):
+    - Flutter
 
 DEPENDENCIES:
   - Flutter (from `Flutter`)
+  - fluttertoast (from `.symlinks/plugins/fluttertoast/ios`)
   - frontegg_flutter (from `.symlinks/plugins/frontegg_flutter/ios`)
   - integration_test (from `.symlinks/plugins/integration_test/ios`)
+  - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
+  - patrol (from `.symlinks/plugins/patrol/darwin`)
+  - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
 
 SPEC REPOS:
   trunk:
+    - CocoaAsyncSocket
     - FronteggSwift
 
 EXTERNAL SOURCES:
   Flutter:
     :path: Flutter
+  fluttertoast:
+    :path: ".symlinks/plugins/fluttertoast/ios"
   frontegg_flutter:
     :path: ".symlinks/plugins/frontegg_flutter/ios"
   integration_test:
     :path: ".symlinks/plugins/integration_test/ios"
+  path_provider_foundation:
+    :path: ".symlinks/plugins/path_provider_foundation/darwin"
+  patrol:
+    :path: ".symlinks/plugins/patrol/darwin"
+  url_launcher_ios:
+    :path: ".symlinks/plugins/url_launcher_ios/ios"
 
 SPEC CHECKSUMS:
+  CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
-  frontegg_flutter: 6f3415e6a4b96589ec45cc19e07e42a918bc64e0
-  FronteggSwift: d26ebeed6b44a47d2345fef80d17a718c253c836
+  fluttertoast: 2c67e14dce98bbdb200df9e1acf610d7a6264ea1
+  frontegg_flutter: 8f88f088ad575b501e00cc0c1ffd66852a67de70
+  FronteggSwift: ce10c4426fd126ce2d386d0cd78dfc56f5868a90
   integration_test: 4a889634ef21a45d28d50d622cf412dc6d9f586e
+  path_provider_foundation: 080d55be775b7414fd5a5ef3ac137b97b097e564
+  patrol: 51b76cc7c11a2933ee3e72482d930c75b9d4ec73
+  url_launcher_ios: 694010445543906933d732453a59da0a173ae33d
 
 PODFILE CHECKSUM: c9be09f6a61958d6788db8b9ee489767b65cfa92
 

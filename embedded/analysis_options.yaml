@@ -21,9 +21,22 @@ linter:
   # `// ignore_for_file: name_of_lint` syntax on the line or in the file
   # producing the lint.
   rules:
-    - overridden_fields
     # avoid_print: false  # Uncomment to disable the `avoid_print` rule
     # prefer_single_quotes: true  # Uncomment to enable the `prefer_single_quotes` rule
+    - avoid_relative_lib_imports # https://dart-lang.github.io/linter/lints/avoid_relative_lib_imports.html
+    - prefer_relative_imports # https://dart-lang.github.io/linter/lints/prefer_relative_imports.html
+
+    - require_trailing_commas # https://dart-lang.github.io/linter/lints/require_trailing_commas.html
+    - avoid_init_to_null
+    - prefer_const_constructors
+    - prefer_const_literals_to_create_immutables
+    - unnecessary_const
+    - unnecessary_new
+    - avoid_unused_constructor_parameters
+    - avoid_private_typedef_functions
+    - avoid_redundant_argument_values
+    - depend_on_referenced_packages
+    - directives_ordering
 
 # Additional information about this file can be found at
 # https://dart.dev/guides/language/analysis-options
