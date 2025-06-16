@@ -36,7 +36,7 @@
 
 ---
 
-#### 🍎 iOS – v1.2.43
+#### 🍎 iOS – v1.2.44
 
 * **⚡ WebView & UI Performance**
 
