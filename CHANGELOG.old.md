@@ -1,3 +1,58 @@
+## v1.0.15
+
+### 🔄 Integration Enhancements
+
+* **Channel Subscription After Initialization**
+  The Flutter SDK now subscribes to the native event channel **only after Frontegg is fully initialized**, ensuring stability and preventing race conditions during early-stage interactions.
+
+---
+
+### 🧹 Native SDK Dependency Updates
+
+#### 🟢 Android – v1.2.42
+
+* **📁 Web Resource Caching for WebView**
+  Introduced persistent disk caching for **JavaScript**, **CSS**, and **font** files used in embedded login flows and hosted assets, reducing redundant requests and improving load times.
+
+  ✅ **How to enable**:
+  Add the following line to your `android/app/build.gradle` file:
+
+  ```gradle
+  buildConfigField "Boolean", "FRONTEGG_USE_DISK_CACHE_WEBVIEW", "true"
+  ```
+
+* **✅ Stability Improvements**
+
+  * Fixed `loginDirectAction` reliability after cold launches.
+  * Channel subscription now deferred until SDK is initialized.
+  * Migrated to structured coroutine scopes for better async control.
+  * Improved error handling for background token refreshes.
+  * Added safe wrappers for API calls (`api.me()` and `api.exchangeToken()`).
+
+* **🛠️ QA & Tooling**
+
+  * Integrated [[Detekt](https://github.com/detekt/detekt)](https://github.com/detekt/detekt) for code quality checks.
+  * Refined publishing scripts and documentation.
+
+---
+
+#### 🍎 iOS – v1.2.44
+
+* **⚡ WebView & UI Performance**
+
+  * Optimized **WKWebView** initialization for faster login rendering.
+  * Unified loading indicators across flows.
+  * Prevented reloads on social login cancelation.
+
+* **🧪 Testing & CI**
+
+  * Enabled E2E tests on iOS simulators.
+  * Automated test runs before each release to ensure quality.
+
+* **🐞 Bug Fixes**
+
+  * Addressed crashes tied to authentication state and view lifecycle.
+
 ## v1.0.14
 - Updated Android SDK
 
