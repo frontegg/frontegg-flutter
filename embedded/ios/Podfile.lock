@@ -3,10 +3,10 @@ PODS:
   - Flutter (1.0.0)
   - fluttertoast (0.0.2):
     - Flutter
-  - frontegg_flutter (1.0.15):
+  - frontegg_flutter (1.0.16):
     - Flutter
-    - FronteggSwift (~> 1.2.44)
-  - FronteggSwift (1.2.44)
+    - FronteggSwift (~> 1.2.45)
+  - FronteggSwift (1.2.45)
   - integration_test (0.0.1):
     - Flutter
   - path_provider_foundation (0.0.1):
@@ -23,7 +23,7 @@ DEPENDENCIES:
   - Flutter (from `Flutter`)
   - fluttertoast (from `.symlinks/plugins/fluttertoast/ios`)
   - frontegg_flutter (from `.symlinks/plugins/frontegg_flutter/ios`)
-  - FronteggSwift (~> 1.2.44)
+  - FronteggSwift (~> 1.2.45)
   - integration_test (from `.symlinks/plugins/integration_test/ios`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
   - patrol (from `.symlinks/plugins/patrol/darwin`)
@@ -53,14 +53,14 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
-  fluttertoast: 21eecd6935e7064cc1fcb733a4c5a428f3f24f0f
-  frontegg_flutter: 392f735d8d1bf88372dfe0b1e0be23d4d0a2e5b1
-  FronteggSwift: 9643e36f6ab8604b281ab764eb6a6bb3dbaa5c26
-  integration_test: 252f60fa39af5e17c3aa9899d35d908a0721b573
-  path_provider_foundation: 2b6b4c569c0fb62ec74538f866245ac84301af46
-  patrol: cf2cd48c7f3e5171610111994f7b466cd76d1f57
-  url_launcher_ios: 5334b05cef931de560670eeae103fd3e431ac3fe
+  fluttertoast: 2c67e14dce98bbdb200df9e1acf610d7a6264ea1
+  frontegg_flutter: 891237165892f68bff13615af49f5de5f103e23b
+  FronteggSwift: d8d3d4c6ddf913f5f15fe11c571abae0d8b36af3
+  integration_test: 4a889634ef21a45d28d50d622cf412dc6d9f586e
+  path_provider_foundation: 080d55be775b7414fd5a5ef3ac137b97b097e564
+  patrol: 51b76cc7c11a2933ee3e72482d930c75b9d4ec73
+  url_launcher_ios: 694010445543906933d732453a59da0a173ae33d
 
-PODFILE CHECKSUM: 78028d904ffb2ee7ee43c9d001017762e8056c7f
+PODFILE CHECKSUM: 0f666920353ecaa3a10e8853b7ffd6b3e44e8281
 
 COCOAPODS: 1.16.2
