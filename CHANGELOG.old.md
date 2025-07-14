@@ -1,3 +1,7 @@
+## v1.0.16
+- Updated example projects UI
+- Upgrade ios version to 1.2.44
+
 ## v1.0.15
 
 ### 🔄 Integration Enhancements
