@@ -1,3 +1,8 @@
+## v1.0.17
+Fix publish script
+- Upgrade android version to `1.2.47`
+- Added check for init of android app
+
 ## v1.0.16
 - Updated example projects UI
 - Upgrade ios version to 1.2.44
