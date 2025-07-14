@@ -31,21 +31,18 @@ class FronteggFlutterPlugin : FlutterPlugin, ActivityAware, ActivityProvider {
             EventChannel(flutterPluginBinding.binaryMessenger, STATE_EVENT_CHANNEL_NAME)
         stateListener = FronteggStateListenerImpl(constants)
 
-
         if (FronteggApp.isInitialized()) {
-            // 1) Reflectively load & init FlutterLoader once
-            try{
-                // 1) Reflectively load & init FlutterLoader once
+            try {
+                // Reflectively load & init FlutterLoader once
                 FronteggApp.getInstance()
-            }catch (e:Exception) {
+            } catch (e: Exception) {
                 // FlutterLoader isn’t on the classpath → nothing to do
-                initializeFrontegg( constants, context)
+                initializeFrontegg(constants, context)
             }
         } else {
-             // FlutterLoader isn’t on the classpath → nothing to do
-             initializeFrontegg( constants, context)
-        }      
-
+            // FlutterLoader isn’t on the classpath → nothing to do
+            initializeFrontegg(constants, context)
+        }
 
         stateEventChannel.setStreamHandler(object : EventChannel.StreamHandler {
             override fun onListen(arguments: Any?, events: EventChannel.EventSink?) {
@@ -68,7 +65,6 @@ class FronteggFlutterPlugin : FlutterPlugin, ActivityAware, ActivityProvider {
     override fun onDetachedFromActivity() {
         this.binding = null
     }
-
 
     override fun onReattachedToActivityForConfigChanges(binding: ActivityPluginBinding) {
         this.binding = binding
