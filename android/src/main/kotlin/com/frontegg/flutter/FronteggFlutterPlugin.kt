@@ -32,23 +32,19 @@ class FronteggFlutterPlugin : FlutterPlugin, ActivityAware, ActivityProvider {
         stateListener = FronteggStateListenerImpl(constants)
 
 
-        try{
+        if (FronteggApp.isInitialized()) {
             // 1) Reflectively load & init FlutterLoader once
-            FronteggApp.getInstance()
-        }catch (e:Exception) {
-            // FlutterLoader isn’t on the classpath → nothing to do
-            FronteggApp.init(
-                context = context!!,
-                fronteggDomain = constants.baseUrl,
-                clientId = constants.clientId,
-                applicationId = constants.applicationId,
-                useAssetsLinks = constants.useAssetsLinks,
-                useChromeCustomTabs = constants.useChromeCustomTabs,
-                deepLinkScheme = constants.deepLinkScheme,
-                useDiskCacheWebview = constants.useDiskCacheWebview
-
-            )
-        }
+            try{
+                // 1) Reflectively load & init FlutterLoader once
+                FronteggApp.getInstance()
+            }catch (e:Exception) {
+                // FlutterLoader isn’t on the classpath → nothing to do
+                initializeFrontegg( constants, context)
+            }
+        } else {
+             // FlutterLoader isn’t on the classpath → nothing to do
+             initializeFrontegg( constants, context)
+        }      
 
 
         stateEventChannel.setStreamHandler(object : EventChannel.StreamHandler {
@@ -94,4 +90,17 @@ class FronteggFlutterPlugin : FlutterPlugin, ActivityAware, ActivityProvider {
         const val METHOD_CHANNEL_NAME = "frontegg_flutter"
         const val STATE_EVENT_CHANNEL_NAME = "frontegg_flutter/state_stream"
     }
+}
+
+private fun initializeFrontegg(constants: FronteggConstants, context: Context? = null) {
+    FronteggApp.init(
+        context = context!!,
+        fronteggDomain = constants.baseUrl,
+        clientId = constants.clientId,
+        applicationId = constants.applicationId,
+        useAssetsLinks = constants.useAssetsLinks,
+        useChromeCustomTabs = constants.useChromeCustomTabs,
+        deepLinkScheme = constants.deepLinkScheme,
+        useDiskCacheWebview = constants.useDiskCacheWebview
+    )
 }
