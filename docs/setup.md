@@ -132,7 +132,7 @@ keytool -list -v -keystore /PATH/file.jks -alias YourAlias -storepass *** -keypa
 ```groovy
 dependencies {
     implementation 'androidx.browser:browser:1.8.0'
-    implementation 'com.frontegg.sdk:android:1.2.47'
+    implementation 'com.frontegg.sdk:android:1.2.48'
 }
 ```
 
