@@ -1,4 +1,3 @@
-## v1.0.19
 - Upgrade android version to `1.2.48`
 
 ## v1.0.18
