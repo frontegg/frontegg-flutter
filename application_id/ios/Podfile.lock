@@ -3,7 +3,7 @@ PODS:
   - Flutter (1.0.0)
   - fluttertoast (0.0.2):
     - Flutter
-  - frontegg_flutter (1.0.18):
+  - frontegg_flutter (1.0.19):
     - Flutter
     - FronteggSwift (~> 1.2.45)
   - FronteggSwift (1.2.45)

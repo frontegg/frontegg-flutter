@@ -1,3 +1,6 @@
+## v1.0.18
+- Upgrade native library for latency improvements
+
 ## v1.0.17
 Fix publish script
 - Upgrade android version to `1.2.47`
