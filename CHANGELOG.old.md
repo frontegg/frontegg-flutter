@@ -1,3 +1,5 @@
+- Upgrade android version to `1.2.48`
+
 ## v1.0.18
 - Upgrade native library for latency improvements
 
