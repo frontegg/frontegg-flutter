@@ -522,7 +522,7 @@ class TenantInfo extends StatelessWidget {
                         Row(
                           children: [
                             SizedBox(
-                              width: MediaQuery.sizeOf(context).width * 0.38,
+                              width: MediaQuery.sizeOf(context).width * 0.35,
                               height: 30,
                               child: Text(
                                 activeTenant.id,
