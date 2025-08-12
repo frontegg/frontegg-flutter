@@ -1,8 +1,9 @@
 package com.frontegg.flutter
 
-import com.frontegg.android.FronteggApp
-import com.frontegg.android.FronteggAuth
+import android.content.Context
 import com.frontegg.android.exceptions.FronteggException
+import com.frontegg.android.fronteggAuth
+import com.frontegg.android.services.StorageProvider
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
@@ -14,7 +15,7 @@ import kotlin.time.toDuration
 
 class FronteggMethodCallHandler(
     private val activityProvider: ActivityProvider,
-    private val constants: FronteggConstants,
+    private val context: Context,
 ) : MethodCallHandler {
 
     companion object {
@@ -48,7 +49,7 @@ class FronteggMethodCallHandler(
     private fun isSteppedUp(call: MethodCall, result: MethodChannel.Result) {
         val maxAge = call.argument<Int>("maxAge")
 
-        val isSteppedUp = FronteggApp.getInstance().auth.isSteppedUp(
+        val isSteppedUp = context.fronteggAuth.isSteppedUp(
             maxAge = maxAge?.toDuration(DurationUnit.SECONDS)
         )
         result.success(isSteppedUp)
@@ -58,7 +59,7 @@ class FronteggMethodCallHandler(
         val maxAge = call.argument<Int>("maxAge")
 
         activityProvider.getActivity()?.let {
-            FronteggApp.getInstance().auth.stepUp(
+            context.fronteggAuth.stepUp(
                 activity = it,
                 maxAge = maxAge?.toDuration(DurationUnit.SECONDS)
             ) { error: Exception? ->
@@ -86,9 +87,9 @@ class FronteggMethodCallHandler(
     private fun directLoginAction(call: MethodCall, result: MethodChannel.Result) {
         val type = call.argument<String>("type") ?: throw ArgumentNotFoundException("type")
         val data = call.argument<String>("data") ?: throw ArgumentNotFoundException("data")
-        if (FronteggApp.getInstance().auth.isEmbeddedMode) {
+        if (context.fronteggAuth.isEmbeddedMode) {
             activityProvider.getActivity()?.let {
-                FronteggAuth.instance.directLoginAction(it, type, data) {
+                context.fronteggAuth.directLoginAction(it, type, data) {
                     result.success(null)
                 }
             }
@@ -103,9 +104,9 @@ class FronteggMethodCallHandler(
 
     private fun directLogin(call: MethodCall, result: MethodChannel.Result) {
         val url = call.argument<String>("url") ?: throw ArgumentNotFoundException("url")
-        if (FronteggApp.getInstance().auth.isEmbeddedMode) {
+        if (context.fronteggAuth.isEmbeddedMode) {
             activityProvider.getActivity()?.let {
-                FronteggAuth.instance.directLoginAction(it, "direct", url) {
+                context.fronteggAuth.directLoginAction(it, "direct", url) {
                     result.success(null)
                 }
             }
@@ -121,9 +122,9 @@ class FronteggMethodCallHandler(
     private fun socialLogin(call: MethodCall, result: MethodChannel.Result) {
         val provider =
             call.argument<String>("provider") ?: throw ArgumentNotFoundException("provider")
-        if (FronteggApp.getInstance().auth.isEmbeddedMode) {
+        if (context.fronteggAuth.isEmbeddedMode) {
             activityProvider.getActivity()?.let {
-                FronteggAuth.instance.directLoginAction(it, "social-login", provider) {
+                context.fronteggAuth.directLoginAction(it, "social-login", provider) {
                     result.success(null)
                 }
             }
@@ -139,9 +140,9 @@ class FronteggMethodCallHandler(
     private fun customSocialLogin(call: MethodCall, result: MethodChannel.Result) {
         val id = call.argument<String>("id") ?: throw ArgumentNotFoundException("id")
 
-        if (FronteggApp.getInstance().auth.isEmbeddedMode) {
+        if (context.fronteggAuth.isEmbeddedMode) {
             activityProvider.getActivity()?.let {
-                FronteggAuth.instance.directLoginAction(it, "custom-social-login", id) {
+                context.fronteggAuth.directLoginAction(it, "custom-social-login", id) {
                     result.success(null)
                 }
             }
@@ -159,7 +160,7 @@ class FronteggMethodCallHandler(
             ?: throw ArgumentNotFoundException("refreshToken")
         val deviceTokenCookie = call.argument<String>("deviceTokenCookie")
 
-        FronteggAuth.instance.requestAuthorize(refreshToken, deviceTokenCookie) { authResult ->
+        context.fronteggAuth.requestAuthorize(refreshToken, deviceTokenCookie) { authResult ->
             authResult.onSuccess { user ->
                 result.success(user.toReadableMap())
             }.onFailure { error ->
@@ -182,7 +183,7 @@ class FronteggMethodCallHandler(
 
     private fun registerPasskeys(result: MethodChannel.Result) {
         activityProvider.getActivity()?.let {
-            FronteggAuth.instance.registerPasskeys(it) { error ->
+            context.fronteggAuth.registerPasskeys(it) { error ->
                 if (error == null) {
                     result.success(null)
                 } else {
@@ -195,7 +196,8 @@ class FronteggMethodCallHandler(
                     } else {
                         result.error(
                             "unknown",
-                            error.localizedMessage ?: "Unknown error occurred during passkey registration",
+                            error.localizedMessage
+                                ?: "Unknown error occurred during passkey registration",
                             null
                         )
                     }
@@ -206,7 +208,7 @@ class FronteggMethodCallHandler(
 
     private fun loginWithPasskeys(result: MethodChannel.Result) {
         activityProvider.getActivity()?.let {
-            FronteggAuth.instance.loginWithPasskeys(it) { error ->
+            context.fronteggAuth.loginWithPasskeys(it) { error ->
                 if (error == null) {
                     result.success(null)
                 } else {
@@ -219,7 +221,8 @@ class FronteggMethodCallHandler(
                     } else {
                         result.error(
                             "unknown",
-                            error.localizedMessage ?: "Unknown error occurred during login with passkeys",
+                            error.localizedMessage
+                                ?: "Unknown error occurred during login with passkeys",
                             null
                         )
                     }
@@ -232,7 +235,7 @@ class FronteggMethodCallHandler(
         val loginHint = call.argument<String>("loginHint")
 
         activityProvider.getActivity()?.let {
-            FronteggAuth.instance.login(
+            context.fronteggAuth.login(
                 activity = it,
                 loginHint = loginHint,
                 callback = {
@@ -246,14 +249,14 @@ class FronteggMethodCallHandler(
         val tenantId =
             call.argument<String>("tenantId") ?: throw ArgumentNotFoundException("tenantId")
 
-        FronteggAuth.instance.switchTenant(tenantId) {
+        context.fronteggAuth.switchTenant(tenantId) {
             result.success(null)
         }
     }
 
     private fun refreshToken(result: MethodChannel.Result) {
         GlobalScope.launch(Dispatchers.IO) {
-            val success = FronteggAuth.instance.refreshTokenIfNeeded()
+            val success = context.fronteggAuth.refreshTokenIfNeeded()
             GlobalScope.launch(Dispatchers.Main) {
                 result.success(success)
             }
@@ -261,12 +264,23 @@ class FronteggMethodCallHandler(
     }
 
     private fun logout(result: MethodChannel.Result) {
-        FronteggAuth.instance.logout {
+        context.fronteggAuth.logout {
             result.success(null)
         }
     }
 
     private fun getConstants(result: MethodChannel.Result) {
-        result.success(constants.toMap())
+        val storage = StorageProvider.getInnerStorage()
+        result.success(
+            mapOf(
+                Pair("baseUrl", storage.baseUrl),
+                Pair("applicationId", storage.applicationId),
+                Pair("useAssetsLinks", storage.useAssetsLinks),
+                Pair("useChromeCustomTabs", storage.useChromeCustomTabs),
+                Pair("bundleId", storage.packageName),
+                Pair("deepLinkScheme", storage.deepLinkScheme),
+                Pair("useDiskCacheWebview", storage.useDiskCacheWebview),
+            )
+        )
     }
 }
