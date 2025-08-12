@@ -2,7 +2,6 @@ package com.frontegg.flutter
 
 import android.app.Activity
 import android.content.Context
-import com.frontegg.android.FronteggApp
 import com.frontegg.flutter.stateListener.FronteggStateListener
 import com.frontegg.flutter.stateListener.FronteggStateListenerImpl
 import io.flutter.embedding.engine.plugins.FlutterPlugin
@@ -22,27 +21,17 @@ class FronteggFlutterPlugin : FlutterPlugin, ActivityAware, ActivityProvider {
     override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
         context = flutterPluginBinding.applicationContext
 
-        val constants = context!!.constants
-
         channel = MethodChannel(flutterPluginBinding.binaryMessenger, METHOD_CHANNEL_NAME)
-        channel.setMethodCallHandler(FronteggMethodCallHandler(this, constants))
+        channel.setMethodCallHandler(
+            FronteggMethodCallHandler(
+                this,
+                flutterPluginBinding.applicationContext,
+            )
+        )
 
         stateEventChannel =
             EventChannel(flutterPluginBinding.binaryMessenger, STATE_EVENT_CHANNEL_NAME)
-        stateListener = FronteggStateListenerImpl(constants)
-
-        if (FronteggApp.isInitialized()) {
-            try {
-                // Reflectively load & init FlutterLoader once
-                FronteggApp.getInstance()
-            } catch (e: Exception) {
-                // FlutterLoader isn’t on the classpath → nothing to do
-                initializeFrontegg(constants, context)
-            }
-        } else {
-            // FlutterLoader isn’t on the classpath → nothing to do
-            initializeFrontegg(constants, context)
-        }
+        stateListener = FronteggStateListenerImpl(flutterPluginBinding.applicationContext)
 
         stateEventChannel.setStreamHandler(object : EventChannel.StreamHandler {
             override fun onListen(arguments: Any?, events: EventChannel.EventSink?) {
@@ -86,17 +75,4 @@ class FronteggFlutterPlugin : FlutterPlugin, ActivityAware, ActivityProvider {
         const val METHOD_CHANNEL_NAME = "frontegg_flutter"
         const val STATE_EVENT_CHANNEL_NAME = "frontegg_flutter/state_stream"
     }
-}
-
-private fun initializeFrontegg(constants: FronteggConstants, context: Context? = null) {
-    FronteggApp.init(
-        context = context!!,
-        fronteggDomain = constants.baseUrl,
-        clientId = constants.clientId,
-        applicationId = constants.applicationId,
-        useAssetsLinks = constants.useAssetsLinks,
-        useChromeCustomTabs = constants.useChromeCustomTabs,
-        deepLinkScheme = constants.deepLinkScheme,
-        useDiskCacheWebview = constants.useDiskCacheWebview
-    )
 }
