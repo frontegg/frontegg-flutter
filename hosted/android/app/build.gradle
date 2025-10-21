@@ -122,5 +122,5 @@ flutter {
 
 dependencies {
     androidTestUtil "androidx.test:orchestrator:1.5.1"
-    implementation 'com.frontegg.sdk:android:1.2.48'
+    implementation 'com.frontegg.sdk:android:1.3.9'
 }
