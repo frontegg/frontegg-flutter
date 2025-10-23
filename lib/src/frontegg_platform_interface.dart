@@ -97,4 +97,8 @@ abstract class FronteggPlatform extends PlatformInterface {
   }) {
     throw UnimplementedError("stepUp() has not been implemented.");
   }
+
+  Future<void> forceStateUpdate() {
+    throw UnimplementedError("forceStateUpdate() has not been implemented.");
+  }
 }

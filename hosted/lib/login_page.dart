@@ -42,6 +42,40 @@ class LoginPage extends StatelessWidget {
                 );
               } else if (!state.initializing && !state.isAuthenticated) {
                 return const Body();
+              } else if (state.isAuthenticated && state.user != null) {
+                // If user is authenticated, show a message and let MainPage handle the redirect
+                debugPrint('LoginPage: User is authenticated, showing redirect message');
+                return const SizedBox.expand(
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        CircularProgressIndicator(),
+                        SizedBox(height: 16),
+                        Text('User authenticated, redirecting...'),
+                      ],
+                    ),
+                  ),
+                );
+              } else if (state.isLoading && state.isAuthenticated) {
+                // Special case: user is authenticated but still loading (hosted mode issue)
+                debugPrint('LoginPage: Special case - user authenticated but still loading, forcing state update');
+                // Try to force state update
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  frontegg.forceStateUpdate();
+                });
+                return const SizedBox.expand(
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        CircularProgressIndicator(),
+                        SizedBox(height: 16),
+                        Text('Updating state...'),
+                      ],
+                    ),
+                  ),
+                );
               }
               return const SizedBox();
             },

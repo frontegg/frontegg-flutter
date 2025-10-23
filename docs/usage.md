@@ -6,7 +6,43 @@ The Frontegg Flutter SDK supports two authentication modes to enhance the user e
 * **Hosted Webview**: A secure, system-level authentication flow leveraging:
   - **Android**: Chrome Custom Tabs for social login and strong session isolation.
 
-### Chrome Custom Tabs for social login
+### Social Login Support
+
+The Frontegg Flutter SDK supports social login in both authentication modes:
+
+* **Embedded mode**: Social login works through the embedded WebView
+* **Hosted mode**: Social login uses Chrome Custom Tabs (Android) or system browser (iOS)
+
+The Android SDK automatically handles the mode selection internally, so social login works seamlessly in both configurations.
+
+Social login is available for the following providers:
+- Google
+- Facebook  
+- LinkedIn
+- GitHub
+- Apple
+- Microsoft
+- Slack
+
+#### Using Social Login
+
+```dart
+// Standard social login
+await frontegg.socialLogin(
+  provider: FronteggSocialProvider.google,
+  ephemeralSession: true,
+  additionalQueryParams: {'custom_param': 'value'},
+);
+
+// Custom social login
+await frontegg.customSocialLogin(
+  id: 'your-custom-provider-id',
+  ephemeralSession: true,
+  additionalQueryParams: {'custom_param': 'value'},
+);
+```
+
+### Chrome Custom Tabs Configuration
 
 To enable social login using Chrome Custom Tabs within your Android application, you need to modify the `android/app/build.gradle` file as described below.
 
@@ -257,6 +293,26 @@ If you want the user to be logged out after reinstalling the application, add th
 ```
 
 By default `keepUserLoggedInAfterReinstall` is `true`.
+
+### Troubleshooting Hosted Mode Issues
+
+If you experience infinite loading in hosted mode after successful authentication, this is typically caused by state not updating properly after returning from Chrome Custom Tabs. The Flutter SDK now includes automatic state refresh to resolve this issue.
+
+The SDK automatically handles state updates after successful authentication by:
+- Calling the public `forceNotifyChanges()` method on the state listener
+- Ensuring immediate state synchronization with Flutter
+- Providing reliable state updates for hosted mode
+
+This ensures that the UI properly reflects the authenticated state immediately after returning from hosted authentication.
+
+#### Manual State Update (if needed)
+
+If you still experience issues, you can manually trigger a state update:
+
+```dart
+// This will force a state refresh
+await frontegg.forceStateUpdate();
+```
 
 ### Troubleshooting
 

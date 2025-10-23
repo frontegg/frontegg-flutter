@@ -13,25 +13,29 @@ import io.flutter.plugin.common.MethodChannel
 class FronteggFlutterPlugin : FlutterPlugin, ActivityAware, ActivityProvider {
     private lateinit var channel: MethodChannel
     private lateinit var stateEventChannel: EventChannel
+    private lateinit var methodCallHandler: FronteggMethodCallHandler
 
     private var context: Context? = null
     private var binding: ActivityPluginBinding? = null
-    private var stateListener: FronteggStateListener? = null
+    private var stateListener: FronteggStateListenerImpl? = null
 
     override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
         context = flutterPluginBinding.applicationContext
 
-        channel = MethodChannel(flutterPluginBinding.binaryMessenger, METHOD_CHANNEL_NAME)
-        channel.setMethodCallHandler(
-            FronteggMethodCallHandler(
-                this,
-                flutterPluginBinding.applicationContext,
-            )
+        methodCallHandler = FronteggMethodCallHandler(
+            this,
+            flutterPluginBinding.applicationContext,
         )
+        
+        channel = MethodChannel(flutterPluginBinding.binaryMessenger, METHOD_CHANNEL_NAME)
+        channel.setMethodCallHandler(methodCallHandler)
 
         stateEventChannel =
             EventChannel(flutterPluginBinding.binaryMessenger, STATE_EVENT_CHANNEL_NAME)
         stateListener = FronteggStateListenerImpl(flutterPluginBinding.applicationContext)
+        
+        // Set the state listener in method call handler
+        methodCallHandler.setStateListener(stateListener!!)
 
         stateEventChannel.setStreamHandler(object : EventChannel.StreamHandler {
             override fun onListen(arguments: Any?, events: EventChannel.EventSink?) {
