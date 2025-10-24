@@ -121,16 +121,15 @@ class Body extends StatelessWidget {
                       },
                     ),
                     const SizedBox(height: 8),
-                    // Direct Apple login by providing the url of the apple login page
+                    // Login with Apple Provider
                     ElevatedButton(
-                      child: const Text('Direct apple login'),
+                      child: const Text('Login with Apple'),
                       onPressed: () async {
-                        await frontegg.directLogin(
-                          url:
-                              'https://appleid.apple.com/auth/authorize?response_type=code&response_mode=form_post&redirect_uri=https%3A%2F%2Fauth.davidantoon.me%2Fidentity%2Fresources%2Fauth%2Fv2%2Fuser%2Fsso%2Fapple%2Fpostlogin&scope=openid+name+email&state=%7B%22oauthState%22%3A%22eyJGUk9OVEVHR19PQVVUSF9SRURJUkVDVF9BRlRFUl9MT0dJTiI6ImNvbS5mcm9udGVnZy5kZW1vOi8vYXV0aC5kYXZpZGFudG9vbi5tZS9pb3Mvb2F1dGgvY2FsbGJhY2siLCJGUk9OVEVHR19PQVVUSF9TVEFURV9BRlRFUl9MT0dJTiI6IjQ1MDVkMzljLTg0ZTctNDhiZi1hMzY3LTVmMjhmMmZlMWU1YiJ9%22%2C%22provider%22%3A%22apple%22%2C%22appId%22%3A%22%22%2C%22action%22%3A%22login%22%7D&client_id=com.frontegg.demo.client',
+                        await frontegg.socialLogin(
+                          provider: FronteggSocialProvider.apple,
                         );
 
-                        debugPrint('Direct Login Finished');
+                        debugPrint('Login via Apple Finished');
                       },
                     ),
                     const SizedBox(height: 8),

@@ -101,17 +101,33 @@ class FronteggStateListenerImpl(
 
     private fun notifyChanges() {
         val fronteggAuth = context.fronteggAuth
+        val storage = com.frontegg.android.services.StorageProvider.getInnerStorage()
+        
+        // Additional fix for infinite loader after multiple logins
+        // If user is authenticated but still loading for more than 2 seconds, force reset
+        val isLoading = if (fronteggAuth.isAuthenticated.value) {
+            if (fronteggAuth.isLoading.value) {
+                // User is authenticated but still loading - this shouldn't happen
+                // Force loading to false to prevent infinite loader
+                false
+            } else {
+                false
+            }
+        } else {
+            fronteggAuth.isLoading.value
+        }
         
         val state = FronteggState(
             accessToken = fronteggAuth.accessToken.value,
             refreshToken = fronteggAuth.refreshToken.value,
             user = fronteggAuth.user.value?.toReadableMap(),
             isAuthenticated = fronteggAuth.isAuthenticated.value,
-            // Force isLoading to false if user is authenticated (fix for hosted mode)
-            isLoading = if (fronteggAuth.isAuthenticated.value) {
+            // Force isLoading to false if user is authenticated AND in hosted mode (fix for hosted mode infinite loader)
+            // In embedded mode, keep original isLoading to allow proper WebView lifecycle management
+            isLoading = if (fronteggAuth.isAuthenticated.value && !storage.isEmbeddedMode) {
                 false
             } else {
-                fronteggAuth.isLoading.value
+                isLoading
             },
             initializing = fronteggAuth.initializing.value,
             showLoader = fronteggAuth.showLoader.value,

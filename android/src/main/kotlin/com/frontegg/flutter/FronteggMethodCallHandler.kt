@@ -133,6 +133,16 @@ class FronteggMethodCallHandler(
         val ephemeralSession = call.argument<Boolean>("ephemeralSession") ?: true
         val additionalQueryParams = call.argument<Map<String, String>>("additionalQueryParams") ?: emptyMap()
         
+        // Check if in embedded mode - social login is only supported in embedded mode
+        if (!context.fronteggAuth.isEmbeddedMode) {
+            result.error(
+                "SOCIAL_LOGIN_NOT_SUPPORTED",
+                "Social login is not supported in hosted mode. Use Chrome Custom Tabs or system browser for authentication.",
+                null
+            )
+            return
+        }
+        
         activityProvider.getActivity()?.let { activity ->
             // Try to use loginWithSocialLoginProvider if available
             try {
@@ -176,6 +186,16 @@ class FronteggMethodCallHandler(
         val id = call.argument<String>("id") ?: throw ArgumentNotFoundException("id")
         val ephemeralSession = call.argument<Boolean>("ephemeralSession") ?: true
         val additionalQueryParams = call.argument<Map<String, String>>("additionalQueryParams") ?: emptyMap()
+
+        // Check if in embedded mode - custom social login is only supported in embedded mode
+        if (!context.fronteggAuth.isEmbeddedMode) {
+            result.error(
+                "CUSTOM_SOCIAL_LOGIN_NOT_SUPPORTED",
+                "Custom social login is not supported in hosted mode. Use Chrome Custom Tabs or system browser for authentication.",
+                null
+            )
+            return
+        }
 
         activityProvider.getActivity()?.let { activity ->
             // Use directLoginAction for both embedded and hosted modes
