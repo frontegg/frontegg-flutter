@@ -1,3 +1,6 @@
+## v1.0.20
+- Updating android SDK
+
 - Upgrade android version to `1.2.48`
 
 ## v1.0.18
