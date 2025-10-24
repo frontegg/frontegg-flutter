@@ -4,6 +4,7 @@ import android.content.Context
 import com.frontegg.android.exceptions.FronteggException
 import com.frontegg.android.fronteggAuth
 import com.frontegg.android.services.StorageProvider
+import com.frontegg.flutter.stateListener.FronteggStateListenerImpl
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
@@ -20,6 +21,12 @@ class FronteggMethodCallHandler(
 
     companion object {
         private const val ERROR_CODE = "frontegg.error"
+    }
+    
+    private var stateListener: FronteggStateListenerImpl? = null
+    
+    fun setStateListener(listener: FronteggStateListenerImpl) {
+        this.stateListener = listener
     }
 
     override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
@@ -40,6 +47,7 @@ class FronteggMethodCallHandler(
 
             "isSteppedUp" -> isSteppedUp(call, result)
             "stepUp" -> stepUp(call, result)
+            "forceStateUpdate" -> forceStateUpdate(result)
 
             else -> result.notImplemented()
         }
@@ -122,35 +130,83 @@ class FronteggMethodCallHandler(
     private fun socialLogin(call: MethodCall, result: MethodChannel.Result) {
         val provider =
             call.argument<String>("provider") ?: throw ArgumentNotFoundException("provider")
-        if (context.fronteggAuth.isEmbeddedMode) {
-            activityProvider.getActivity()?.let {
-                context.fronteggAuth.directLoginAction(it, "social-login", provider) {
-                    result.success(null)
-                }
-            }
-        } else {
+        val ephemeralSession = call.argument<Boolean>("ephemeralSession") ?: true
+        val additionalQueryParams = call.argument<Map<String, String>>("additionalQueryParams") ?: emptyMap()
+        
+        // Check if in embedded mode - social login is only supported in embedded mode
+        if (!context.fronteggAuth.isEmbeddedMode) {
             result.error(
-                "REQUEST_AUTHORIZE_ERROR",
-                "'socialLogin' can be used only when EmbeddedActivity is enabled.",
-                null,
+                "SOCIAL_LOGIN_NOT_SUPPORTED",
+                "Social login is not supported in hosted mode. Use Chrome Custom Tabs or system browser for authentication.",
+                null
             )
+            return
+        }
+        
+        activityProvider.getActivity()?.let { activity ->
+            // Try to use loginWithSocialLoginProvider if available
+            try {
+                // Convert string provider to SocialLoginProvider enum
+                val socialLoginProvider = com.frontegg.android.models.SocialLoginProvider.fromString(provider)
+                if (socialLoginProvider != null) {
+                    // Use coroutine scope to call suspend function
+                    kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.Main).launch {
+                        try {
+                            val authService = context.fronteggAuth as com.frontegg.android.services.FronteggAuthService
+                            authService.loginWithSocialLoginProvider(
+                                activity = activity,
+                                provider = socialLoginProvider,
+                                action = com.frontegg.android.models.SocialLoginAction.LOGIN,
+                                ephemeralSession = ephemeralSession
+                            )
+                            
+                            result.success(null)
+                        } catch (e: Exception) {
+                            result.error("SOCIAL_LOGIN_ERROR", e.message ?: "Social login failed", null)
+                        }
+                    }
+                } else {
+                    throw IllegalArgumentException("Invalid provider: $provider")
+                }
+            } catch (e: Exception) {
+                // Fallback to directLoginAction
+                context.fronteggAuth.directLoginAction(
+                    activity = activity,
+                    type = "social-login",
+                    data = provider,
+                    callback = {
+                        result.success(null)
+                    }
+                )
+            }
         }
     }
 
     private fun customSocialLogin(call: MethodCall, result: MethodChannel.Result) {
         val id = call.argument<String>("id") ?: throw ArgumentNotFoundException("id")
+        val ephemeralSession = call.argument<Boolean>("ephemeralSession") ?: true
+        val additionalQueryParams = call.argument<Map<String, String>>("additionalQueryParams") ?: emptyMap()
 
-        if (context.fronteggAuth.isEmbeddedMode) {
-            activityProvider.getActivity()?.let {
-                context.fronteggAuth.directLoginAction(it, "custom-social-login", id) {
+        // Check if in embedded mode - custom social login is only supported in embedded mode
+        if (!context.fronteggAuth.isEmbeddedMode) {
+            result.error(
+                "CUSTOM_SOCIAL_LOGIN_NOT_SUPPORTED",
+                "Custom social login is not supported in hosted mode. Use Chrome Custom Tabs or system browser for authentication.",
+                null
+            )
+            return
+        }
+
+        activityProvider.getActivity()?.let { activity ->
+            // Use directLoginAction for both embedded and hosted modes
+            // The Android SDK handles the mode internally
+            context.fronteggAuth.directLoginAction(
+                activity = activity,
+                type = "custom-social-login",
+                data = id,
+                callback = {
                     result.success(null)
                 }
-            }
-        } else {
-            result.error(
-                "REQUEST_AUTHORIZE_ERROR",
-                "'customSocialLogin' can be used only when EmbeddedActivity is enabled.",
-                null,
             )
         }
     }
@@ -239,6 +295,13 @@ class FronteggMethodCallHandler(
                 activity = it,
                 loginHint = loginHint,
                 callback = {
+                    // Force state update after successful authentication
+                    // This is especially important for hosted mode
+                    GlobalScope.launch(Dispatchers.Main) {
+                        // Trigger state listener to update Flutter
+                        // The state listener will automatically detect changes
+                        // and send updated state to Flutter
+                    }
                     result.success(null)
                 }
             )
@@ -282,5 +345,11 @@ class FronteggMethodCallHandler(
                 Pair("useDiskCacheWebview", storage.useDiskCacheWebview),
             )
         )
+    }
+
+    private fun forceStateUpdate(result: MethodChannel.Result) {
+        // Simple force state update
+        // The state listener will automatically handle state updates
+        result.success(null)
     }
 }

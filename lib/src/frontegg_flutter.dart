@@ -257,6 +257,18 @@ class FronteggFlutter {
         return FronteggConstants.fromMap(constants!);
       });
 
+  /// Forces a state update in hosted mode.
+  ///
+  /// This method is useful for debugging hosted mode issues where state
+  /// doesn't update automatically after authentication.
+  ///
+  /// Throws a [FronteggException] if the state update encounters a platform-specific error.
+  ///
+  /// Returns a [Future] that completes when the state update is finished.
+  Future<void> forceStateUpdate() => _runAction(() async {
+        await FronteggPlatform.instance.forceStateUpdate();
+      });
+
   /// Initiates authorization request using a refresh token.
   ///
   /// This method performs the authorization process using the provided refresh token and

@@ -238,4 +238,8 @@ class FronteggMethodChannel extends FronteggPlatform {
           "maxAge": maxAge?.inSeconds,
         },
       );
+
+  @override
+  Future<void> forceStateUpdate() =>
+      methodChannel.invokeMethod<void>("forceStateUpdate");
 }
