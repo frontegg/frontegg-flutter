@@ -134,33 +134,41 @@ class FronteggMethodCallHandler(
         val additionalQueryParams = call.argument<Map<String, String>>("additionalQueryParams") ?: emptyMap()
         
         activityProvider.getActivity()?.let { activity ->
-            android.util.Log.d("FronteggMethodCallHandler", "Starting social login with provider: $provider")
-            // Use directLoginAction for both embedded and hosted modes
-            // The Android SDK handles the mode internally
-            context.fronteggAuth.directLoginAction(
-                activity = activity,
-                type = "social-login",
-                data = provider,
-                callback = {
-                    android.util.Log.d("FronteggMethodCallHandler", "=== SOCIAL LOGIN CALLBACK STARTED ===")
-                    // Force state update after successful authentication
-                    // This is especially important for hosted mode
-                    GlobalScope.launch(Dispatchers.Main) {
-                        android.util.Log.d("FronteggMethodCallHandler", "Authentication callback completed, forcing state update")
-                        // Add a longer delay to ensure state has been updated by the SDK
-                        kotlinx.coroutines.delay(500)
-                        android.util.Log.d("FronteggMethodCallHandler", "First delay completed, calling notifyChangesWithHostedModeFix")
-                        // Force state listener to notify changes with hosted mode fix
-                        stateListener?.notifyChangesWithHostedModeFix()
-                        // Add another delay and force update again to ensure it sticks
-                        kotlinx.coroutines.delay(200)
-                        android.util.Log.d("FronteggMethodCallHandler", "Second delay completed, calling notifyChangesWithHostedModeFix again")
-                        stateListener?.notifyChangesWithHostedModeFix()
-                        android.util.Log.d("FronteggMethodCallHandler", "=== SOCIAL LOGIN CALLBACK COMPLETED ===")
+            // Try to use loginWithSocialLoginProvider if available
+            try {
+                // Convert string provider to SocialLoginProvider enum
+                val socialLoginProvider = com.frontegg.android.models.SocialLoginProvider.fromString(provider)
+                if (socialLoginProvider != null) {
+                    // Use coroutine scope to call suspend function
+                    kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.Main).launch {
+                        try {
+                            val authService = context.fronteggAuth as com.frontegg.android.services.FronteggAuthService
+                            authService.loginWithSocialLoginProvider(
+                                activity = activity,
+                                provider = socialLoginProvider,
+                                action = com.frontegg.android.models.SocialLoginAction.LOGIN,
+                                ephemeralSession = ephemeralSession
+                            )
+                            
+                            result.success(null)
+                        } catch (e: Exception) {
+                            result.error("SOCIAL_LOGIN_ERROR", e.message ?: "Social login failed", null)
+                        }
                     }
-                    result.success(null)
+                } else {
+                    throw IllegalArgumentException("Invalid provider: $provider")
                 }
-            )
+            } catch (e: Exception) {
+                // Fallback to directLoginAction
+                context.fronteggAuth.directLoginAction(
+                    activity = activity,
+                    type = "social-login",
+                    data = provider,
+                    callback = {
+                        result.success(null)
+                    }
+                )
+            }
         }
     }
 
@@ -172,21 +180,14 @@ class FronteggMethodCallHandler(
         activityProvider.getActivity()?.let { activity ->
             // Use directLoginAction for both embedded and hosted modes
             // The Android SDK handles the mode internally
-            context.fronteggAuth.directLoginAction(activity, "custom-social-login", id) {
-                // Force state update after successful authentication
-                // This is especially important for hosted mode
-                GlobalScope.launch(Dispatchers.Main) {
-                    android.util.Log.d("FronteggMethodCallHandler", "Authentication callback completed, forcing state update")
-                    // Add a longer delay to ensure state has been updated by the SDK
-                    kotlinx.coroutines.delay(500)
-                    // Force state listener to notify changes with hosted mode fix
-                    stateListener?.notifyChangesWithHostedModeFix()
-                    // Add another delay and force update again to ensure it sticks
-                    kotlinx.coroutines.delay(200)
-                    stateListener?.notifyChangesWithHostedModeFix()
+            context.fronteggAuth.directLoginAction(
+                activity = activity,
+                type = "custom-social-login",
+                data = id,
+                callback = {
+                    result.success(null)
                 }
-                result.success(null)
-            }
+            )
         }
     }
 
@@ -327,17 +328,8 @@ class FronteggMethodCallHandler(
     }
 
     private fun forceStateUpdate(result: MethodChannel.Result) {
-        // Force update all state properties to trigger state listener
-        GlobalScope.launch(Dispatchers.Main) {
-            android.util.Log.d("FronteggMethodCallHandler", "Force state update called")
-            // Add a longer delay to ensure state has been updated by the SDK
-            kotlinx.coroutines.delay(500)
-            // Force state listener to notify changes with hosted mode fix
-            stateListener?.notifyChangesWithHostedModeFix()
-            // Add another delay and force update again to ensure it sticks
-            kotlinx.coroutines.delay(200)
-            stateListener?.notifyChangesWithHostedModeFix()
-            result.success(null)
-        }
+        // Simple force state update
+        // The state listener will automatically handle state updates
+        result.success(null)
     }
 }
