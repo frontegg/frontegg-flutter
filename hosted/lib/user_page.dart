@@ -96,6 +96,38 @@ class _UserPageState extends State<UserPage> {
                                       top: 16.0,
                                       left: 10.5,
                                       right: 10.5,
+                                      bottom: 8,
+                                    ),
+                                    // Receive access token button
+                                    child: ElevatedButton(
+                                      onPressed: () async {
+                                        final accessToken = state.accessToken;
+                                        if (accessToken != null && accessToken.isNotEmpty) {
+                                          await Clipboard.setData(
+                                            ClipboardData(text: accessToken),
+                                          );
+                                          Fluttertoast.showToast(
+                                            msg: "Access token was copied to clipboard",
+                                            toastLength: Toast.LENGTH_SHORT,
+                                            gravity: ToastGravity.BOTTOM,
+                                            backgroundColor: primaryColor,
+                                            textColor: Colors.white,
+                                            fontSize: 16.0,
+                                          );
+                                        } else {
+                                          _showFailureMessage(
+                                            "Access token is not available",
+                                          );
+                                        }
+                                      },
+                                      child: const Text("Receive access token"),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                      top: 8.0,
+                                      left: 10.5,
+                                      right: 10.5,
                                       bottom: 24,
                                     ),
                                     // Sensitive action button
