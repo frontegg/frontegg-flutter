@@ -1,3 +1,7 @@
+## v1.0.22
+Bump Frontegg-Kotlin-SDK version to 1.3.9
+Bump Frontegg-Swift-SDK version to 1.2.48
+
 ## v1.0.20
 - Updating android SDK
 
