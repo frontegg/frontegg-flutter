@@ -1,3 +1,8 @@
+## v1.0.23
+Bump swift-sdk to 1.2.51v
+Bump kotlin-sdk to 1.3.10v
+Added examples for token retrieval after login below the "Sensitive action" button
+
 ## v1.0.22
 Bump Frontegg-Kotlin-SDK version to 1.3.9
 Bump Frontegg-Swift-SDK version to 1.2.48

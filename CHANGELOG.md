@@ -1,3 +1,6 @@
+## v1.0.24
+Fixed issue when reset password link sometimes redirected to blank screen.
+
 ## v1.0.23
 Bump swift-sdk to 1.2.51v
 Bump kotlin-sdk to 1.3.10v
