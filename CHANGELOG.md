@@ -1,3 +1,7 @@
+## v1.0.26
+Fixed magic links
+Fixed: post Activation Redirect to App fails, leaving user on "Opening Application" page
+
 ## v1.0.25
 Bug fixing.
 Increased versions of Kotlin and Swift-sdks
