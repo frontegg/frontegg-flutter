@@ -66,6 +66,7 @@ manifestPlaceholders = [
 buildConfigField "String", "FRONTEGG_DOMAIN", "\"$fronteggDomain\""
 buildConfigField "String", "FRONTEGG_CLIENT_ID", "\"$fronteggClientId\""
 buildConfigField "Boolean", "FRONTEGG_USE_CHROME_CUSTOM_TABS", "true"
+buildConfigField "Boolean", "FRONTEGG_ENABLE_SESSION_PER_TENANT", "false"
 ```
 
 - Replace `{{FRONTEGG_BASE_URL}}` with the domain name from your Frontegg Portal.
@@ -293,6 +294,30 @@ If you want the user to be logged out after reinstalling the application, add th
 ```
 
 By default `keepUserLoggedInAfterReinstall` is `true`.
+
+### Enable per-tenant sessions (`enableSessionPerTenant`)
+
+Per-tenant sessions are controlled by a flag in `Frontegg.plist`, similar to `keepUserLoggedInAfterReinstall`.
+
+To enable per-tenant sessions on iOS, add the `enableSessionPerTenant` key to your `Frontegg.plist`:
+
+```xml
+<plist version="1.0">
+  <dict>
+    <key>enableSessionPerTenant</key>
+    <true/>
+    ...
+  </dict>
+</plist>
+```
+and verify your Gradle config includes:
+
+```groovy
+buildConfigField "Boolean", "FRONTEGG_ENABLE_SESSION_PER_TENANT", "true"
+```
+
+- When this key is `true`, and your Frontegg workspace has per-tenant sessions enabled, the SDK will maintain separate sessions per tenant.
+- The existing Flutter API (`login`, `switchTenant(tenantId)`, etc.) will automatically respect this behaviour; no additional Dart configuration is required.
 
 ### Troubleshooting Hosted Mode Issues
 

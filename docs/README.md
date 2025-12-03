@@ -30,6 +30,35 @@ Sign up here → [https://portal.us.frontegg.com/signup](https://portal.us.front
 
 ---
 
+## 🔐 Per-tenant sessions (`enableSessionPerTenant`)
+
+The Flutter SDK supports Frontegg's **per-tenant sessions** feature through the underlying native SDKs.
+
+- On **Android**, the plugin and example apps use `com.frontegg.sdk:android:1.3.13`.
+- On **iOS**, the plugin depends on `FronteggSwift` with a version constraint `>= 1.2.55`.
+
+To enable and use per-tenant sessions:
+
+1. **Enable the flag in your iOS configuration**
+   - Add the following key to your `Frontegg.plist`:
+   ```xml
+   <plist version="1.0">
+     <dict>
+       <key>enableSessionPerTenant</key>
+       <true/>
+       ...
+     </dict>
+   </plist>
+   ```
+
+2. **Enable the flag in your Android configuration**  
+   - Android: verify your Gradle config includes:
+     ```groovy
+     buildConfigField "Boolean", "FRONTEGG_ENABLE_SESSION_PER_TENANT", "true"
+     ```
+
+---
+
 ## 💬 Support
 
 Need help? Our team is here for you:  
