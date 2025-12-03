@@ -297,8 +297,6 @@ By default `keepUserLoggedInAfterReinstall` is `true`.
 
 ### Enable per-tenant sessions (`enableSessionPerTenant`)
 
-Per-tenant sessions are controlled by a flag in `Frontegg.plist`, similar to `keepUserLoggedInAfterReinstall`.
-
 To enable per-tenant sessions on iOS, add the `enableSessionPerTenant` key to your `Frontegg.plist`:
 
 ```xml
