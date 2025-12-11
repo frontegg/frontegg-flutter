@@ -54,13 +54,13 @@ SPEC CHECKSUMS:
   CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
   Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
   fluttertoast: 2c67e14dce98bbdb200df9e1acf610d7a6264ea1
-  frontegg_flutter: 471e7e5a7d5e8443a35facbf37b75031991fd7fa
-  FronteggSwift: fcb33f65d08cd74a569d46f957d8dd5bcacd0cf8
+  frontegg_flutter: 51860a061114b0dbc62bfb511604b3be88a0bc2b
+  FronteggSwift: d8151ab0a5c753e7ebc240820b63f368a408cec4
   integration_test: 4a889634ef21a45d28d50d622cf412dc6d9f586e
   path_provider_foundation: 080d55be775b7414fd5a5ef3ac137b97b097e564
   patrol: 51b76cc7c11a2933ee3e72482d930c75b9d4ec73
   url_launcher_ios: 694010445543906933d732453a59da0a173ae33d
 
-PODFILE CHECKSUM: 23c09c6c318cf0fd291ed0c7648426a03dfa7abe
+PODFILE CHECKSUM: 9aaf54413613544116a7f7cfbfa9bb1618dabb8e
 
 COCOAPODS: 1.16.2
