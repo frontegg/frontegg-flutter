@@ -5,8 +5,8 @@ PODS:
     - Flutter
   - frontegg_flutter (1.0.27):
     - Flutter
-    - FronteggSwift (~> 1.2.57)
-  - FronteggSwift (1.2.57)
+    - FronteggSwift (~> 1.2.58)
+  - FronteggSwift (1.2.58)
   - integration_test (0.0.1):
     - Flutter
   - path_provider_foundation (0.0.1):
@@ -23,7 +23,7 @@ DEPENDENCIES:
   - Flutter (from `Flutter`)
   - fluttertoast (from `.symlinks/plugins/fluttertoast/ios`)
   - frontegg_flutter (from `.symlinks/plugins/frontegg_flutter/ios`)
-  - FronteggSwift (~> 1.2.57)
+  - FronteggSwift (~> 1.2.58)
   - integration_test (from `.symlinks/plugins/integration_test/ios`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
   - patrol (from `.symlinks/plugins/patrol/darwin`)
