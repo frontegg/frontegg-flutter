@@ -3,10 +3,10 @@ PODS:
   - Flutter (1.0.0)
   - fluttertoast (0.0.2):
     - Flutter
-  - frontegg_flutter (1.0.19):
+  - frontegg_flutter (1.0.27):
     - Flutter
-    - FronteggSwift (~> 1.2.45)
-  - FronteggSwift (1.2.45)
+    - FronteggSwift (~> 1.2.58)
+  - FronteggSwift (1.2.58)
   - integration_test (0.0.1):
     - Flutter
   - path_provider_foundation (0.0.1):
@@ -51,10 +51,10 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
-  Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
+  Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
   fluttertoast: 2c67e14dce98bbdb200df9e1acf610d7a6264ea1
-  frontegg_flutter: 690debdf95d2e85ab915fbaa33526255cdb2fd5c
-  FronteggSwift: d8d3d4c6ddf913f5f15fe11c571abae0d8b36af3
+  frontegg_flutter: 51860a061114b0dbc62bfb511604b3be88a0bc2b
+  FronteggSwift: d8151ab0a5c753e7ebc240820b63f368a408cec4
   integration_test: 4a889634ef21a45d28d50d622cf412dc6d9f586e
   path_provider_foundation: 080d55be775b7414fd5a5ef3ac137b97b097e564
   patrol: 51b76cc7c11a2933ee3e72482d930c75b9d4ec73
