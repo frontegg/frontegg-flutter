@@ -1,3 +1,6 @@
+## v1.0.28
+Fixed: Google Login fails to redirect to app in embeddedMode when Safari session exists
+
 ## v1.0.27
 - Enable session per tenant support 
 
