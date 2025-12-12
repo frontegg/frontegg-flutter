@@ -1,3 +1,6 @@
+## v1.0.27
+- Enable session per tenant support 
+
 ## v1.0.26
 Fixed magic links
 Fixed: post Activation Redirect to App fails, leaving user on "Opening Application" page
