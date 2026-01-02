@@ -158,6 +158,38 @@ class _UserPageState extends State<UserPage> {
                                       child: const Text("Sensitive action"),
                                     ),
                                   ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                      top: 8.0,
+                                      left: 10.5,
+                                      right: 10.5,
+                                      bottom: 24,
+                                    ),
+                                    child: ElevatedButton(
+                                      onPressed: () async {
+                                        try {
+                                          final refreshToken = state.refreshToken;
+                                          if (refreshToken == null || refreshToken.isEmpty) {
+                                            _showFailureMessage(
+                                              "Refresh token is not available",
+                                            );
+                                            return;
+                                          }
+                                          await frontegg.requestAuthorize(
+                                            refreshToken: refreshToken,
+                                          );
+                                          _showSuccessMessage(
+                                            "Authorization request completed successfully",
+                                          );
+                                        } catch (e) {
+                                          _showFailureMessage(
+                                            "Failed to request authorization: $e",
+                                          );
+                                        }
+                                      },
+                                      child: const Text("Request Authorize"),
+                                    ),
+                                  ),
                                 ],
                               ),
                             ),
