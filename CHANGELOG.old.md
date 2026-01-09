@@ -1,3 +1,7 @@
+## v1.0.29
+- ios version upgrade
+- added `requestAuthorize` in hosted example
+
 ## v1.0.28
 Fixed: Google Login fails to redirect to app in embeddedMode when Safari session exists
 

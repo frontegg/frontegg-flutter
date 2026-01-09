@@ -1,3 +1,6 @@
+## v1.0.30
+Updated FronteggSwift version to 1.2.66.
+
 ## v1.0.29
 - ios version upgrade
 - added `requestAuthorize` in hosted example
