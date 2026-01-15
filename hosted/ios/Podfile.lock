@@ -3,10 +3,11 @@ PODS:
   - Flutter (1.0.0)
   - fluttertoast (0.0.2):
     - Flutter
-  - frontegg_flutter (1.0.28):
+  - frontegg_flutter (1.0.30):
     - Flutter
-    - FronteggSwift (= 1.2.63)
-  - FronteggSwift (1.2.63)
+    - FronteggSwift (= 1.2.69)
+  - FronteggSwift (1.2.69):
+    - Sentry (~> 8.46.0)
   - integration_test (0.0.1):
     - Flutter
   - path_provider_foundation (0.0.1):
@@ -16,6 +17,9 @@ PODS:
     - CocoaAsyncSocket (~> 7.6)
     - Flutter
     - FlutterMacOS
+  - Sentry (8.46.0):
+    - Sentry/Core (= 8.46.0)
+  - Sentry/Core (8.46.0)
   - url_launcher_ios (0.0.1):
     - Flutter
 
@@ -23,7 +27,7 @@ DEPENDENCIES:
   - Flutter (from `Flutter`)
   - fluttertoast (from `.symlinks/plugins/fluttertoast/ios`)
   - frontegg_flutter (from `.symlinks/plugins/frontegg_flutter/ios`)
-  - FronteggSwift (= 1.2.63)
+  - FronteggSwift (= 1.2.69)
   - integration_test (from `.symlinks/plugins/integration_test/ios`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
   - patrol (from `.symlinks/plugins/patrol/darwin`)
@@ -33,6 +37,7 @@ SPEC REPOS:
   trunk:
     - CocoaAsyncSocket
     - FronteggSwift
+    - Sentry
 
 EXTERNAL SOURCES:
   Flutter:
@@ -54,13 +59,14 @@ SPEC CHECKSUMS:
   CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
   Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
   fluttertoast: 21eecd6935e7064cc1fcb733a4c5a428f3f24f0f
-  frontegg_flutter: 74d0c90b11fb03e41789b1e727873b30940c672f
-  FronteggSwift: 23e4f1014fd6d40a7dfb1e60f5c7c3362da7f057
+  frontegg_flutter: 9823737063f879f535fef1e332f5a72b4b884ef4
+  FronteggSwift: c8d873f5b5fe61897100b6e5e15770964baf9fc2
   integration_test: 252f60fa39af5e17c3aa9899d35d908a0721b573
   path_provider_foundation: 2b6b4c569c0fb62ec74538f866245ac84301af46
   patrol: cf2cd48c7f3e5171610111994f7b466cd76d1f57
+  Sentry: da60d980b197a46db0b35ea12cb8f39af48d8854
   url_launcher_ios: 5334b05cef931de560670eeae103fd3e431ac3fe
 
-PODFILE CHECKSUM: 245142cae260d9989bf69a57854e1363741e89eb
+PODFILE CHECKSUM: 925ee0fec6dd4f88479ef8a1470120aae498ec52
 
 COCOAPODS: 1.16.2
