@@ -1,3 +1,6 @@
+## v1.0.31
+Updated FronteggSwift version to 1.2.68.
+
 ## v1.0.30
 Updated FronteggSwift version to 1.2.66.
 
