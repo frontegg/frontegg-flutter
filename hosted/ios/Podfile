@@ -31,7 +31,7 @@ target 'Runner' do
   use_frameworks!
   use_modular_headers!
 
-  pod 'FronteggSwift', '1.2.66'
+  pod 'FronteggSwift', '1.2.69'
 
   flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
 
