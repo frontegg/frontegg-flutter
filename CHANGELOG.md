@@ -1,4 +1,7 @@
 ## v1.0.31
+- Bump IOS version to 1.2.69
+
+## v1.0.31
 Updated FronteggSwift version to 1.2.69.
 
 ## v1.0.30
