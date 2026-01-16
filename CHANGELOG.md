@@ -1,3 +1,6 @@
+## v1.0.32
+- bump IOS version to 1.2.70
+
 ## v1.0.31
 - Bump IOS version to 1.2.69
 
