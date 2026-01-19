@@ -6,6 +6,8 @@
 	<array>
 		<string>webcredentials:davidantoon.me</string>
 		<string>applinks:davidantoon.me</string>
+		<string>applinks:autheu.davidantoon.me</string>
+		<string>webcredentials:autheu.davidantoon.me</string>
 	</array>
 </dict>
 </plist>
