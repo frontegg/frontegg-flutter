@@ -13,6 +13,6 @@
 	<string>trace</string>
 	<!-- Keep user logged in after reinstall -->
 	<key>keepUserLoggedInAfterReinstall</key>
-	<false/>
+	<true/>
 </dict>
 </plist>
