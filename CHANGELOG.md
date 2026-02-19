@@ -1,3 +1,8 @@
+## v1.0.36
+Fixed: "Remember MFA Device" Setting Ignored.
+Fixed: Autofill Password Managers kills activity.
+Fixed: screen rotation resets flow.
+
 ## v1.0.35
 Bump frontegg-kotlin version 1.3.16.
 Bump FronteggSwift version 1.2.73.

@@ -1,3 +1,7 @@
+## v1.0.35
+Bump frontegg-kotlin version 1.3.16.
+Bump FronteggSwift version 1.2.73.
+
 ## v1.0.34
 - Bump IOS version to 1.2.73
 
