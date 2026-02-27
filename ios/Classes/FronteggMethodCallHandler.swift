@@ -102,8 +102,8 @@ class FronteggMethodCallHandler {
         }
         
         
-        // Retrieve the 'ephemeral' parameter or use the default value of true
-        let ephemeralSession = arguments["ephemeral"] as? Bool ?? true
+        // Retrieve the 'ephemeralSession' parameter (must match Flutter key) or use the default value of true
+        let ephemeralSession = arguments["ephemeralSession"] as? Bool ?? true
         
         let additionalQueryParams = arguments["additionalQueryParams"] as? [String: String] ?? [:]
         
@@ -133,8 +133,8 @@ class FronteggMethodCallHandler {
             return result(FlutterError(code: "MISSING_PARAMS", message: "Missing 'url' argumant", details: nil))
         }
         
-        // Retrieve the 'ephemeral' parameter or use the default value of true
-        let ephemeralSession = arguments["ephemeral"] as? Bool ?? true
+        // Retrieve the 'ephemeralSession' parameter (must match Flutter key) or use the default value of true
+        let ephemeralSession = arguments["ephemeralSession"] as? Bool ?? true
         
         let additionalQueryParams = arguments["additionalQueryParams"] as? [String: String] ?? [:]
         
@@ -165,8 +165,8 @@ class FronteggMethodCallHandler {
             return result(FlutterError(code: "MISSING_PARAMS", message: "Missing 'provider' argumant", details: nil))
         }
         
-        // Retrieve the 'ephemeral' parameter or use the default value of true
-        let ephemeralSession = arguments["ephemeral"] as? Bool ?? true
+        // Retrieve the 'ephemeralSession' parameter (must match Flutter key) or use the default value of true
+        let ephemeralSession = arguments["ephemeralSession"] as? Bool ?? true
         
         let additionalQueryParams = arguments["additionalQueryParams"] as? [String: String] ?? [:]
         
@@ -198,8 +198,8 @@ class FronteggMethodCallHandler {
         }
         
         
-        // Retrieve the 'ephemeral' parameter or use the default value of true
-        let ephemeralSession = arguments["ephemeral"] as? Bool ?? true
+        // Retrieve the 'ephemeralSession' parameter (must match Flutter key) or use the default value of true
+        let ephemeralSession = arguments["ephemeralSession"] as? Bool ?? true
         
         let additionalQueryParams = arguments["additionalQueryParams"] as? [String: String] ?? [:]
         
