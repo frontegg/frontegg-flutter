@@ -139,7 +139,7 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "1.0.36"
+    version: "1.0.37"
   fuchsia_remote_debug_protocol:
     dependency: transitive
     description: flutter
