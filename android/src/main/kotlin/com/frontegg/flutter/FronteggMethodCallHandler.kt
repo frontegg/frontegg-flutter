@@ -1,6 +1,8 @@
 package com.frontegg.flutter
 
 import android.content.Context
+import android.util.Base64
+import com.frontegg.android.EmbeddedAuthActivity
 import com.frontegg.android.exceptions.FronteggException
 import com.frontegg.android.fronteggAuth
 import com.frontegg.android.services.StorageProvider
@@ -11,6 +13,7 @@ import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import org.json.JSONObject
 import kotlin.time.DurationUnit
 import kotlin.time.toDuration
 
@@ -112,18 +115,62 @@ class FronteggMethodCallHandler(
 
     private fun directLogin(call: MethodCall, result: MethodChannel.Result) {
         val url = call.argument<String>("url") ?: throw ArgumentNotFoundException("url")
-        if (context.fronteggAuth.isEmbeddedMode) {
-            activityProvider.getActivity()?.let {
-                context.fronteggAuth.directLoginAction(it, "direct", url) {
-                    result.success(null)
-                }
-            }
-        } else {
+        if (!context.fronteggAuth.isEmbeddedMode) {
             result.error(
                 "REQUEST_AUTHORIZE_ERROR",
                 "'directLogin' can be used only when EmbeddedActivity is enabled.",
                 null,
             )
+            return
+        }
+
+        activityProvider.getActivity()?.let { activity ->
+            try {
+                val directLogin: Map<String, Any> = mapOf(
+                    "type" to "direct",
+                    "data" to url,
+                    "additionalQueryParams" to mapOf(
+                        "prompt" to "consent",
+                    ),
+                )
+
+                val jsonData =
+                    JSONObject(directLogin).toString().toByteArray(Charsets.UTF_8)
+                val loginAction =
+                    Base64.encodeToString(jsonData, Base64.NO_WRAP)
+
+                EmbeddedAuthActivity.authenticateWithMultiFactor(
+                    activity = activity,
+                    mfaLoginAction = loginAction,
+                    callback = { error ->
+                        if (error == null) {
+                            result.success(null)
+                        } else {
+                            if (error is FronteggException) {
+                                result.error(
+                                    error.message ?: "unknown",
+                                    error.message
+                                        ?: "Unknown error occurred during direct login",
+                                    null,
+                                )
+                            } else {
+                                result.error(
+                                    "unknown",
+                                    error.localizedMessage
+                                        ?: "Unknown error occurred during direct login",
+                                    null,
+                                )
+                            }
+                        }
+                    },
+                )
+            } catch (e: Exception) {
+                result.error(
+                    "DIRECT_LOGIN_ERROR",
+                    e.localizedMessage ?: "Failed to start direct login",
+                    null,
+                )
+            }
         }
     }
 
