@@ -1,0 +1,23 @@
+{
+  "pins" : [
+    {
+      "identity" : "frontegg-ios-swift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/frontegg/frontegg-ios-swift.git",
+      "state" : {
+        "revision" : "045c4f13da42d1fd330a5729d3a4e5828bb1ccad",
+        "version" : "1.2.77"
+      }
+    },
+    {
+      "identity" : "sentry-cocoa",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/getsentry/sentry-cocoa.git",
+      "state" : {
+        "revision" : "16cd512711375fa73f25ae5e373f596bdf4251ae",
+        "version" : "8.58.0"
+      }
+    }
+  ],
+  "version" : 2
+}

@@ -34,8 +34,10 @@ Sign up here → [https://portal.us.frontegg.com/signup](https://portal.us.front
 
 The Flutter SDK supports Frontegg's **per-tenant sessions** feature through the underlying native SDKs.
 
-- On **Android**, the plugin and example apps use `com.frontegg.sdk:android:1.3.18`.
-- On **iOS**, the plugin depends on `FronteggSwift` with a version constraint `>= 1.2.76`.
+- On **Android**, the plugin and example apps use `com.frontegg.sdk:android:1.3.19`.
+- On **iOS**, the plugin depends on `FronteggSwift`:
+  - **Flutter 3.41+** (SPM): `1.2.77` from GitHub. Run `flutter config --enable-swift-package-manager`, then `flutter pub get` and build.
+  - **Flutter &lt; 3.41** (CocoaPods): `1.2.76` (1.2.77 not on CocoaPods).
 
 To enable and use per-tenant sessions:
 

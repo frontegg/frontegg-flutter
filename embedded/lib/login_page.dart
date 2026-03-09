@@ -101,7 +101,10 @@ class Body extends StatelessWidget {
                       child: const Text('Sign in'),
                       onPressed: () async {
                         try {
-                          await frontegg.login();
+                          await frontegg.directLogin(
+                            url: 'https://autheu.davidantoon.me',
+                            ephemeralSession: false,
+                          );
                           debugPrint("Login Finished");
                         } catch (e) {
                           debugPrint("Login failed $e");
