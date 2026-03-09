@@ -1,3 +1,7 @@
+## v1.0.37
+FR-23832.
+Fixed ephemeralSession.
+
 ## v1.0.36
 Fixed: "Remember MFA Device" Setting Ignored.
 Fixed: Autofill Password Managers kills activity.
