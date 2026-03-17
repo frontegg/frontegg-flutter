@@ -69,6 +69,61 @@ import FronteggSwift
 }
 ```
 
+## Entitlements
+
+Entitlements allow you to automatically load and check user permissions (features and permissions) using the native SDKs.  
+In Flutter this is built on top of the existing support in `frontegg-ios-swift` and `frontegg-android-kotlin`.
+
+### iOS
+
+On iOS, entitlements are enabled via `Frontegg.plist`:
+
+```xml
+<plist version="1.0">
+  <dict>
+    <key>baseUrl</key>
+    <string>{{FRONTEGG_BASE_URL}}</string>
+
+    <key>clientId</key>
+    <string>{{FRONTEGG_CLIENT_ID}}</string>
+
+    <key>entitlementsEnabled</key>
+    <true/>
+  </dict>
+</plist>
+```
+
+- Add the `entitlementsEnabled` key and set it to `true` to:
+  - automatically fetch entitlements on login;
+  - enable all entitlements‑related APIs in the native SDK.
+
+### Android
+
+On Android, entitlements are configured via a `buildConfigField` in `android/app/build.gradle`:
+
+```groovy
+android {
+    defaultConfig {
+        // ...
+        buildConfigField "Boolean", "FRONTEGG_ENABLE_ENTITLEMENTS", "true"
+    }
+}
+```
+
+The native Android SDK reads this flag and enables entitlements support (automatic fetch on login and access to entitlements APIs).
+
+### Manually loading entitlements from Flutter
+
+In addition to automatic loading on login, you can manually trigger entitlements loading/refresh from Dart:
+
+```dart
+final frontegg = FronteggFlutter();
+final success = await frontegg.loadEntitlements(forceRefresh: true);
+```
+
+- `forceRefresh: true` — always performs a network request.
+- `forceRefresh: false` — uses the SDK cache when possible.
+
 ## Android
 
 ### Multi-app support

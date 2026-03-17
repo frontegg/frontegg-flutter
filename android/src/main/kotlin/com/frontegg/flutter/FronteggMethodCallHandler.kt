@@ -52,6 +52,8 @@ class FronteggMethodCallHandler(
             "stepUp" -> stepUp(call, result)
             "forceStateUpdate" -> forceStateUpdate(result)
 
+            "loadEntitlements" -> loadEntitlements(call, result)
+
             else -> result.notImplemented()
         }
     }
@@ -398,5 +400,18 @@ class FronteggMethodCallHandler(
         // Simple force state update
         // The state listener will automatically handle state updates
         result.success(null)
+    }
+
+    private fun loadEntitlements(
+        call: MethodCall,
+        result: MethodChannel.Result,
+    ) {
+        val forceRefresh = call.argument<Boolean>("forceRefresh") ?: false
+
+        context.fronteggAuth.loadEntitlements(
+            forceRefresh = forceRefresh,
+        ) { success ->
+            result.success(success)
+        }
     }
 }
