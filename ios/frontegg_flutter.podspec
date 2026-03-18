@@ -15,8 +15,8 @@ A new Flutter plugin project.
   s.source           = { :path => '.' }
   s.source_files = 'frontegg_flutter/Sources/frontegg_flutter/**/*.swift'
   s.dependency 'Flutter'
-  # Use 1.2.76 until 1.2.77 is on CocoaPods. SPM (Flutter 3.41+) uses 1.2.77 from GitHub.
-  s.dependency 'FronteggSwift', '1.2.76'
+  # FronteggSwift is integrated via Swift Package Manager (SPM) through `Package.swift`.
+  # CocoaPods dependency is intentionally omitted to avoid version mismatch issues.
   s.platform = :ios, '14.0'
 
   # Flutter.framework does not contain a i386 slice.

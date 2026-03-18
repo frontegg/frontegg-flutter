@@ -13,7 +13,7 @@ let package = Package(
     ],
     dependencies: [
         .package(name: "FlutterFramework", path: "../FlutterFramework"),
-        .package(url: "https://github.com/frontegg/frontegg-ios-swift.git", exact: "1.2.77"),
+        .package(url: "https://github.com/frontegg/frontegg-ios-swift.git", exact: "1.2.78"),
     ],
     targets: [
         .target(

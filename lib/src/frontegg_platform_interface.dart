@@ -98,6 +98,17 @@ abstract class FronteggPlatform extends PlatformInterface {
     throw UnimplementedError("stepUp() has not been implemented.");
   }
 
+  /// Triggers a manual entitlements load on the native SDKs.
+  ///
+  /// Returns `true` if entitlements were successfully loaded, otherwise `false`.
+  Future<bool> loadEntitlements({
+    bool forceRefresh = false,
+  }) {
+    throw UnimplementedError(
+      "loadEntitlements() has not been implemented.",
+    );
+  }
+
   Future<void> forceStateUpdate() {
     throw UnimplementedError("forceStateUpdate() has not been implemented.");
   }

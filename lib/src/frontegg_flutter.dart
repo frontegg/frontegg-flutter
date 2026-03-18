@@ -323,6 +323,22 @@ class FronteggFlutter {
   }) =>
       _runAction(() => FronteggPlatform.instance.stepUp(maxAge: maxAge));
 
+  /// Manually triggers entitlements loading on the native SDKs.
+  ///
+  /// By default, entitlements are fetched automatically on login when
+  /// entitlements support is enabled. This method allows you to explicitly
+  /// refresh entitlements, optionally forcing a network call.
+  ///
+  /// Returns `true` if entitlements were successfully loaded.
+  Future<bool> loadEntitlements({
+    bool forceRefresh = false,
+  }) =>
+      _runAction(
+        () => FronteggPlatform.instance.loadEntitlements(
+          forceRefresh: forceRefresh,
+        ),
+      );
+
   Future<T> _runAction<T>(Future<T> Function() action) async {
     try {
       return await action();

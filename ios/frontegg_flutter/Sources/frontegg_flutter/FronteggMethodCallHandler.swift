@@ -41,7 +41,8 @@ class FronteggMethodCallHandler {
             stepUp(call: call, result: result)
         case "isSteppedUp":
             isSteppedUp(call: call, result: result)
-            
+        case "loadEntitlements":
+            loadEntitlements(call: call, result: result)
             
         default:
             result(FlutterMethodNotImplemented)
@@ -331,6 +332,29 @@ class FronteggMethodCallHandler {
                 let success = await self.fronteggApp.auth.refreshTokenIfNeeded()
                 result(success)
             }
+        }
+    }
+
+    private func loadEntitlements(
+        call: FlutterMethodCall,
+        result: @escaping FlutterResult
+    ) {
+        guard let arguments = call.arguments as? [String: Any?] else {
+            return result(
+                FlutterError(
+                    code: "MISSING_PARAMS",
+                    message: "Missing arguments",
+                    details: nil
+                )
+            )
+        }
+
+        let forceRefresh = arguments["forceRefresh"] as? Bool ?? false
+
+        fronteggApp.auth.loadEntitlements(
+            forceRefresh: forceRefresh
+        ) { success in
+            result(success)
         }
     }
 }
