@@ -74,6 +74,12 @@ import FronteggSwift
 Entitlements allow you to automatically load and check user permissions (features and permissions) using the native SDKs.  
 In Flutter this is built on top of the existing support in `frontegg-ios-swift` and `frontegg-android-kotlin`.
 
+Note: iOS entitlements APIs depend on `FronteggSwift` being integrated via Swift Package Manager (SPM).  
+Use **Flutter 3.41+** and enable SPM in your project:
+`flutter config --enable-swift-package-manager`.
+
+SPM integration requires **Xcode 15+**.
+
 ### iOS
 
 On iOS, entitlements are enabled via `Frontegg.plist`:
