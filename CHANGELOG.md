@@ -2,8 +2,7 @@
 ## Summary
 - **Example apps** now uses shared Frontegg credentials (for automation / E2E).
 - **iOS**: `Frontegg.plist` + `.entitlements` (associated domains) updated.
-- **Android**: `build.gradle` `fronteggDomain` / `fronteggClientId` updated.
-Aligns the Android plugin with Frontegg Android SDK 1.3.22 and fixes `state.accessToken` staying stale after await `frontegg.refreshToken()` by waiting for native refresh to finish and forcing a state push to Flutter before the method channel returns
+- **Android**: `build.gradle` `fronteggDomain` / `fronteggClientId` updated. Aligns the Android plugin with Frontegg Android SDK 1.3.22 and fixes `state.accessToken` staying stale after await `frontegg.refreshToken()` by waiting for native refresh to finish and forcing a state push to Flutter before the method channel returns
 
 ## v1.0.38
 Bump frontegg-android-kotlin version to 1.3.19.
