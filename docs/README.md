@@ -36,7 +36,7 @@ The Flutter SDK supports Frontegg's **per-tenant sessions** feature through the 
 
 - On **Android**, the plugin and example apps use `com.frontegg.sdk:android:1.3.23`.
 - On **iOS**, the plugin depends on `FronteggSwift`:
-  - **Flutter 3.41+** (SPM): `1.2.78` from GitHub. Run `flutter config --enable-swift-package-manager`, then `flutter pub get` and build.
+  - **Flutter 3.41+** (SPM): `1.2.79` from GitHub. Run `flutter config --enable-swift-package-manager`, then `flutter pub get` and build.
   - Note: CocoaPods fallback is no longer supported for `FronteggSwift`.
   - SPM integration requires **Xcode 15+**.
 
