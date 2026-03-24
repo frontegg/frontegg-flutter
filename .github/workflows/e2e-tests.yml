@@ -1,0 +1,36 @@
+# Triggers E2E tests in e2e-system-tests repo for every PR. Merge is blocked until E2E passes.
+# Requires: In frontegg-flutter, add secret E2E_DISPATCH_TOKEN (PAT with repo + workflow scope on e2e-system-tests).
+# In e2e-system-tests, add secret FRONTEGG_FLUTTER_CI_TOKEN (PAT with repo scope on frontegg-flutter, for checkout + commit status).
+# In frontegg-flutter branch protection, require status check "e2e/flutter-sdk" before merge.
+name: Trigger E2E Tests
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches: [master, main]
+
+jobs:
+  trigger-e2e:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger E2E Flutter SDK tests
+        env:
+          E2E_DISPATCH_TOKEN: ${{ secrets.E2E_DISPATCH_TOKEN }}
+        run: |
+          if [ -z "$E2E_DISPATCH_TOKEN" ]; then
+            echo "E2E_DISPATCH_TOKEN not set; skipping E2E trigger (required to block merge on E2E result)."
+            exit 0
+          fi
+          curl -sS -X POST \
+            -H "Accept: application/vnd.github.v3+json" \
+            -H "Authorization: token $E2E_DISPATCH_TOKEN" \
+            https://api.github.com/repos/frontegg/e2e-system-tests/dispatches \
+            -d '{
+              "event_type": "flutter-pr-e2e",
+              "client_payload": {
+                "repo": "${{ github.repository }}",
+                "pr_number": ${{ github.event.pull_request.number }},
+                "head_sha": "${{ github.event.pull_request.head.sha }}"
+              }
+            }'
+          echo "E2E workflow triggered for PR #${{ github.event.pull_request.number }}."

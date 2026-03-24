@@ -25,6 +25,6 @@ Future<bool> launchUrl(
 extension BuildContextEx on BuildContext {
   Future<bool> get isDefaultCredentials async {
     final constants = await frontegg.getConstants();
-    return constants.baseUrl == "https://autheu.davidantoon.me";
+    return constants.baseUrl == "https://app-x4gr8g28fxr5.frontegg.com";
   }
 }

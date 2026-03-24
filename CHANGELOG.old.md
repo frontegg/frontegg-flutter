@@ -1,3 +1,8 @@
+## v1.0.38
+Bump frontegg-android-kotlin version to 1.3.19.
+Add Swift Package Manager (SPM) support for iOS FronteggSwift 1.2.77 via SPM when using Flutter 3.41+.
+CocoaPods: FronteggSwift 1.2.76 (1.2.77 not exists on CocoaPods).
+
 ## v1.0.37
 FR-23832.
 Fixed ephemeralSession.

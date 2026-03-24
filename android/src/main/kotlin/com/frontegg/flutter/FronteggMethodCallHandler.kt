@@ -13,6 +13,7 @@ import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import kotlin.time.DurationUnit
 import kotlin.time.toDuration
@@ -367,10 +368,15 @@ class FronteggMethodCallHandler(
     }
 
     private fun refreshToken(result: MethodChannel.Result) {
-        GlobalScope.launch(Dispatchers.IO) {
-            val success = context.fronteggAuth.refreshTokenIfNeeded()
-            GlobalScope.launch(Dispatchers.Main) {
+        GlobalScope.launch(Dispatchers.Main) {
+            try {
+                val success = withContext(Dispatchers.IO) {
+                    context.fronteggAuth.refreshTokenAndWait()
+                }
+                stateListener?.forceNotifyChanges()
                 result.success(success)
+            } catch (e: Exception) {
+                result.error("refresh_failed", e.message, null)
             }
         }
     }
