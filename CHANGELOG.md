@@ -1,3 +1,8 @@
+## v1.0.40
+Added entitlements support.
+Bump ios and android versions.
+Minimum required version of flutter is 3.41
+
 ## v1.0.39
 ## Summary
 - **Example apps** now uses shared Frontegg credentials (for automation / E2E).
