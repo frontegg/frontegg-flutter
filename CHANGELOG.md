@@ -1,7 +1,7 @@
 ## v1.0.40
-Added entitlements support.
-Bump ios and android versions.
-Minimum required version of flutter is 3.41
+- Added entitlements and roles feature support
+- Bump IOS and Android versions
+- Minimum required version of Flutter is `3.41+`
 
 ## v1.0.39
 ## Summary
