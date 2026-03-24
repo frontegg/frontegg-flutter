@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -128,7 +129,7 @@ class _UserPageState extends State<UserPage> {
                                       top: 8.0,
                                       left: 10.5,
                                       right: 10.5,
-                                      bottom: 24,
+                                      bottom: 8,
                                     ),
                                     // Sensitive action button
                                     child: ElevatedButton(
@@ -156,6 +157,52 @@ class _UserPageState extends State<UserPage> {
                                         }
                                       },
                                       child: const Text("Sensitive action"),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                      top: 8.0,
+                                      left: 10.5,
+                                      right: 10.5,
+                                      bottom: 24,
+                                    ),
+                                    child: ElevatedButton(
+                                      onPressed: () async {
+                                        try {
+                                          final loaded =
+                                              await frontegg.loadEntitlements(
+                                            forceRefresh: true,
+                                          );
+                                          final claims = _decodeJwtClaims(
+                                            state.accessToken,
+                                          );
+                                          final entitlements =
+                                              claims?["entitlements"] ??
+                                                  claims?["entitlement"];
+
+                                          debugPrint(
+                                            "loadEntitlements success: $loaded",
+                                          );
+                                          debugPrint(
+                                            "entitlements: $entitlements",
+                                          );
+
+                                          if (loaded) {
+                                            _showSuccessMessage(
+                                              "Entitlements loaded. See console",
+                                            );
+                                          } else {
+                                            _showFailureMessage(
+                                              "Failed to load entitlements",
+                                            );
+                                          }
+                                        } catch (e) {
+                                          _showFailureMessage(
+                                            "Failed to load entitlements: $e",
+                                          );
+                                        }
+                                      },
+                                      child: const Text("Load Entitlements"),
                                     ),
                                   ),
                                 ],
@@ -274,6 +321,22 @@ class _UserPageState extends State<UserPage> {
         _messageWidget = null;
       });
     });
+  }
+
+  Map<String, dynamic>? _decodeJwtClaims(String? token) {
+    if (token == null || token.isEmpty) return null;
+
+    final parts = token.split(".");
+    if (parts.length != 3) return null;
+
+    try {
+      final normalized = base64Url.normalize(parts[1]);
+      final payload = utf8.decode(base64Url.decode(normalized));
+      final decoded = jsonDecode(payload);
+      return decoded is Map<String, dynamic> ? decoded : null;
+    } catch (_) {
+      return null;
+    }
   }
 }
 

@@ -9,6 +9,8 @@
     <string>https://autheu.davidantoon.me</string>
     <key>clientId</key>
     <string>b6adfe4c-d695-4c04-b95f-3ec9fd0c6cca</string>
+	<key>entitlementsEnabled</key>
+	<true/>
 	<key>logLevel</key>
 	<string>trace</string>
 	<!-- Keep user logged in after reinstall -->
