@@ -22,7 +22,10 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           architecture: x64
-          flutter-version: 3.29.2
+          flutter-version: 3.41.0
+
+      - name: Enable Swift Package Manager (SPM)
+        run: flutter config --enable-swift-package-manager
 
       - name: Git Identity
         run: |

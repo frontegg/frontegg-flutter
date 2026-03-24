@@ -26,6 +26,7 @@ class FronteggMethodChannel extends FronteggPlatform {
   static const String requestAuthorizeMethodName = "requestAuthorize";
   static const String stepUpMethodName = "stepUp";
   static const String isSteppedUpMethodName = "isSteppedUp";
+  static const String loadEntitlementsMethodName = "loadEntitlements";
 
   /// MethodChannel used for invoking platform-specific methods.
   @visibleForTesting
@@ -242,4 +243,16 @@ class FronteggMethodChannel extends FronteggPlatform {
   @override
   Future<void> forceStateUpdate() =>
       methodChannel.invokeMethod<void>("forceStateUpdate");
+
+  @override
+  Future<bool> loadEntitlements({
+    bool forceRefresh = false,
+  }) async =>
+      (await methodChannel.invokeMethod<bool>(
+            loadEntitlementsMethodName,
+            {
+              "forceRefresh": forceRefresh,
+            },
+          )) ??
+          false;
 }
