@@ -23,8 +23,8 @@ if (flutterVersionName == null) {
 }
 
 
-def fronteggDomain = "app-x4gr8g28fxr5.frontegg.com"
-def fronteggClientId = "5f493de4-01c5-4a61-8642-fca650a6a9dc"
+def fronteggDomain = "autheu.davidantoon.me"
+def fronteggClientId = "b6adfe4c-d695-4c04-b95f-3ec9fd0c6cca"
 
 
 android {
@@ -124,5 +124,5 @@ flutter {
 
 dependencies {
     androidTestUtil "androidx.test:orchestrator:1.5.1"
-    implementation 'com.frontegg.sdk:android:1.3.23'
+    implementation 'com.frontegg.sdk:android:1.3.24'
 }
