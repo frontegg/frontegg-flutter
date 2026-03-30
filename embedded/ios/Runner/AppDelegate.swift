@@ -69,8 +69,33 @@ import FronteggSwift
                 result(FlutterError(code: "MISSING_PARAM", message: "baseUrl and clientId required", details: nil))
                 return
             }
-            FronteggApp.shared.initEmbeddedForLocalE2E(baseUrl: baseUrl, clientId: clientId)
-            result(nil)
+            let resetState = args["resetState"] as? Bool ?? true
+            let forceNetworkPathOffline = args["forceNetworkPathOffline"] as? Bool ?? false
+            Task { @MainActor in
+#if DEBUG
+                if resetState {
+                    await FronteggApp.shared.resetForTesting(baseUrlOverride: baseUrl)
+                }
+                FronteggApp.shared.configureTestingNetworkPathAvailability(
+                    forceNetworkPathOffline ? false : nil
+                )
+                if let offline = args["enableOfflineMode"] as? Bool {
+                    FronteggApp.shared.configureTestingOfflineMode(offline)
+                }
+#endif
+                FronteggApp.shared.shouldPromptSocialLoginConsent = false
+                FronteggApp.shared.manualInit(
+                    baseUrl: baseUrl,
+                    cliendId: clientId,
+                    handleLoginWithSocialLogin: true,
+                    handleLoginWithSSO: true,
+                    handleLoginWithCustomSSO: true,
+                    handleLoginWithCustomSocialLoginProvider: true,
+                    handleLoginWithSocialProvider: true,
+                    entitlementsEnabled: false
+                )
+                result(nil)
+            }
 
         case "resetForTesting":
             FronteggApp.shared.auth.logout { _ in

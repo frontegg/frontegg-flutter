@@ -1,7 +1,6 @@
 package com.frontegg.demo
 
 import android.content.Context
-import com.frontegg.android.FronteggApp
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 
@@ -65,11 +64,7 @@ class E2EMethodChannel(private val context: Context) : MethodChannel.MethodCallH
         )
 
         try {
-            FronteggApp.initializeEmbeddedForLocalE2E(
-                context = context,
-                baseUrl = baseUrl,
-                clientId = clientId,
-            )
+            FronteggE2eEmbeddedInitializer.rebindSingletonToMockServer(context, baseUrl, clientId)
             result.success(null)
         } catch (e: Exception) {
             result.error("E2E_INIT_FAILED", e.message, null)
@@ -78,6 +73,7 @@ class E2EMethodChannel(private val context: Context) : MethodChannel.MethodCallH
 
     private fun resetForTesting(result: MethodChannel.Result) {
         try {
+            FronteggE2eEmbeddedInitializer.clearSingletonInstance()
             DemoEmbeddedTestMode.reset()
             result.success(null)
         } catch (e: Exception) {
