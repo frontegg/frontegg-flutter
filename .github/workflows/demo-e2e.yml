@@ -120,6 +120,13 @@ jobs:
         working-directory: embedded/ios
         run: pod install
 
+      # Hosted runners cannot sign with the repo's Apple Development team; use automatic
+      # simulator signing (empty team) like Flutter's default CI templates.
+      - name: Clear DEVELOPMENT_TEAM for simulator-only CI
+        working-directory: embedded/ios
+        run: |
+          sed -i '' 's/DEVELOPMENT_TEAM = 3R2X6557U2;/DEVELOPMENT_TEAM = "";/g' Runner.xcodeproj/project.pbxproj
+
       - name: Run embedded E2E on iOS Simulator
         working-directory: embedded
         run: |
