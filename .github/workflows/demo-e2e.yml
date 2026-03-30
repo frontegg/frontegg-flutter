@@ -123,9 +123,23 @@ jobs:
       - name: Run embedded E2E on iOS Simulator
         working-directory: embedded
         run: |
+          set -euo pipefail
+          UDID=$(xcrun simctl list devices available -j | jq -r '
+            [.devices | to_entries[] | .value[]
+              | select(.isAvailable == true and (.name | startswith("iPhone")))]
+            | sort_by(.name) | .[0].udid // empty')
+          if [[ -z "$UDID" || "$UDID" == "null" ]]; then
+            echo "::error::No available iPhone simulator"
+            xcrun simctl list devices available
+            exit 1
+          fi
+          echo "::notice::Using iOS Simulator UDID=$UDID"
+          xcrun simctl boot "$UDID" 2>/dev/null || true
+          open -a Simulator || true
+          sleep 3
           patrol test \
             -t integration_test/e2e/embedded_e2e_test.dart \
-            -d "iPhone 16 Pro" \
+            -d "$UDID" \
             --uninstall
 
       - uses: actions/upload-artifact@v6
