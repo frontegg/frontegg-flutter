@@ -5,11 +5,21 @@ import 'embedded_e2e_test_case.dart';
 
 const _e2eTestFilter = String.fromEnvironment('E2E_TEST_FILTER');
 
-/// When set (e.g. CI shards), only that `patrolTest` name is registered.
-void e2ePatrolTest(String name, PatrolTesterCallback callback) {
-  if (_e2eTestFilter.isNotEmpty && _e2eTestFilter != name) {
-    return;
+/// When set (e.g. CI shards), only listed tests are registered. Supports a single
+/// name or a comma-separated list so one `patrol test` run can execute a whole shard
+/// without rebuilding the integration test target four times.
+bool _e2eFilterAllows(String name) {
+  if (_e2eTestFilter.isEmpty) return true;
+  for (final raw in _e2eTestFilter.split(',')) {
+    final part = raw.trim();
+    if (part.isEmpty) continue;
+    if (part == name) return true;
   }
+  return false;
+}
+
+void e2ePatrolTest(String name, PatrolTesterCallback callback) {
+  if (!_e2eFilterAllows(name)) return;
   patrolTest(name, callback);
 }
 

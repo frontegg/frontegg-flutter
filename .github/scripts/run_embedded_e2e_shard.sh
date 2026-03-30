@@ -26,18 +26,12 @@ run_patrol() {
   "${cmd[@]}"
 }
 
+# One patrol invocation per shard: comma-separated E2E_TEST_FILTER matches multiple
+# e2ePatrolTest entries without paying for N× iOS xcodebuild + install cycles.
 if [[ -n "$METHODS" ]]; then
-  _old_ifs=$IFS
-  IFS=,
-  failed=0
-  for m in $METHODS; do
-    IFS=$_old_ifs
-    [[ -z "$m" ]] && continue
-    echo "::notice::Running E2E test: $m"
-    run_patrol --dart-define="E2E_TEST_FILTER=$m" || failed=1
-  done
-  IFS=$_old_ifs
-  exit "$failed"
+  echo "::notice::Running E2E shard tests: $METHODS"
+  run_patrol --dart-define="E2E_TEST_FILTER=$METHODS"
+  exit $?
 fi
 
 echo "::notice::Running full E2E suite"

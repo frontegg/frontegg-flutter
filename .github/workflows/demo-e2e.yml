@@ -149,8 +149,9 @@ jobs:
           export IOS_DEVICE="$UDID"
           echo "::notice::Using iOS Simulator UDID=$UDID"
           xcrun simctl boot "$UDID" 2>/dev/null || true
+          xcrun simctl bootstatus "$UDID" -b
           open -a Simulator || true
-          sleep 3
+          sleep 5
           bash .github/scripts/run_embedded_e2e_shard.sh
 
       - uses: actions/upload-artifact@v6
