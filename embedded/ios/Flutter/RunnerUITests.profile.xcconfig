@@ -1,0 +1,2 @@
+#include? "Pods/Target Support Files/Pods-Runner-RunnerUITests/Pods-Runner-RunnerUITests.profile.xcconfig"
+#include "Generated.xcconfig"
