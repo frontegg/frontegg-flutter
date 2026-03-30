@@ -20,17 +20,16 @@ void main() {
   });
 
   patrolTest('testPasswordLoginAndSessionRestore', ($) async {
-    await tc.launchApp($, resetState: true);
+    await tc.launchApp($);
     await tc.loginWithPassword($);
     await tc.waitForUserEmail($, 'test@frontegg.com', timeout: const Duration(seconds: 120));
-    // Simulate terminate + relaunch (widget rebuild with preserved state)
     await tc.launchApp($, resetState: false);
     await Future.delayed(const Duration(milliseconds: 1500));
     await tc.waitForUserEmail($, 'test@frontegg.com', timeout: const Duration(seconds: 180));
   });
 
   patrolTest('testEmbeddedSamlLogin', ($) async {
-    await tc.launchApp($, resetState: true);
+    await tc.launchApp($);
     await tc.waitForLoginPage($);
     await tc.tapSemantics($, 'E2EEmbeddedSAMLButton');
     await tc.tapWebButtonIfPresent($, 'Login With Okta');
@@ -38,7 +37,7 @@ void main() {
   });
 
   patrolTest('testEmbeddedOidcLogin', ($) async {
-    await tc.launchApp($, resetState: true);
+    await tc.launchApp($);
     await tc.waitForLoginPage($);
     await tc.tapSemantics($, 'E2EEmbeddedOIDCButton');
     await tc.tapWebButtonIfPresent($, 'Login With Okta');
@@ -46,7 +45,7 @@ void main() {
   });
 
   patrolTest('testRequestAuthorizeFlow', ($) async {
-    await tc.launchApp($, resetState: true);
+    await tc.launchApp($);
     await tc.waitForLoginPage($, timeout: const Duration(seconds: 35));
     await tc.tapSemantics($, 'E2ESeedRequestAuthorizeTokenButton');
     await Future.delayed(const Duration(seconds: 2));
@@ -55,7 +54,7 @@ void main() {
   });
 
   patrolTest('testCustomSSOBrowserHandoff', ($) async {
-    await tc.launchApp($, resetState: true);
+    await tc.launchApp($);
     await tc.waitForLoginPage($);
     await tc.tapSemantics($, 'E2ECustomSSOButton');
     await Future.delayed(const Duration(milliseconds: 4500));
@@ -63,7 +62,7 @@ void main() {
   });
 
   patrolTest('testDirectSocialBrowserHandoff', ($) async {
-    await tc.launchApp($, resetState: true);
+    await tc.launchApp($);
     await tc.waitForLoginPage($);
     await tc.tapSemantics($, 'E2EDirectSocialLoginButton');
     await Future.delayed(const Duration(seconds: 6));
@@ -71,7 +70,7 @@ void main() {
   });
 
   patrolTest('testEmbeddedGoogleSocialLoginWithSystemWebAuthenticationSession', ($) async {
-    await tc.launchApp($, resetState: true);
+    await tc.launchApp($);
     await tc.waitForLoginPage($, timeout: const Duration(seconds: 40));
     await tc.tapSemantics($, 'E2EEmbeddedGoogleSocialButton');
     await Future.delayed(const Duration(seconds: 32));
@@ -83,25 +82,32 @@ void main() {
       'ER-05001',
       'JWT token size exceeded the maximum allowed size. Please contact support to reduce token payload size.',
     );
-    await tc.launchApp($, resetState: true);
+    await tc.launchApp($);
     await tc.waitForLoginPage($);
     await tc.tapSemantics($, 'E2EEmbeddedGoogleSocialButton');
     await Future.delayed(const Duration(seconds: 18));
-    final found = await tc.waitForA11yTextContains($, 'ER-05001', timeout: const Duration(seconds: 50));
+    final found = await tc.waitForA11yTextContains(
+      $,
+      'ER-05001',
+      timeout: const Duration(seconds: 50),
+    );
     expect(found, isTrue, reason: 'Expected error text in UI');
   });
 
   patrolTest('testColdLaunchTransientProbeTimeoutsDoNotBlinkNoConnectionPage', ($) async {
     tc.mock.queueProbeTimeouts(count: 2, delayMs: 1500);
-    await tc.launchApp($, resetState: true);
+    await tc.launchApp($);
     await tc.waitForLoginPage($, timeout: const Duration(seconds: 20));
     await Future.delayed(const Duration(milliseconds: 2100));
-    expect(find.bySemanticsLabel('NoConnectionPageRoot').evaluate().isEmpty, isTrue,
-        reason: 'Unexpected NoConnection overlay');
+    expect(
+      find.bySemanticsLabel('NoConnectionPageRoot').evaluate().isEmpty,
+      isTrue,
+      reason: 'Unexpected NoConnection overlay',
+    );
   });
 
   patrolTest('testLogoutTerminateTransientProbeFailureDoesNotBlinkNoConnectionPage', ($) async {
-    await tc.launchApp($, resetState: true);
+    await tc.launchApp($);
     await tc.loginWithPassword($);
     await tc.waitForUserEmail($, 'test@frontegg.com', timeout: const Duration(seconds: 90));
     await tc.tapLogout($);
@@ -113,7 +119,7 @@ void main() {
   });
 
   patrolTest('testAuthenticatedOfflineModeWhenNetworkPathUnavailable', ($) async {
-    await tc.launchApp($, resetState: true);
+    await tc.launchApp($);
     await tc.loginWithPassword($);
     final initialVersion = await tc.accessTokenVersion($);
     await tc.launchApp($, resetState: false, forceNetworkPathOffline: true);
@@ -121,8 +127,11 @@ void main() {
     await tc.waitForSemantics($, 'AuthenticatedOfflineModeEnabled', timeout: const Duration(seconds: 10));
     await tc.waitForSemantics($, 'OfflineModeBadge', timeout: const Duration(seconds: 10));
     expect(await tc.accessTokenVersion($), equals(initialVersion));
-    expect(find.bySemanticsLabel('RetryConnectionButton').evaluate().isEmpty, isTrue,
-        reason: 'Did not expect Retry button');
+    expect(
+      find.bySemanticsLabel('RetryConnectionButton').evaluate().isEmpty,
+      isTrue,
+      reason: 'Did not expect Retry button',
+    );
   });
 
   patrolTest('testExpiredAccessTokenRefreshesOnAuthenticatedRelaunch', ($) async {
@@ -131,7 +140,7 @@ void main() {
       accessTTL: expiringAccessTokenTTL,
       refreshTTL: longLivedRefreshTokenTTL,
     );
-    await tc.launchApp($, resetState: true);
+    await tc.launchApp($);
     await tc.loginWithPassword($);
     await tc.waitForUserEmail($, 'test@frontegg.com', timeout: const Duration(seconds: 90));
     final v0 = await tc.accessTokenVersion($);
@@ -144,13 +153,13 @@ void main() {
   });
 
   patrolTest('testAuthenticatedOfflineModeRecoversToOnlineAndRefreshesToken', ($) async {
-    await tc.launchApp($, resetState: true);
+    await tc.launchApp($);
     await tc.loginWithPassword($);
     final v0 = await tc.accessTokenVersion($);
     await tc.launchApp($, resetState: false, forceNetworkPathOffline: true);
     await tc.waitForUserEmail($, 'test@frontegg.com', timeout: const Duration(seconds: 120));
     await tc.waitForSemantics($, 'OfflineModeBadge', timeout: const Duration(seconds: 75));
-    await tc.launchApp($, resetState: false, forceNetworkPathOffline: false);
+    await tc.launchApp($, resetState: false);
     await tc.waitForUserEmail($, 'test@frontegg.com', timeout: const Duration(seconds: 120));
     await Future.delayed(const Duration(seconds: 18));
     await tc.waitForAccessTokenVersionChange($, v0, timeout: const Duration(seconds: 240));
@@ -162,7 +171,7 @@ void main() {
       accessTTL: expiringAccessTokenTTL,
       refreshTTL: longLivedRefreshTokenTTL,
     );
-    await tc.launchApp($, resetState: true);
+    await tc.launchApp($);
     await tc.loginWithPassword($);
     await tc.launchApp($, resetState: false, forceNetworkPathOffline: true);
     await tc.waitForUserEmail($, 'test@frontegg.com');
@@ -170,13 +179,13 @@ void main() {
     await tc.waitDurationSeconds(expiringAccessTokenTTL + 2);
     await tc.waitForSemantics($, 'AuthenticatedOfflineModeEnabled', timeout: const Duration(seconds: 10));
     final versionBeforeReconnect = await tc.accessTokenVersion($);
-    await tc.launchApp($, resetState: false, forceNetworkPathOffline: false);
+    await tc.launchApp($, resetState: false);
     await tc.waitForUserEmail($, 'test@frontegg.com');
     await tc.waitForAccessTokenVersionChange($, versionBeforeReconnect, timeout: const Duration(seconds: 75));
   });
 
   patrolTest('testLogoutTerminateTransientNoConnectionThenCustomSSORecovers', ($) async {
-    await tc.launchApp($, resetState: true);
+    await tc.launchApp($);
     await tc.loginWithPassword($);
     await tc.tapLogout($);
     await tc.waitForLoginPage($);
@@ -192,15 +201,15 @@ void main() {
 
   patrolTest('testColdLaunchWithOfflineModeDisabledReachesLoginQuickly', ($) async {
     tc.mock.queueProbeFailures([503, 503]);
-    await tc.launchApp($, resetState: true, enableOfflineMode: false);
+    await tc.launchApp($, enableOfflineMode: false);
     await tc.waitForLoginPage($, timeout: const Duration(seconds: 50));
     await Future.delayed(const Duration(milliseconds: 3500));
   });
 
   patrolTest('testOfflineModeDisabledPreservesSessionDuringConnectionLossAndRecovers', ($) async {
-    await tc.launchApp($, resetState: true, enableOfflineMode: false);
+    await tc.launchApp($, enableOfflineMode: false);
     await tc.loginWithPassword($);
-    tc.mock.queueConnectionDrops(method: 'POST', path: '/oauth/token', count: 1);
+    tc.mock.queueConnectionDrops(path: '/oauth/token');
     await tc.launchApp($, resetState: false, enableOfflineMode: false);
     await tc.waitForUserEmail($, 'test@frontegg.com');
     await Future.delayed(const Duration(seconds: 2));
@@ -208,14 +217,14 @@ void main() {
   });
 
   patrolTest('testPasswordLoginWorksWithOfflineModeDisabled', ($) async {
-    await tc.launchApp($, resetState: true, enableOfflineMode: false);
+    await tc.launchApp($, enableOfflineMode: false);
     await tc.waitForLoginPage($, timeout: const Duration(seconds: 35));
     await tc.loginWithPassword($);
     await tc.waitForUserEmail($, 'test@frontegg.com', timeout: const Duration(seconds: 90));
   });
 
   patrolTest('testLogoutClearsSessionAndRelaunchShowsLogin', ($) async {
-    await tc.launchApp($, resetState: true);
+    await tc.launchApp($);
     await tc.loginWithPassword($);
     await tc.waitForUserEmail($, 'test@frontegg.com', timeout: const Duration(seconds: 120));
     await tc.tapLogout($);
@@ -227,11 +236,11 @@ void main() {
 
   patrolTest('testExpiredRefreshTokenClearsSessionAndShowsLogin', ($) async {
     tc.mock.configureTokenPolicy(email: 'test@frontegg.com', accessTTL: 30, refreshTTL: 12);
-    await tc.launchApp($, resetState: true);
+    await tc.launchApp($);
     await tc.loginWithPassword($);
     await tc.waitForUserEmail($, 'test@frontegg.com');
     await tc.waitDurationSeconds(18);
-    await tc.launchApp($, resetState: true);
+    await tc.launchApp($);
     await Future.delayed(const Duration(milliseconds: 2500));
     await tc.waitForLoginPage($, timeout: const Duration(seconds: 60));
   });
@@ -242,7 +251,7 @@ void main() {
       accessTTL: 45,
       refreshTTL: longLivedRefreshTokenTTL,
     );
-    await tc.launchApp($, resetState: true);
+    await tc.launchApp($);
     await tc.loginWithPassword($);
     final start = tc.oauthRefreshRequestCount();
     await Future.delayed(const Duration(seconds: 35));
@@ -255,7 +264,7 @@ void main() {
       accessTTL: expiringAccessTokenTTL,
       refreshTTL: longLivedRefreshTokenTTL,
     );
-    await tc.launchApp($, resetState: true);
+    await tc.launchApp($);
     await tc.loginWithPassword($);
     await tc.waitForUserEmail($, 'test@frontegg.com', timeout: const Duration(seconds: 90));
     await tc.waitDurationSeconds(expiringAccessTokenTTL + 8);

@@ -335,7 +335,7 @@ class _UserPageState extends State<UserPage> {
         width: size.width - 48,
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: Colors.redAccent.withOpacity(0.6),
+          color: Colors.redAccent.withValues(alpha: 0.6),
           borderRadius: BorderRadius.circular(16),
         ),
         child: Row(

@@ -51,7 +51,7 @@ jobs:
           java-version: "17"
 
       - name: Install Patrol CLI
-        run: flutter pub global activate patrol_cli
+        run: dart pub global activate patrol_cli 3.6.0
 
       - name: Install dependencies
         working-directory: embedded
@@ -72,8 +72,7 @@ jobs:
           api-level: 34
           arch: x86_64
           profile: pixel_6
-          working-directory: embedded
-          script: bash ../.github/scripts/run_embedded_e2e_shard.sh
+          script: bash .github/scripts/run_embedded_e2e_shard.sh
 
       - name: Collect test reports
         if: always()
@@ -111,7 +110,7 @@ jobs:
           channel: stable
 
       - name: Install Patrol CLI
-        run: flutter pub global activate patrol_cli
+        run: dart pub global activate patrol_cli 3.6.0
 
       - name: Install dependencies
         working-directory: embedded

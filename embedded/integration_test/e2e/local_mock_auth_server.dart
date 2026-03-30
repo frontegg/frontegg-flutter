@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import 'dart:math';
 
 /// Dart mirror of the Swift/Kotlin `LocalMockAuthServer` for embedded E2E.
 class LocalMockAuthServer {
@@ -12,7 +11,6 @@ class LocalMockAuthServer {
   late final String urlRoot;
   final _state = _MockAuthState();
   final _requestLog = <_LoggedRequest>[];
-  final _random = Random();
 
   Future<void> start({int port = defaultPort}) async {
     _server = await HttpServer.bind(InternetAddress.loopbackIPv4, port);
@@ -214,12 +212,14 @@ class LocalMockAuthServer {
       loginHint: loginHint,
     );
 
-    final preloginUri = Uri.parse('$urlRoot/oauth/prelogin').replace(queryParameters: {
-      'client_id': clientId,
-      'redirect_uri': redirectUri,
-      'state': hostedState,
-      if (loginHint.isNotEmpty) 'login_hint': loginHint,
-    });
+    final preloginUri = Uri.parse('$urlRoot/oauth/prelogin').replace(
+      queryParameters: {
+        'client_id': clientId,
+        'redirect_uri': redirectUri,
+        'state': hostedState,
+        if (loginHint.isNotEmpty) 'login_hint': loginHint,
+      },
+    );
     _sendRedirect(res, preloginUri.toString());
   }
 

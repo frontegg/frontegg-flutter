@@ -1,6 +1,3 @@
-import 'dart:async';
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:frontegg_flutter_embedded_example/e2e_test_mode.dart';
@@ -53,7 +50,7 @@ class EmbeddedE2ETestCase {
   }
 
   Future<void> tapSemantics(PatrolIntegrationTester $, String label, {Duration timeout = const Duration(seconds: 10)}) async {
-    await _waitForSemantics($, label, timeout: timeout);
+    await waitForSemantics($, label, timeout: timeout);
     final finder = find.bySemanticsLabel(label);
     await $.tap(finder.first);
     await $.pumpAndSettle();
@@ -76,7 +73,7 @@ class EmbeddedE2ETestCase {
   }
 
   Future<int> accessTokenVersion(PatrolIntegrationTester $, {Duration timeout = const Duration(seconds: 10)}) async {
-    await _waitForSemantics($, 'AccessTokenVersionValue', timeout: timeout);
+    await waitForSemantics($, 'AccessTokenVersionValue', timeout: timeout);
     final widget = find.bySemanticsLabel('AccessTokenVersionValue');
     final textWidget = widget.evaluate().first.widget;
     if (textWidget is Text) {
