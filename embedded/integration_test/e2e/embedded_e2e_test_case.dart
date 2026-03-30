@@ -37,7 +37,16 @@ class EmbeddedE2ETestCase {
     );
 
     await $.pumpWidget(const MyApp());
-    await $.pumpAndSettle(timeout: const Duration(seconds: 25));
+    // The Frontegg SDK keeps background timers alive (connectivity probes, token
+    // refresh) which prevents pumpAndSettle from ever completing. Use a fixed pump
+    // duration to render the initial frame tree, then rely on explicit element
+    // waits (waitForSemantics / waitForText) in individual tests.
+    try {
+      await $.pumpAndSettle(timeout: const Duration(seconds: 8));
+    } on FlutterError {
+      // Expected: SDK timers keep scheduling frames.
+      await $.pump(const Duration(seconds: 2));
+    }
   }
 
   Future<void> waitForLoginPage(PatrolIntegrationTester $, {Duration timeout = const Duration(seconds: 20)}) async {
@@ -53,7 +62,7 @@ class EmbeddedE2ETestCase {
     await waitForSemantics($, label, timeout: timeout);
     final finder = find.bySemanticsLabel(label);
     await $.tap(finder.first);
-    await $.pumpAndSettle();
+    await $.pump(const Duration(milliseconds: 500));
   }
 
   Future<void> loginWithPassword(PatrolIntegrationTester $) async {
