@@ -120,21 +120,23 @@ jobs:
         working-directory: embedded/ios
         run: pod install
 
-      # Hosted runners cannot sign with the repo's Apple Development team; use automatic
-      # simulator signing (empty team) like Flutter's default CI templates.
-      - name: Clear DEVELOPMENT_TEAM for simulator-only CI
-        working-directory: embedded/ios
-        run: |
-          sed -i '' 's/DEVELOPMENT_TEAM = 3R2X6557U2;/DEVELOPMENT_TEAM = "";/g' Runner.xcodeproj/project.pbxproj
-
+      # Match frontegg-ios-swift demo-e2e: same DEVELOPMENT_TEAM in the Xcode project and
+      # iPhone 16 Pro simulator destination (no sed stripping of the team).
       - name: Run embedded E2E on iOS Simulator
         working-directory: embedded
         run: |
           set -euo pipefail
+          LOG="${RUNNER_TEMP}/ios-e2e-shard-${{ matrix['shard-index'] }}.log"
           UDID=$(xcrun simctl list devices available -j | jq -r '
-            [.devices | to_entries[] | .value[]
-              | select(.isAvailable == true and (.name | startswith("iPhone")))]
-            | sort_by(.name) | .[0].udid // empty')
+            [.devices | to_entries[].value[]
+              | select(.isAvailable == true and .name == "iPhone 16 Pro")]
+            | .[0].udid // empty')
+          if [[ -z "$UDID" || "$UDID" == "null" ]]; then
+            UDID=$(xcrun simctl list devices available -j | jq -r '
+              [.devices | to_entries[] | .value[]
+                | select(.isAvailable == true and (.name | startswith("iPhone")))]
+              | sort_by(.name) | .[0].udid // empty')
+          fi
           if [[ -z "$UDID" || "$UDID" == "null" ]]; then
             echo "::error::No available iPhone simulator"
             xcrun simctl list devices available
@@ -147,13 +149,16 @@ jobs:
           patrol test \
             -t integration_test/e2e/embedded_e2e_test.dart \
             -d "$UDID" \
-            --uninstall
+            --uninstall \
+            --verbose 2>&1 | tee "$LOG"
 
       - uses: actions/upload-artifact@v6
         if: always()
         with:
           name: flutter-e2e-ios-shard-${{ matrix['shard-index'] }}
-          path: embedded/build/ios_integ/
+          path: |
+            ${{ runner.temp }}/ios-e2e-shard-${{ matrix['shard-index'] }}.log
+            embedded/build/ios_integ/
           if-no-files-found: ignore
 
   summary:
