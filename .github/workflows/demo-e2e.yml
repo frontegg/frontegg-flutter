@@ -109,12 +109,20 @@ jobs:
         with:
           channel: stable
 
+      - name: Enable Swift Package Manager
+        run: flutter config --enable-swift-package-manager
+
       - name: Install Patrol CLI
         run: dart pub global activate patrol_cli 3.6.0
 
       - name: Install dependencies
         working-directory: embedded
         run: flutter pub get
+
+      - name: Fix generated SPM platform version
+        run: |
+          PKG="embedded/ios/Flutter/ephemeral/Packages/FlutterGeneratedPluginSwiftPackage/Package.swift"
+          sed -i '' 's/.iOS("13.0")/.iOS("14.0")/' "$PKG"
 
       - name: Install pods
         working-directory: embedded/ios
