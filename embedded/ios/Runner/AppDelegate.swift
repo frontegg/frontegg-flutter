@@ -81,6 +81,8 @@ import FronteggSwift
                 )
                 if let offline = args["enableOfflineMode"] as? Bool {
                     FronteggApp.shared.configureTestingOfflineMode(offline)
+                } else if let offline = args["enableOfflineMode"] as? NSNumber {
+                    FronteggApp.shared.configureTestingOfflineMode(offline.boolValue)
                 }
 #endif
                 FronteggApp.shared.shouldPromptSocialLoginConsent = false
