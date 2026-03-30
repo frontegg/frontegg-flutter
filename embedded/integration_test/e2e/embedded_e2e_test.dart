@@ -95,9 +95,9 @@ void main() {
   });
 
   patrolTest('testColdLaunchTransientProbeTimeoutsDoNotBlinkNoConnectionPage', ($) async {
-    tc.mock.queueProbeTimeouts(count: 2, delayMs: 1500);
+    tc.mock.queueProbeTimeouts(count: 2);
     await tc.launchApp($);
-    await tc.waitForLoginPage($, timeout: const Duration(seconds: 20));
+    await tc.waitForLoginPage($);
     await Future.delayed(const Duration(milliseconds: 2100));
     expect(
       find.bySemanticsLabel('NoConnectionPageRoot').evaluate().isEmpty,
@@ -191,9 +191,9 @@ void main() {
     await tc.waitForLoginPage($);
     tc.mock.queueProbeFailures([503]);
     await tc.launchApp($, resetState: false);
-    await tc.waitForSemantics($, 'NoConnectionPageRoot', timeout: const Duration(seconds: 20));
+    await tc.waitForSemantics($, 'NoConnectionPageRoot');
     tc.mock.reset();
-    await tc.tapSemantics($, 'RetryConnectionButton', timeout: const Duration(seconds: 10));
+    await tc.tapSemantics($, 'RetryConnectionButton');
     await tc.tapSemantics($, 'E2ECustomSSOButton');
     await Future.delayed(const Duration(milliseconds: 5500));
     await tc.waitForUserEmail($, 'custom-sso@frontegg.com', timeout: const Duration(seconds: 90));

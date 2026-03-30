@@ -10,7 +10,7 @@ const ROOT = path.resolve(__dirname, "../..");
 const CONFIG = {
   catalog: path.join(ROOT, "embedded/e2e/scenario-catalog.json"),
   testSources: [
-    path.join(ROOT, "embedded/integration_test/e2e/embedded_e2e_tests.dart"),
+    path.join(ROOT, "embedded/integration_test/e2e/embedded_e2e_test.dart"),
   ],
 };
 

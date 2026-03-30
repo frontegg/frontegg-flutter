@@ -4,7 +4,7 @@ set -euo pipefail
 METHODS="${E2E_METHODS:-}"
 
 cd embedded
-TEST_FILE="integration_test/e2e/embedded_e2e_tests.dart"
+TEST_FILE="integration_test/e2e/embedded_e2e_test.dart"
 
 flutter pub get
 
