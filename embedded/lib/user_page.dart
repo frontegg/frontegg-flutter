@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:frontegg_flutter/frontegg_flutter.dart';
 
+import 'e2e_test_mode.dart';
 import 'theme.dart';
 import 'utils.dart';
 import 'widgets/footer.dart';
@@ -131,7 +132,6 @@ class _UserPageState extends State<UserPage> {
                                       right: 10.5,
                                       bottom: 8,
                                     ),
-                                    // Sensitive action button
                                     child: ElevatedButton(
                                       onPressed: () async {
                                         const maxAge = Duration(minutes: 1);
@@ -164,7 +164,7 @@ class _UserPageState extends State<UserPage> {
                                       top: 8.0,
                                       left: 10.5,
                                       right: 10.5,
-                                      bottom: 24,
+                                      bottom: 8,
                                     ),
                                     child: ElevatedButton(
                                       onPressed: () async {
@@ -205,6 +205,29 @@ class _UserPageState extends State<UserPage> {
                                       child: const Text("Load Entitlements"),
                                     ),
                                   ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                      top: 8.0,
+                                      left: 10.5,
+                                      right: 10.5,
+                                      bottom: 8,
+                                    ),
+                                    child: Semantics(
+                                      label: 'LogoutButton',
+                                      child: ElevatedButton(
+                                        key: const ValueKey('LogoutButton'),
+                                        onPressed: () async {
+                                          await frontegg.logout();
+                                        },
+                                        child: const Text("Logout"),
+                                      ),
+                                    ),
+                                  ),
+                                  if (E2ETestMode.isEnabled &&
+                                      state.accessToken != null)
+                                    _buildAccessTokenVersionLabel(
+                                      state.accessToken!,
+                                    ),
                                 ],
                               ),
                             ),
@@ -240,6 +263,32 @@ class _UserPageState extends State<UserPage> {
             return const Center(child: Text("User not authenticated"));
           }
         },
+      ),
+    );
+  }
+
+  Widget _buildAccessTokenVersionLabel(String accessToken) {
+    int? version;
+    try {
+      final parts = accessToken.split('.');
+      if (parts.length > 1) {
+        var payload = parts[1];
+        payload = payload.replaceAll('-', '+').replaceAll('_', '/');
+        final remainder = payload.length % 4;
+        if (remainder > 0) payload += '=' * (4 - remainder);
+        final decoded = utf8.decode(base64.decode(payload));
+        final json = jsonDecode(decoded) as Map<String, dynamic>;
+        version = json['token_version'] as int?;
+      }
+    } catch (_) {}
+    return Padding(
+      padding: const EdgeInsets.only(left: 10.5, right: 10.5, bottom: 24),
+      child: Semantics(
+        label: 'AccessTokenVersionValue',
+        child: Text(
+          '${version ?? 0}',
+          style: const TextStyle(fontSize: 12, color: Colors.grey),
+        ),
       ),
     );
   }
@@ -286,7 +335,7 @@ class _UserPageState extends State<UserPage> {
         width: size.width - 48,
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: Colors.redAccent.withValues(alpha: 0.6),
+          color: Colors.redAccent.withOpacity(0.6),
           borderRadius: BorderRadius.circular(16),
         ),
         child: Row(

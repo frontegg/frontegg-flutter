@@ -13,7 +13,15 @@ import FronteggSwift
         GeneratedPluginRegistrant.register(with: self)
 
         DefaultLoader.customLoaderView = AnyView(Text("Loading..."))
-        
+
+        if let controller = window?.rootViewController as? FlutterViewController {
+            let e2eChannel = FlutterMethodChannel(
+                name: "frontegg_e2e",
+                binaryMessenger: controller.binaryMessenger
+            )
+            e2eChannel.setMethodCallHandler(handleE2EMethodCall)
+        }
+
         return super.application(application, didFinishLaunchingWithOptions: launchOptions)
     }
     
@@ -52,6 +60,31 @@ import FronteggSwift
         return false
     }
     
+    private func handleE2EMethodCall(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
+        switch call.method {
+        case "initializeForE2E":
+            guard let args = call.arguments as? [String: Any],
+                  let baseUrl = args["baseUrl"] as? String,
+                  let clientId = args["clientId"] as? String else {
+                result(FlutterError(code: "MISSING_PARAM", message: "baseUrl and clientId required", details: nil))
+                return
+            }
+            FronteggApp.shared.initEmbeddedForLocalE2E(baseUrl: baseUrl, clientId: clientId)
+            result(nil)
+
+        case "resetForTesting":
+            FronteggApp.shared.auth.logout { _ in
+                result(nil)
+            }
+
+        case "writeBootstrap", "consumeBootstrap":
+            result(nil)
+
+        default:
+            result(FlutterMethodNotImplemented)
+        }
+    }
+
     func showToast(message: String) {
         guard let window = UIApplication.shared.windows.first(where: { $0.isKeyWindow }) else { return }
 
