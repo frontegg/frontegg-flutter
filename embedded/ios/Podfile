@@ -31,7 +31,11 @@ target 'Runner' do
   use_frameworks!
   use_modular_headers!
 
-  # FronteggSwift comes from frontegg_flutter (SPM or podspec), do not add here to avoid duplicate Sentry.framework
+  # frontegg_flutter's podspec omits FronteggSwift (SPM-first design). The version on
+  # CocoaPods trunk (1.2.76) is behind what the plugin needs (1.2.79), so we use a local
+  # podspec that fetches the correct tag from GitHub.
+  pod 'FronteggSwift', :podspec => 'FronteggSwift.podspec'
+
   flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
 
   target 'RunnerUITests' do
