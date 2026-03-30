@@ -121,12 +121,16 @@ jobs:
         run: pod install
 
       # Match frontegg-ios-swift demo-e2e: same DEVELOPMENT_TEAM in the Xcode project and
-      # iPhone 16 Pro simulator destination (no sed stripping of the team).
+      # iPhone 16 Pro simulator. Shard tests via E2E_METHODS + E2E_TEST_FILTER (same as Android).
       - name: Run embedded E2E on iOS Simulator
-        working-directory: embedded
+        env:
+          E2E_METHODS: ${{ matrix['test-methods'] }}
+          PATROL_VERBOSE: "1"
         run: |
           set -euo pipefail
           LOG="${RUNNER_TEMP}/ios-e2e-shard-${{ matrix['shard-index'] }}.log"
+          : > "$LOG"
+          export PATROL_LOG_FILE="$LOG"
           UDID=$(xcrun simctl list devices available -j | jq -r '
             [.devices | to_entries[].value[]
               | select(.isAvailable == true and .name == "iPhone 16 Pro")]
@@ -142,15 +146,12 @@ jobs:
             xcrun simctl list devices available
             exit 1
           fi
+          export IOS_DEVICE="$UDID"
           echo "::notice::Using iOS Simulator UDID=$UDID"
           xcrun simctl boot "$UDID" 2>/dev/null || true
           open -a Simulator || true
           sleep 3
-          patrol test \
-            -t integration_test/e2e/embedded_e2e_test.dart \
-            -d "$UDID" \
-            --uninstall \
-            --verbose 2>&1 | tee "$LOG"
+          bash .github/scripts/run_embedded_e2e_shard.sh
 
       - uses: actions/upload-artifact@v6
         if: always()

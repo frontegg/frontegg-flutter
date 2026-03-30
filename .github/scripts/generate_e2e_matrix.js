@@ -24,7 +24,7 @@ function readCatalogMethods(catalogPath) {
 
 function readDartTestMethods(testSources) {
   const methods = new Set();
-  const re = /patrolTest\(\s*'(test[A-Za-z0-9_]+)'/gm;
+  const re = /e2ePatrolTest\(\s*'(test[A-Za-z0-9_]+)'/gm;
   for (const sourcePath of testSources) {
     const source = fs.readFileSync(sourcePath, "utf-8");
     for (const match of source.matchAll(re)) {
