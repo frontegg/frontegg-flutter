@@ -92,8 +92,7 @@ class EmbeddedE2ETestCase {
   Future<void> loginWithPassword(PatrolIntegrationTester $) async {
     await waitForLoginPage($);
     await tapSemantics($, 'E2EEmbeddedPasswordButton');
-    await Future.delayed(const Duration(seconds: 2));
-    await tapWebButtonIfPresent($, 'Sign in', timeout: const Duration(seconds: 55));
+    await waitForUserEmail($, 'test@frontegg.com', timeout: const Duration(seconds: 45));
   }
 
   Future<void> tapLogout(PatrolIntegrationTester $) async {
