@@ -6,16 +6,17 @@ on:
       - master
 jobs:
   build:
-    runs-on: 'macos-latest-large'
+    # Standard runner avoids macos-latest-large, which requires higher org
+    # spending limits and fails fast when billing / quota is exceeded.
+    runs-on: macos-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v5
 
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          architecture: x64
-          flutter-version: 3.41.0
+          channel: stable
 
       - name: Enable Swift Package Manager (SPM)
         run: flutter config --enable-swift-package-manager
