@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:frontegg_flutter_embedded_example/e2e_test_mode.dart';
@@ -29,7 +28,6 @@ class EmbeddedE2ETestCase {
     bool forceNetworkPathOffline = false,
     bool? enableOfflineMode,
   }) async {
-    debugPrint('E2E launchApp: calling initializeForE2E baseUrl=${mock.urlRoot}');
     await E2ETestMode.initializeForE2E(
       baseUrl: mock.urlRoot,
       clientId: mock.clientId,
@@ -37,31 +35,31 @@ class EmbeddedE2ETestCase {
       forceNetworkPathOffline: forceNetworkPathOffline,
       enableOfflineMode: enableOfflineMode,
     );
-    debugPrint('E2E launchApp: initializeForE2E returned');
 
     await $.pumpWidget(const MyApp());
-    debugPrint('E2E launchApp: pumpWidget done');
 
     // Poll until the SDK finishes initializing and the widget tree updates.
     // The Frontegg SDK has background timers that prevent pumpAndSettle from
     // ever completing, so we pump in a loop and check for the expected UI.
-    final deadline = DateTime.now().add(const Duration(seconds: 20));
+    final deadline = DateTime.now().add(const Duration(seconds: 25));
     var settled = false;
     while (DateTime.now().isBefore(deadline)) {
       await $.pump(const Duration(milliseconds: 500));
       final hasLogin = find.bySemanticsLabel('LoginPageRoot').evaluate().isNotEmpty;
       final hasUser = find.bySemanticsLabel('UserPageRoot').evaluate().isNotEmpty;
       if (hasLogin || hasUser) {
-        debugPrint('E2E launchApp: UI ready (login=$hasLogin user=$hasUser)');
         settled = true;
         break;
       }
-      final hasProgress = find.byType(CircularProgressIndicator).evaluate().isNotEmpty;
-      final hasSizedBox = !hasLogin && !hasUser && !hasProgress;
-      debugPrint('E2E launchApp: waiting... progress=$hasProgress sizedBox=$hasSizedBox');
     }
     if (!settled) {
-      debugPrint('E2E launchApp: WARNING — UI never reached LoginPageRoot or UserPageRoot within 20s');
+      final hasProgress = find.byType(CircularProgressIndicator).evaluate().isNotEmpty;
+      throw AssertionError(
+        'launchApp: UI stuck after 25s — '
+        'CircularProgressIndicator=$hasProgress, '
+        'LoginPageRoot=false, UserPageRoot=false, '
+        'baseUrl=${mock.urlRoot}',
+      );
     }
   }
 
