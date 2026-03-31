@@ -53,13 +53,14 @@ class EmbeddedE2ETestCase {
     await $.pump();
 
     // Poll until the SDK finishes initializing and the widget tree updates.
-    // Uses Future.delayed instead of pump(Duration) because pump() can hang
-    // when the native SDK presents a modal webview (TestAsyncUtils.guard
-    // deadlock). LiveTestWidgetsFlutterBinding processes frames automatically.
-    final deadline = DateTime.now().add(const Duration(seconds: 25));
+    // Future.delayed alone does not advance the test binding; bare pump() applies
+    // one frame (safe during cold launch). Avoid pump(Duration), which can stall
+    // when a modal webview is presented later in the flow.
+    final deadline = DateTime.now().add(const Duration(seconds: 30));
     var settled = false;
     while (DateTime.now().isBefore(deadline)) {
       await Future.delayed(const Duration(milliseconds: 300));
+      await $.pump();
       if (_semFinder('LoginPageRoot').evaluate().isNotEmpty ||
           _semFinder('UserPageRoot').evaluate().isNotEmpty) {
         settled = true;
@@ -68,7 +69,7 @@ class EmbeddedE2ETestCase {
     }
     if (!settled) {
       throw AssertionError(
-        'launchApp: UI not ready after 25s — baseUrl=${mock.urlRoot}',
+        'launchApp: UI not ready after 30s — baseUrl=${mock.urlRoot}',
       );
     }
   }
@@ -87,8 +88,10 @@ class EmbeddedE2ETestCase {
     final finder = _semFinder(label).first;
     await $.tester.ensureVisible(finder);
     await Future.delayed(const Duration(milliseconds: 300));
+    await $.pump();
     await $.tester.tap(finder);
     await Future.delayed(const Duration(milliseconds: 500));
+    await $.pump();
   }
 
   Future<void> loginWithPassword(PatrolIntegrationTester $) async {
@@ -127,6 +130,7 @@ class EmbeddedE2ETestCase {
     final deadline = DateTime.now().add(timeout);
     while (DateTime.now().isBefore(deadline)) {
       await Future.delayed(const Duration(milliseconds: 350));
+      await $.pump();
       try {
         final v = await accessTokenVersion($, timeout: const Duration(seconds: 2));
         if (v != from) return v;
@@ -139,6 +143,7 @@ class EmbeddedE2ETestCase {
     final deadline = DateTime.now().add(timeout);
     while (DateTime.now().isBefore(deadline)) {
       await Future.delayed(const Duration(milliseconds: 250));
+      await $.pump();
       final found = find.textContaining(fragment).evaluate().isNotEmpty;
       if (found) return true;
     }
@@ -153,6 +158,7 @@ class EmbeddedE2ETestCase {
     final deadline = DateTime.now().add(timeout);
     while (DateTime.now().isBefore(deadline)) {
       await Future.delayed(const Duration(milliseconds: 250));
+      await $.pump();
       if (_semFinder(label).evaluate().isNotEmpty) return;
     }
     throw AssertionError('Timeout waiting for semantics label=$label');
@@ -162,6 +168,7 @@ class EmbeddedE2ETestCase {
     final deadline = DateTime.now().add(timeout);
     while (DateTime.now().isBefore(deadline)) {
       await Future.delayed(const Duration(milliseconds: 250));
+      await $.pump();
       if (find.text(text).evaluate().isNotEmpty) return;
     }
     throw AssertionError('Timeout waiting for text=$text');
