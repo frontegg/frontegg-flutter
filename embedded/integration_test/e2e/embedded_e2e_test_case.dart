@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:frontegg_flutter/frontegg_flutter.dart';
 import 'package:frontegg_flutter_embedded_example/e2e_test_mode.dart';
 import 'package:frontegg_flutter_embedded_example/main.dart';
 import 'package:patrol/patrol.dart';
@@ -41,10 +42,15 @@ class EmbeddedE2ETestCase {
     // Poll until the SDK finishes initializing and the widget tree updates.
     // The Frontegg SDK has background timers that prevent pumpAndSettle from
     // ever completing, so we pump in a loop and check for the expected UI.
+    //
+    // We use pump() (no duration) to explicitly request a frame from the
+    // LiveTestWidgetsFlutterBinding, then Future.delayed for async operations.
+    // pump(Duration) alone only calls Future.delayed without processing frames.
     final deadline = DateTime.now().add(const Duration(seconds: 25));
     var settled = false;
     while (DateTime.now().isBefore(deadline)) {
-      await $.pump(const Duration(milliseconds: 500));
+      await $.pump(const Duration(milliseconds: 250));
+      await $.pump(); // explicitly process pending frame
       final hasLogin = find.bySemanticsLabel('LoginPageRoot').evaluate().isNotEmpty;
       final hasUser = find.bySemanticsLabel('UserPageRoot').evaluate().isNotEmpty;
       if (hasLogin || hasUser) {
@@ -54,10 +60,36 @@ class EmbeddedE2ETestCase {
     }
     if (!settled) {
       final hasProgress = find.byType(CircularProgressIndicator).evaluate().isNotEmpty;
+      final hasWelcome = find.text('Welcome!').evaluate().isNotEmpty;
+      final scaffoldCount = find.byType(Scaffold).evaluate().length;
+
+      String stateStr = 'unknown';
+      try {
+        final els = find.byType(FronteggProvider).evaluate();
+        if (els.isNotEmpty) {
+          final p = els.first.widget as FronteggProvider;
+          final s = p.value.currentState;
+          stateStr = 'init=${s.initializing},auth=${s.isAuthenticated},'
+              'load=${s.isLoading},showLoader=${s.showLoader}';
+        } else {
+          stateStr = 'no-provider';
+        }
+      } catch (e) {
+        stateStr = 'err:$e';
+      }
+
+      final hasSemLabel = find
+          .byWidgetPredicate((w) =>
+              w is Semantics && w.properties.label == 'LoginPageRoot')
+          .evaluate()
+          .isNotEmpty;
+
       throw AssertionError(
         'launchApp: UI stuck after 25s — '
-        'CircularProgressIndicator=$hasProgress, '
-        'LoginPageRoot=false, UserPageRoot=false, '
+        'CPI=$hasProgress, '
+        'welcomeText=$hasWelcome, scaffolds=$scaffoldCount, '
+        'semanticsWidget=$hasSemLabel, '
+        'state=$stateStr, '
         'baseUrl=${mock.urlRoot}',
       );
     }
