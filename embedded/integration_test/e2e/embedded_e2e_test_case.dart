@@ -90,8 +90,9 @@ class EmbeddedE2ETestCase {
     await Future.delayed(const Duration(milliseconds: 300));
     await $.pump();
     await $.tester.tap(finder);
+    // Do not pump() after tap: embedded login can present a native webview
+    // immediately; WidgetTester.pump then blocks and never returns, so job hits CI timeout.
     await Future.delayed(const Duration(milliseconds: 500));
-    await $.pump();
   }
 
   Future<void> loginWithPassword(PatrolIntegrationTester $) async {
@@ -130,7 +131,6 @@ class EmbeddedE2ETestCase {
     final deadline = DateTime.now().add(timeout);
     while (DateTime.now().isBefore(deadline)) {
       await Future.delayed(const Duration(milliseconds: 350));
-      await $.pump();
       try {
         final v = await accessTokenVersion($, timeout: const Duration(seconds: 2));
         if (v != from) return v;
@@ -143,7 +143,6 @@ class EmbeddedE2ETestCase {
     final deadline = DateTime.now().add(timeout);
     while (DateTime.now().isBefore(deadline)) {
       await Future.delayed(const Duration(milliseconds: 250));
-      await $.pump();
       final found = find.textContaining(fragment).evaluate().isNotEmpty;
       if (found) return true;
     }
@@ -168,7 +167,6 @@ class EmbeddedE2ETestCase {
     final deadline = DateTime.now().add(timeout);
     while (DateTime.now().isBefore(deadline)) {
       await Future.delayed(const Duration(milliseconds: 250));
-      await $.pump();
       if (find.text(text).evaluate().isNotEmpty) return;
     }
     throw AssertionError('Timeout waiting for text=$text');
