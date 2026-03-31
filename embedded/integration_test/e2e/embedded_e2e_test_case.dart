@@ -82,7 +82,10 @@ class EmbeddedE2ETestCase {
 
   Future<void> tapSemantics(PatrolIntegrationTester $, String label, {Duration timeout = const Duration(seconds: 10)}) async {
     await waitForSemantics($, label, timeout: timeout);
-    await $.tap(_semFinder(label).first);
+    final finder = _semFinder(label).first;
+    await $.tester.ensureVisible(finder);
+    await $.pump(const Duration(milliseconds: 300));
+    await $.tester.tap(finder);
     await $.pump(const Duration(milliseconds: 500));
   }
 
