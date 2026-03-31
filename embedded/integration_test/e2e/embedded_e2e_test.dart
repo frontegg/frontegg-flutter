@@ -1,7 +1,13 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:patrol/patrol.dart';
 
 import 'embedded_e2e_test_case.dart';
+
+Finder _semFinder(String label) => find.byWidgetPredicate(
+      (w) => w is Semantics && w.properties.label == label,
+      description: 'Semantics(label: "$label")',
+    );
 
 const _e2eTestFilter = String.fromEnvironment('E2E_TEST_FILTER');
 
@@ -120,7 +126,7 @@ void main() {
     await tc.waitForLoginPage($);
     await Future.delayed(const Duration(milliseconds: 2100));
     expect(
-      find.bySemanticsLabel('NoConnectionPageRoot').evaluate().isEmpty,
+      _semFinder('NoConnectionPageRoot').evaluate().isEmpty,
       isTrue,
       reason: 'Unexpected NoConnection overlay',
     );
@@ -148,7 +154,7 @@ void main() {
     await tc.waitForSemantics($, 'OfflineModeBadge', timeout: const Duration(seconds: 10));
     expect(await tc.accessTokenVersion($), equals(initialVersion));
     expect(
-      find.bySemanticsLabel('RetryConnectionButton').evaluate().isEmpty,
+      _semFinder('RetryConnectionButton').evaluate().isEmpty,
       isTrue,
       reason: 'Did not expect Retry button',
     );
