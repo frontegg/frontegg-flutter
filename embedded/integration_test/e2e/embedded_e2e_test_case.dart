@@ -1,11 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:frontegg_flutter/frontegg_flutter.dart';
 import 'package:frontegg_flutter_embedded_example/e2e_test_mode.dart';
 import 'package:frontegg_flutter_embedded_example/main.dart';
 import 'package:patrol/patrol.dart';
 
 import 'local_mock_auth_server.dart';
+
+/// Finds a [Semantics] widget whose [SemanticsProperties.label] equals [label].
+///
+/// Unlike [find.bySemanticsLabel], this does NOT rely on the compiled semantics
+/// tree (RenderObject.debugSemantics), which may be null when the
+/// sendSemanticsUpdate frame phase has not yet completed — a common situation
+/// in [LiveTestWidgetsFlutterBinding] (integration tests).
+Finder _semFinder(String label) {
+  return find.byWidgetPredicate(
+    (w) => w is Semantics && w.properties.label == label,
+    description: 'Semantics(label: "$label")',
+  );
+}
 
 /// Base harness for embedded mock-server E2E tests (Swift/Kotlin parity).
 ///
@@ -42,55 +54,19 @@ class EmbeddedE2ETestCase {
     // Poll until the SDK finishes initializing and the widget tree updates.
     // The Frontegg SDK has background timers that prevent pumpAndSettle from
     // ever completing, so we pump in a loop and check for the expected UI.
-    //
-    // We use pump() (no duration) to explicitly request a frame from the
-    // LiveTestWidgetsFlutterBinding, then Future.delayed for async operations.
-    // pump(Duration) alone only calls Future.delayed without processing frames.
     final deadline = DateTime.now().add(const Duration(seconds: 25));
     var settled = false;
     while (DateTime.now().isBefore(deadline)) {
-      await $.pump(const Duration(milliseconds: 250));
-      await $.pump(); // explicitly process pending frame
-      final hasLogin = find.bySemanticsLabel('LoginPageRoot').evaluate().isNotEmpty;
-      final hasUser = find.bySemanticsLabel('UserPageRoot').evaluate().isNotEmpty;
-      if (hasLogin || hasUser) {
+      await $.pump(const Duration(milliseconds: 300));
+      if (_semFinder('LoginPageRoot').evaluate().isNotEmpty ||
+          _semFinder('UserPageRoot').evaluate().isNotEmpty) {
         settled = true;
         break;
       }
     }
     if (!settled) {
-      final hasProgress = find.byType(CircularProgressIndicator).evaluate().isNotEmpty;
-      final hasWelcome = find.text('Welcome!').evaluate().isNotEmpty;
-      final scaffoldCount = find.byType(Scaffold).evaluate().length;
-
-      String stateStr = 'unknown';
-      try {
-        final els = find.byType(FronteggProvider).evaluate();
-        if (els.isNotEmpty) {
-          final p = els.first.widget as FronteggProvider;
-          final s = p.value.currentState;
-          stateStr = 'init=${s.initializing},auth=${s.isAuthenticated},'
-              'load=${s.isLoading},showLoader=${s.showLoader}';
-        } else {
-          stateStr = 'no-provider';
-        }
-      } catch (e) {
-        stateStr = 'err:$e';
-      }
-
-      final hasSemLabel = find
-          .byWidgetPredicate((w) =>
-              w is Semantics && w.properties.label == 'LoginPageRoot')
-          .evaluate()
-          .isNotEmpty;
-
       throw AssertionError(
-        'launchApp: UI stuck after 25s — '
-        'CPI=$hasProgress, '
-        'welcomeText=$hasWelcome, scaffolds=$scaffoldCount, '
-        'semanticsWidget=$hasSemLabel, '
-        'state=$stateStr, '
-        'baseUrl=${mock.urlRoot}',
+        'launchApp: UI not ready after 25s — baseUrl=${mock.urlRoot}',
       );
     }
   }
@@ -106,8 +82,7 @@ class EmbeddedE2ETestCase {
 
   Future<void> tapSemantics(PatrolIntegrationTester $, String label, {Duration timeout = const Duration(seconds: 10)}) async {
     await waitForSemantics($, label, timeout: timeout);
-    final finder = find.bySemanticsLabel(label);
-    await $.tap(finder.first);
+    await $.tap(_semFinder(label).first);
     await $.pump(const Duration(milliseconds: 500));
   }
 
@@ -129,10 +104,13 @@ class EmbeddedE2ETestCase {
 
   Future<int> accessTokenVersion(PatrolIntegrationTester $, {Duration timeout = const Duration(seconds: 10)}) async {
     await waitForSemantics($, 'AccessTokenVersionValue', timeout: timeout);
-    final widget = find.bySemanticsLabel('AccessTokenVersionValue');
-    final textWidget = widget.evaluate().first.widget;
-    if (textWidget is Text) {
-      return int.tryParse(textWidget.data ?? '0') ?? 0;
+    final sem = _semFinder('AccessTokenVersionValue').evaluate().first;
+    final textFinder = find.descendant(of: find.byWidget(sem.widget), matching: find.byType(Text));
+    if (textFinder.evaluate().isNotEmpty) {
+      final textWidget = textFinder.evaluate().first.widget;
+      if (textWidget is Text) {
+        return int.tryParse(textWidget.data ?? '0') ?? 0;
+      }
     }
     return 0;
   }
@@ -171,7 +149,7 @@ class EmbeddedE2ETestCase {
     final deadline = DateTime.now().add(timeout);
     while (DateTime.now().isBefore(deadline)) {
       await $.pump(const Duration(milliseconds: 250));
-      if (find.bySemanticsLabel(label).evaluate().isNotEmpty) return;
+      if (_semFinder(label).evaluate().isNotEmpty) return;
     }
     throw AssertionError('Timeout waiting for semantics label=$label');
   }
