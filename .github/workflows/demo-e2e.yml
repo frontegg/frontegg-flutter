@@ -31,15 +31,15 @@ jobs:
 
   embedded-e2e-android:
     runs-on: ubuntu-latest
-    # Shards run up to 4 heavy tests + PATROL_MAX_RETRIES=2 + ~6m APK build + emulator boot
+    # ~2 tests/shard + ~6m APK build + emulator boot; avoid PATROL_MAX_RETRIES>1 (doubles wall time)
     timeout-minutes: 90
     needs: matrix
     strategy:
       fail-fast: false
       matrix: ${{ fromJson(needs.matrix.outputs.matrix) }}
     env:
-      # Transient adb / emulator flakes (e.g. exit 224): retry in run_embedded_e2e_shard.sh
-      PATROL_MAX_RETRIES: "2"
+      # Retries double runtime and often hit the job timeout while the first run is stuck.
+      PATROL_MAX_RETRIES: "1"
     steps:
       - uses: actions/checkout@v5
 
@@ -109,7 +109,7 @@ jobs:
       fail-fast: false
       matrix: ${{ fromJson(needs.matrix.outputs.matrix) }}
     env:
-      PATROL_MAX_RETRIES: "2"
+      PATROL_MAX_RETRIES: "1"
     steps:
       - uses: actions/checkout@v5
 
