@@ -78,8 +78,21 @@ class EmbeddedE2ETestCase {
     await waitForSemantics($, 'LoginPageRoot', timeout: timeout);
   }
 
-  Future<void> waitForUserEmail(PatrolIntegrationTester $, String email, {Duration timeout = const Duration(seconds: 30)}) async {
-    await waitForSemantics($, 'UserPageRoot', timeout: timeout);
+  /// When [awaitingUserPageAfterEmbeddedWebView] is true, skips [WidgetTester.pump]
+  /// while waiting for [UserPageRoot] — pump can deadlock while a native embedded
+  /// WebView is modal. Use false for in-app flows (e.g. [FronteggFlutter.requestAuthorize]).
+  Future<void> waitForUserEmail(
+    PatrolIntegrationTester $,
+    String email, {
+    Duration timeout = const Duration(seconds: 30),
+    bool awaitingUserPageAfterEmbeddedWebView = false,
+  }) async {
+    await waitForSemantics(
+      $,
+      'UserPageRoot',
+      timeout: timeout,
+      pumpFrame: !awaitingUserPageAfterEmbeddedWebView,
+    );
     await waitForText($, email, timeout: timeout);
   }
 
@@ -98,7 +111,12 @@ class EmbeddedE2ETestCase {
   Future<void> loginWithPassword(PatrolIntegrationTester $) async {
     await waitForLoginPage($);
     await tapSemantics($, 'E2EEmbeddedPasswordButton');
-    await waitForUserEmail($, 'test@frontegg.com', timeout: const Duration(seconds: 45));
+    await waitForUserEmail(
+      $,
+      'test@frontegg.com',
+      timeout: const Duration(seconds: 45),
+      awaitingUserPageAfterEmbeddedWebView: true,
+    );
   }
 
   Future<void> tapLogout(PatrolIntegrationTester $) async {
@@ -143,6 +161,7 @@ class EmbeddedE2ETestCase {
     final deadline = DateTime.now().add(timeout);
     while (DateTime.now().isBefore(deadline)) {
       await Future.delayed(const Duration(milliseconds: 250));
+      // No pump(): same embedded WebView / Custom Tab deadlock as UserPageRoot wait.
       final found = find.textContaining(fragment).evaluate().isNotEmpty;
       if (found) return true;
     }
@@ -153,12 +172,16 @@ class EmbeddedE2ETestCase {
     await Future.delayed(Duration(seconds: seconds));
   }
 
-  Future<void> waitForSemantics(PatrolIntegrationTester $, String label, {Duration timeout = const Duration(seconds: 20)}) async {
+  Future<void> waitForSemantics(
+    PatrolIntegrationTester $,
+    String label, {
+    Duration timeout = const Duration(seconds: 20),
+    bool pumpFrame = true,
+  }) async {
     final deadline = DateTime.now().add(timeout);
     while (DateTime.now().isBefore(deadline)) {
       await Future.delayed(const Duration(milliseconds: 250));
-      // Never pump() here: native embedded WebView is modal and WidgetTester.pump
-      // can block forever, so this loop never advances to the deadline → CI timeout.
+      if (pumpFrame) await $.pump();
       if (_semFinder(label).evaluate().isNotEmpty) return;
     }
     throw AssertionError('Timeout waiting for semantics label=$label');
@@ -168,6 +191,7 @@ class EmbeddedE2ETestCase {
     final deadline = DateTime.now().add(timeout);
     while (DateTime.now().isBefore(deadline)) {
       await Future.delayed(const Duration(milliseconds: 250));
+      await $.pump();
       if (find.text(text).evaluate().isNotEmpty) return;
     }
     throw AssertionError('Timeout waiting for text=$text');
