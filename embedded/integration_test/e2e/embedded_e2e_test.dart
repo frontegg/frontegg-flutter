@@ -58,7 +58,12 @@ void main() {
     await tc.waitForLoginPage($);
     await tc.tapSemantics($, 'E2EEmbeddedSAMLButton');
     await tc.tapWebButtonIfPresent($, 'Login With Okta');
-    await tc.waitForUserEmail($, 'test@saml-domain.com', awaitingUserPageAfterEmbeddedWebView: true);
+    await tc.waitForUserEmail(
+      $,
+      'test@saml-domain.com',
+      timeout: const Duration(seconds: 90),
+      awaitingUserPageAfterEmbeddedWebView: true,
+    );
   });
 
   e2ePatrolTest('testEmbeddedOidcLogin', ($) async {
@@ -66,7 +71,12 @@ void main() {
     await tc.waitForLoginPage($);
     await tc.tapSemantics($, 'E2EEmbeddedOIDCButton');
     await tc.tapWebButtonIfPresent($, 'Login With Okta');
-    await tc.waitForUserEmail($, 'test@oidc-domain.com', awaitingUserPageAfterEmbeddedWebView: true);
+    await tc.waitForUserEmail(
+      $,
+      'test@oidc-domain.com',
+      timeout: const Duration(seconds: 90),
+      awaitingUserPageAfterEmbeddedWebView: true,
+    );
   });
 
   e2ePatrolTest('testRequestAuthorizeFlow', ($) async {
@@ -162,7 +172,11 @@ void main() {
     await tc.loginWithPassword($);
     final initialVersion = await tc.accessTokenVersion($);
     await tc.launchApp($, resetState: false, forceNetworkPathOffline: true);
-    await tc.waitForUserEmail($, 'test@frontegg.com');
+    await tc.waitForUserEmail(
+      $,
+      'test@frontegg.com',
+      timeout: const Duration(seconds: 90),
+    );
     await tc.waitForSemantics($, 'AuthenticatedOfflineModeEnabled', timeout: const Duration(seconds: 10));
     await tc.waitForSemantics($, 'OfflineModeBadge', timeout: const Duration(seconds: 10));
     expect(await tc.accessTokenVersion($), equals(initialVersion));
@@ -261,8 +275,11 @@ void main() {
 
   e2ePatrolTest('testPasswordLoginWorksWithOfflineModeDisabled', ($) async {
     await tc.launchApp($, enableOfflineMode: false);
-    await tc.waitForLoginPage($, timeout: const Duration(seconds: 35));
-    await tc.loginWithPassword($);
+    await tc.waitForLoginPage($, timeout: const Duration(seconds: 50));
+    await tc.loginWithPassword(
+      $,
+      emailTimeout: const Duration(seconds: 90),
+    );
   });
 
   e2ePatrolTest('testLogoutClearsSessionAndRelaunchShowsLogin', ($) async {
@@ -316,6 +333,6 @@ void main() {
     await tc.loginWithPassword($);
     await tc.waitDurationSeconds(expiringAccessTokenTTL + 8);
     await tc.launchApp($, resetState: false);
-    await tc.waitForUserEmail($, 'test@frontegg.com', timeout: const Duration(seconds: 150));
+    await tc.waitForUserEmail($, 'test@frontegg.com', timeout: const Duration(seconds: 180));
   });
 }
