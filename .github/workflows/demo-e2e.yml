@@ -100,12 +100,14 @@ jobs:
           mkdir -p e2e-artifacts
           find . -name "TEST-*.xml" -exec cp -f {} e2e-artifacts/ \; 2>/dev/null || true
 
-      - name: Publish JUnit report
+      # Annotate only: do not create a second GitHub Check per shard (the matrix job
+      # already reports pass/fail; duplicate check_name was cluttering the PR checks list).
+      - name: JUnit report (annotations + job summary)
         uses: mikepenz/action-junit-report@v5
         if: always()
         with:
           report_paths: e2e-artifacts/*.xml
-          check_name: Flutter E2E (shard ${{ matrix['shard-index'] }})
+          annotate_only: true
 
       - uses: actions/upload-artifact@v6
         if: always()
