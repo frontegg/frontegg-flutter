@@ -4,9 +4,9 @@
 const fs = require("node:fs");
 const path = require("node:path");
 
-// Keep shards small so one Patrol run + emulator/Xcode stays under CI timeouts
-// (many scenarios stack long native waits + 240s token polls).
-const MAX_TESTS_PER_SHARD = 2;
+// One scenario per shard: pairs of heavy tests (login + 240s token waits) still
+// exceeded 90m; isolating avoids a single stuck/hung test blocking a whole pair.
+const MAX_TESTS_PER_SHARD = 1;
 
 const ROOT = path.resolve(__dirname, "../..");
 const CONFIG = {

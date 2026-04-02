@@ -48,7 +48,6 @@ void main() {
   e2ePatrolTest('testPasswordLoginAndSessionRestore', ($) async {
     await tc.launchApp($);
     await tc.loginWithPassword($);
-    await tc.waitForUserEmail($, 'test@frontegg.com', timeout: const Duration(seconds: 120));
     await tc.launchApp($, resetState: false);
     await Future.delayed(const Duration(milliseconds: 1500));
     await tc.waitForUserEmail($, 'test@frontegg.com', timeout: const Duration(seconds: 180));

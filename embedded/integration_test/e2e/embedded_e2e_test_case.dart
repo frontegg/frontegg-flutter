@@ -157,7 +157,8 @@ class EmbeddedE2ETestCase {
     final deadline = DateTime.now().add(timeout);
     while (DateTime.now().isBefore(deadline)) {
       await Future.delayed(const Duration(milliseconds: 250));
-      await $.pump();
+      // Never pump() here: native embedded WebView is modal and WidgetTester.pump
+      // can block forever, so this loop never advances to the deadline → CI timeout.
       if (_semFinder(label).evaluate().isNotEmpty) return;
     }
     throw AssertionError('Timeout waiting for semantics label=$label');
