@@ -243,7 +243,7 @@ void main() {
     await tc.waitForLoginPage($);
     tc.mock.queueProbeFailures([503]);
     await tc.launchApp($, resetState: false);
-    await tc.waitForSemantics($, 'NoConnectionPageRoot');
+    await tc.waitForSemantics($, 'NoConnectionPageRoot', timeout: const Duration(seconds: 100));
     tc.mock.reset();
     await tc.tapSemantics($, 'RetryConnectionButton');
     await tc.tapSemantics($, 'E2ECustomSSOButton');

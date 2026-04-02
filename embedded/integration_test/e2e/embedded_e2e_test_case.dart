@@ -93,7 +93,12 @@ class EmbeddedE2ETestCase {
       timeout: timeout,
       pumpFrame: !awaitingUserPageAfterEmbeddedWebView,
     );
-    await waitForText($, email, timeout: timeout);
+    await waitForText(
+      $,
+      email,
+      timeout: timeout,
+      pumpFrame: !awaitingUserPageAfterEmbeddedWebView,
+    );
   }
 
   Future<void> tapSemantics(PatrolIntegrationTester $, String label, {Duration timeout = const Duration(seconds: 10)}) async {
@@ -190,11 +195,18 @@ class EmbeddedE2ETestCase {
     throw AssertionError('Timeout waiting for semantics label=$label');
   }
 
-  Future<void> waitForText(PatrolIntegrationTester $, String text, {Duration timeout = const Duration(seconds: 20)}) async {
+  /// When [pumpFrame] is false, only real-time delays run — avoids deadlocks when
+  /// [WidgetTester.pump] would block while a native embedded WebView / Custom Tab is up.
+  Future<void> waitForText(
+    PatrolIntegrationTester $,
+    String text, {
+    Duration timeout = const Duration(seconds: 20),
+    bool pumpFrame = true,
+  }) async {
     final deadline = DateTime.now().add(timeout);
     while (DateTime.now().isBefore(deadline)) {
       await Future.delayed(const Duration(milliseconds: 250));
-      await $.pump();
+      if (pumpFrame) await $.pump();
       if (find.text(text).evaluate().isNotEmpty) return;
     }
     throw AssertionError('Timeout waiting for text=$text');

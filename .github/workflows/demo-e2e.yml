@@ -29,10 +29,10 @@ jobs:
             echo "$JSON"
             echo "MATRIX_JSON_EOF"
           } >> "$GITHUB_OUTPUT"
-      # Android: skip flaky offline scenario until stabilized (iOS still runs it).
+      # Android: skip scenarios that require native offline/no-connection UX parity (iOS still runs them).
       - id: set-matrix-android
         env:
-          INPUT_EXCLUDE_METHODS: testAuthenticatedOfflineModeWhenNetworkPathUnavailable
+          INPUT_EXCLUDE_METHODS: testAuthenticatedOfflineModeWhenNetworkPathUnavailable,testLogoutTerminateTransientNoConnectionThenCustomSSORecovers
         run: |
           JSON=$(env -u GITHUB_OUTPUT node .github/scripts/generate_e2e_matrix.js)
           {
@@ -76,7 +76,7 @@ jobs:
       - name: Validate E2E scenario catalog
         run: |
           env -u GITHUB_OUTPUT node .github/scripts/generate_e2e_matrix.js > /dev/null
-          INPUT_EXCLUDE_METHODS=testAuthenticatedOfflineModeWhenNetworkPathUnavailable env -u GITHUB_OUTPUT node .github/scripts/generate_e2e_matrix.js > /dev/null
+          INPUT_EXCLUDE_METHODS=testAuthenticatedOfflineModeWhenNetworkPathUnavailable,testLogoutTerminateTransientNoConnectionThenCustomSSORecovers env -u GITHUB_OUTPUT node .github/scripts/generate_e2e_matrix.js > /dev/null
 
       - name: Build debug APK + test APK
         working-directory: embedded

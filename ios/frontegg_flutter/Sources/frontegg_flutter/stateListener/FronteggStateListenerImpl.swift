@@ -20,12 +20,13 @@ class FronteggStateListenerImpl: FronteggStateListener {
     func subscribe() {
         let auth = fronteggApp.auth
         var stateChange: AnyPublisher<Void, Never> {
-            return Publishers.Merge5 (
+            return Publishers.MergeMany(
                 auth.$refreshingToken.map { _ in },
                 auth.$isAuthenticated.map {_ in },
                 auth.$isLoading.map {_ in },
                 auth.$initializing.map {_ in },
-                auth.$showLoader.map {_ in }
+                auth.$showLoader.map {_ in },
+                auth.$isOfflineMode.map { _ in },
             )
             .eraseToAnyPublisher()
         }
@@ -70,7 +71,8 @@ class FronteggStateListenerImpl: FronteggStateListener {
             initializing: NSNumber(value: auth.initializing),
             showLoader: NSNumber(value: auth.showLoader),
             appLink: NSNumber(value: auth.appLink),
-            refreshingToken: NSNumber(value: auth.refreshingToken)
+            refreshingToken: NSNumber(value: auth.refreshingToken),
+            isOfflineMode: NSNumber(value: auth.isOfflineMode)
         )
         
         self.sendState(state: state)

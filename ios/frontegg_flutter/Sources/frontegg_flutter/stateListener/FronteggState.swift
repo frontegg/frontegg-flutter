@@ -10,6 +10,7 @@ struct FronteggState {
     var showLoader: NSNumber
     var appLink: NSNumber
     var refreshingToken: NSNumber
+    var isOfflineMode: NSNumber
     
     public func toMap() -> Dictionary<String, Any?> {
         return [
@@ -22,6 +23,7 @@ struct FronteggState {
             "showLoader": showLoader,
             "appLink": appLink,
             "refreshingToken": refreshingToken,
+            "isOfflineMode": isOfflineMode,
         ]
     }
 }
