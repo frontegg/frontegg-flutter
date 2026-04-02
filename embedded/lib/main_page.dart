@@ -21,7 +21,10 @@ class MainPage extends StatelessWidget {
           late final Widget main;
           if (snapshot.hasData) {
             final state = snapshot.data!;
-            if (state.initializing) {
+            // Match Swift `MyApp`: global loader while `isLoading` — do not show
+            // NoConnection or Login until loading finishes, or cold start can briefly
+            // show NoConnection (isOfflineMode) without LoginPageRoot and break E2E.
+            if (state.initializing || state.isLoading) {
               main = const Center(child: CircularProgressIndicator());
             } else if (state.isAuthenticated && state.user != null) {
               main = Semantics(
@@ -57,7 +60,7 @@ class MainPage extends StatelessWidget {
                   ),
                 ),
               );
-            } else if (!state.isAuthenticated && state.isOfflineMode) {
+            } else if (state.isOfflineMode) {
               main = const NoConnectionPage();
             } else {
               main = Semantics(

@@ -93,12 +93,10 @@ class EmbeddedE2ETestCase {
       timeout: timeout,
       pumpFrame: !awaitingUserPageAfterEmbeddedWebView,
     );
-    await waitForText(
-      $,
-      email,
-      timeout: timeout,
-      pumpFrame: !awaitingUserPageAfterEmbeddedWebView,
-    );
+    // Once UserPageRoot is present, the embedded WebView is gone; pump is needed
+    // so the subtree (e.g. email Text) is built — skipping pump here caused CI timeouts.
+    await Future.delayed(const Duration(milliseconds: 400));
+    await waitForText($, email, timeout: timeout);
   }
 
   Future<void> tapSemantics(PatrolIntegrationTester $, String label, {Duration timeout = const Duration(seconds: 10)}) async {
