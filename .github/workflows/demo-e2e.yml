@@ -121,6 +121,12 @@ jobs:
       - name: Validate E2E scenario catalog
         run: env -u GITHUB_OUTPUT node .github/scripts/generate_e2e_matrix.js > /dev/null
 
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
       - name: Build debug APK + test APK
         working-directory: embedded
         run: patrol build android --target integration_test/e2e/embedded_e2e_test.dart
@@ -133,11 +139,9 @@ jobs:
           api-level: 31
           arch: x86_64
           profile: pixel_6
-          ram-size: 2048M
-          heap-size: 512M
           disable-animations: true
-          emulator-boot-timeout: 900
-          emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim -memory 2048
+          emulator-boot-timeout: 300
+          emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim
           script: bash .github/scripts/run_embedded_e2e_shard.sh
 
       - name: Collect test reports
