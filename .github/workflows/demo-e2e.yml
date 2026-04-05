@@ -42,16 +42,33 @@ jobs:
             echo "$JSON"
             echo "MATRIX_JSON_EOF"
           } >> "$GITHUB_OUTPUT"
-      # Android matrix: skip browser-handoff, google social, and complex offline tests.
-      # Also skip testAuthenticatedOfflineModeWhenNetworkPathUnavailable (iOS-only parity).
+      # Android matrix: the Frontegg Android SDK (like iOS) blocks WebView navigation
+      # to localhost, and the emulator's /etc/hosts is read-only so we cannot add
+      # mock.frontegg.local. Until we find an Android-specific workaround, only run
+      # tests that do NOT require webview login (cold-launch / offline-mode-disabled).
       - id: set-matrix-android
         env:
           INPUT_EXCLUDE_METHODS: >-
+            testPasswordLoginAndSessionRestore,
+            testEmbeddedSamlLogin,
+            testEmbeddedOidcLogin,
+            testRequestAuthorizeFlow,
+            testCustomSSOBrowserHandoff,
+            testDirectSocialBrowserHandoff,
             testEmbeddedGoogleSocialLoginWithSystemWebAuthenticationSession,
             testEmbeddedGoogleSocialLoginOAuthErrorShowsToastAndKeepsLoginOpen,
+            testLogoutTerminateTransientProbeFailureDoesNotBlinkNoConnectionPage,
             testAuthenticatedOfflineModeWhenNetworkPathUnavailable,
+            testExpiredAccessTokenRefreshesOnAuthenticatedRelaunch,
+            testAuthenticatedOfflineModeRecoversToOnlineAndRefreshesToken,
+            testAuthenticatedOfflineModeKeepsUserLoggedInUntilReconnectRefreshesExpiredToken,
             testLogoutTerminateTransientNoConnectionThenCustomSSORecovers,
-            testRequestAuthorizeFlow
+            testOfflineModeDisabledPreservesSessionDuringConnectionLossAndRecovers,
+            testPasswordLoginWorksWithOfflineModeDisabled,
+            testLogoutClearsSessionAndRelaunchShowsLogin,
+            testExpiredRefreshTokenClearsSessionAndShowsLogin,
+            testScheduledTokenRefreshFiresBeforeExpiry,
+            testAuthenticatedRelaunchWithExpiredAccessTokenAndFreshRefreshToken
         run: |
           JSON=$(env -u GITHUB_OUTPUT node .github/scripts/generate_e2e_matrix.js)
           {
@@ -73,9 +90,6 @@ jobs:
       PATROL_MAX_RETRIES: "1"
     steps:
       - uses: actions/checkout@v5
-
-      - name: Map mock.frontegg.local to loopback
-        run: echo "127.0.0.1 mock.frontegg.local" | sudo tee -a /etc/hosts
 
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
@@ -118,13 +132,8 @@ jobs:
           profile: pixel_6
           disable-animations: true
           emulator-boot-timeout: 300
-          emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim -writable-system
-          script: |
-            # Map mock.frontegg.local inside the emulator so the test app can reach the mock server
-            adb root || true
-            adb remount || true
-            adb shell "echo '127.0.0.1 mock.frontegg.local' >> /etc/hosts" || true
-            bash .github/scripts/run_embedded_e2e_shard.sh
+          emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim
+          script: bash .github/scripts/run_embedded_e2e_shard.sh
 
       - name: Collect test reports
         if: always()

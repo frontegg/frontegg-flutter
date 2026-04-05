@@ -6,10 +6,12 @@ import 'dart:io';
 class LocalMockAuthServer {
   static const int defaultPort = 49384;
 
-  /// Non-localhost hostname used so the Frontegg SDK's WebView does not block
-  /// navigation to it.  The CI workflow adds a /etc/hosts entry mapping this
-  /// hostname to 127.0.0.1.  Locally, developers should add the same entry.
-  static const String e2eHostname = 'mock.frontegg.local';
+  /// Non-localhost hostname used on iOS so the Frontegg SDK's WebView does not
+  /// block navigation to it (CustomWebView.swift blocks any URL whose host
+  /// contains "localhost" or "127.0.0.1").
+  /// CI adds a /etc/hosts entry mapping this to 127.0.0.1.
+  /// On Android the SDK does NOT have this block, so we keep 127.0.0.1.
+  static const String _iosHostname = 'mock.frontegg.local';
 
   final String clientId = 'demo-embedded-e2e-client';
   late final HttpServer _server;
@@ -19,7 +21,8 @@ class LocalMockAuthServer {
 
   Future<void> start({int port = defaultPort}) async {
     _server = await HttpServer.bind(InternetAddress.anyIPv4, port);
-    urlRoot = 'http://$e2eHostname:${_server.port}';
+    final host = Platform.isIOS ? _iosHostname : '127.0.0.1';
+    urlRoot = 'http://$host:${_server.port}';
     _server.listen(_handleRequest);
   }
 
