@@ -13,6 +13,10 @@ on:
     branches: [master, main]
   workflow_dispatch:
 
+concurrency:
+  group: demo-e2e-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   matrix:
     runs-on: ubuntu-latest

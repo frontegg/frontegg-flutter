@@ -89,6 +89,9 @@ class LocalMockAuthServer {
 
     _requestLog.add(_LoggedRequest(method: method, path: path));
 
+    // Debug logging for CI: trace mock-server requests to diagnose login flow failures.
+    print('[MockServer] $method $path${request.uri.hasQuery ? '?${request.uri.query}' : ''}');
+
     final queued = _state.dequeue(method: method, path: path);
     if (queued != null) {
       await _sendQueuedResponse(request.response, queued, method);
@@ -162,6 +165,7 @@ class LocalMockAuthServer {
       case 'POST /oauth/logout/token':
         _handleLogout(request.response, headers);
       default:
+        print('[MockServer] ⚠️ 404 Unhandled: $method $path');
         _sendJson(request.response, 404, {'error': 'Unhandled route $method $path'});
     }
   }
@@ -274,7 +278,7 @@ ${_hostedBootstrapScript(true)}''';
     final emailLit = _jsLiteral(email);
     final autoSubmit = prefilledPassword ? '''
 window.addEventListener('load', () => {
-  setTimeout(() => { if (passwordField.value) form.requestSubmit(); }, 0);
+  setTimeout(() => { if (passwordField.value) form.requestSubmit(); }, 350);
 });''' : '';
     final body = '''
 <h1>Password Login</h1>
@@ -618,6 +622,7 @@ button{font-size:16px;padding:14px 18px;border:0;border-radius:12px;background:#
   }
 
   void _sendRedirect(HttpResponse res, String location) {
+    print('[MockServer] 302 → $location');
     res.statusCode = 302;
     res.headers.set('location', location);
     res.close();
@@ -689,6 +694,8 @@ button{font-size:16px;padding:14px 18px;border:0;border-radius:12px;background:#
       'refresh_token': refreshToken,
       'access_token': at,
       'id_token': at,
+      'expires_in': policy.accessTTL,
+      'expires': (DateTime.now().millisecondsSinceEpoch ~/ 1000 + policy.accessTTL).toString(),
     };
   }
 
