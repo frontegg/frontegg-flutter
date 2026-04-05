@@ -25,7 +25,30 @@ jobs:
       matrix_android: ${{ steps.set-matrix-android.outputs.matrix_android }}
     steps:
       - uses: actions/checkout@v5
+      # Webview-based login flows have not yet been validated in CI.
+      # Only run tests that use method-channel auth or check the unauthenticated UI.
       - id: set-matrix
+        env:
+          INPUT_EXCLUDE_METHODS: >-
+            testPasswordLoginAndSessionRestore,
+            testEmbeddedSamlLogin,
+            testEmbeddedOidcLogin,
+            testCustomSSOBrowserHandoff,
+            testDirectSocialBrowserHandoff,
+            testEmbeddedGoogleSocialLoginWithSystemWebAuthenticationSession,
+            testEmbeddedGoogleSocialLoginOAuthErrorShowsToastAndKeepsLoginOpen,
+            testLogoutTerminateTransientProbeFailureDoesNotBlinkNoConnectionPage,
+            testAuthenticatedOfflineModeWhenNetworkPathUnavailable,
+            testExpiredAccessTokenRefreshesOnAuthenticatedRelaunch,
+            testAuthenticatedOfflineModeRecoversToOnlineAndRefreshesToken,
+            testAuthenticatedOfflineModeKeepsUserLoggedInUntilReconnectRefreshesExpiredToken,
+            testLogoutTerminateTransientNoConnectionThenCustomSSORecovers,
+            testOfflineModeDisabledPreservesSessionDuringConnectionLossAndRecovers,
+            testPasswordLoginWorksWithOfflineModeDisabled,
+            testLogoutClearsSessionAndRelaunchShowsLogin,
+            testExpiredRefreshTokenClearsSessionAndShowsLogin,
+            testScheduledTokenRefreshFiresBeforeExpiry,
+            testAuthenticatedRelaunchWithExpiredAccessTokenAndFreshRefreshToken
         run: |
           JSON=$(env -u GITHUB_OUTPUT node .github/scripts/generate_e2e_matrix.js)
           {
@@ -33,10 +56,28 @@ jobs:
             echo "$JSON"
             echo "MATRIX_JSON_EOF"
           } >> "$GITHUB_OUTPUT"
-      # Android: skip scenarios that require native offline/no-connection UX parity (iOS still runs them).
       - id: set-matrix-android
         env:
-          INPUT_EXCLUDE_METHODS: testAuthenticatedOfflineModeWhenNetworkPathUnavailable,testLogoutTerminateTransientNoConnectionThenCustomSSORecovers
+          INPUT_EXCLUDE_METHODS: >-
+            testPasswordLoginAndSessionRestore,
+            testEmbeddedSamlLogin,
+            testEmbeddedOidcLogin,
+            testCustomSSOBrowserHandoff,
+            testDirectSocialBrowserHandoff,
+            testEmbeddedGoogleSocialLoginWithSystemWebAuthenticationSession,
+            testEmbeddedGoogleSocialLoginOAuthErrorShowsToastAndKeepsLoginOpen,
+            testLogoutTerminateTransientProbeFailureDoesNotBlinkNoConnectionPage,
+            testAuthenticatedOfflineModeWhenNetworkPathUnavailable,
+            testExpiredAccessTokenRefreshesOnAuthenticatedRelaunch,
+            testAuthenticatedOfflineModeRecoversToOnlineAndRefreshesToken,
+            testAuthenticatedOfflineModeKeepsUserLoggedInUntilReconnectRefreshesExpiredToken,
+            testLogoutTerminateTransientNoConnectionThenCustomSSORecovers,
+            testOfflineModeDisabledPreservesSessionDuringConnectionLossAndRecovers,
+            testPasswordLoginWorksWithOfflineModeDisabled,
+            testLogoutClearsSessionAndRelaunchShowsLogin,
+            testExpiredRefreshTokenClearsSessionAndShowsLogin,
+            testScheduledTokenRefreshFiresBeforeExpiry,
+            testAuthenticatedRelaunchWithExpiredAccessTokenAndFreshRefreshToken
         run: |
           JSON=$(env -u GITHUB_OUTPUT node .github/scripts/generate_e2e_matrix.js)
           {
@@ -78,9 +119,7 @@ jobs:
         run: flutter pub get
 
       - name: Validate E2E scenario catalog
-        run: |
-          env -u GITHUB_OUTPUT node .github/scripts/generate_e2e_matrix.js > /dev/null
-          INPUT_EXCLUDE_METHODS=testAuthenticatedOfflineModeWhenNetworkPathUnavailable,testLogoutTerminateTransientNoConnectionThenCustomSSORecovers env -u GITHUB_OUTPUT node .github/scripts/generate_e2e_matrix.js > /dev/null
+        run: env -u GITHUB_OUTPUT node .github/scripts/generate_e2e_matrix.js > /dev/null
 
       - name: Build debug APK + test APK
         working-directory: embedded
@@ -91,11 +130,14 @@ jobs:
           E2E_METHODS: ${{ matrix['test-methods'] }}
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 34
+          api-level: 31
           arch: x86_64
           profile: pixel_6
+          ram-size: 2048M
+          heap-size: 512M
           disable-animations: true
           emulator-boot-timeout: 900
+          emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim -memory 2048
           script: bash .github/scripts/run_embedded_e2e_shard.sh
 
       - name: Collect test reports

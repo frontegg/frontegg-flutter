@@ -90,7 +90,7 @@ class LocalMockAuthServer {
     _requestLog.add(_LoggedRequest(method: method, path: path));
 
     // Debug logging for CI: trace mock-server requests to diagnose login flow failures.
-    print('[MockServer] $method $path${request.uri.hasQuery ? '?${request.uri.query}' : ''}');
+    stderr.writeln('[MockServer] $method $path${request.uri.hasQuery ? '?${request.uri.query}' : ''}');
 
     final queued = _state.dequeue(method: method, path: path);
     if (queued != null) {
@@ -165,7 +165,7 @@ class LocalMockAuthServer {
       case 'POST /oauth/logout/token':
         _handleLogout(request.response, headers);
       default:
-        print('[MockServer] ⚠️ 404 Unhandled: $method $path');
+        stderr.writeln('[MockServer] ⚠️ 404 Unhandled: $method $path');
         _sendJson(request.response, 404, {'error': 'Unhandled route $method $path'});
     }
   }
@@ -622,7 +622,7 @@ button{font-size:16px;padding:14px 18px;border:0;border-radius:12px;background:#
   }
 
   void _sendRedirect(HttpResponse res, String location) {
-    print('[MockServer] 302 → $location');
+    stderr.writeln('[MockServer] 302 → $location');
     res.statusCode = 302;
     res.headers.set('location', location);
     res.close();
