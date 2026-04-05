@@ -11,7 +11,7 @@ class LocalMockAuthServer {
   /// contains "localhost" or "127.0.0.1").
   /// CI adds a /etc/hosts entry mapping this to 127.0.0.1.
   /// On Android the SDK does NOT have this block, so we keep 127.0.0.1.
-  static const String _iosHostname = 'mock.frontegg.local';
+  static const String _iosHostname = 'mock-frontegg.test';
 
   final String clientId = 'demo-embedded-e2e-client';
   late final HttpServer _server;

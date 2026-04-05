@@ -27,7 +27,7 @@ jobs:
       - uses: actions/checkout@v5
       # Webview-based login flows have not yet been validated in CI.
       # Only run tests that use method-channel auth or check the unauthenticated UI.
-      # iOS matrix: re-enable login tests to validate mock.frontegg.local fix.
+      # iOS matrix: re-enable login tests to validate mock-frontegg.test fix.
       - id: set-matrix
         env:
           INPUT_EXCLUDE_METHODS: >-
@@ -44,7 +44,7 @@ jobs:
           } >> "$GITHUB_OUTPUT"
       # Android matrix: the Frontegg Android SDK (like iOS) blocks WebView navigation
       # to localhost, and the emulator's /etc/hosts is read-only so we cannot add
-      # mock.frontegg.local. Until we find an Android-specific workaround, only run
+      # mock-frontegg.test. Until we find an Android-specific workaround, only run
       # tests that do NOT require webview login (cold-launch / offline-mode-disabled).
       - id: set-matrix-android
         env:
@@ -170,8 +170,8 @@ jobs:
     steps:
       - uses: actions/checkout@v5
 
-      - name: Map mock.frontegg.local to loopback
-        run: echo "127.0.0.1 mock.frontegg.local" | sudo tee -a /etc/hosts
+      - name: Map mock-frontegg.test to loopback
+        run: echo "127.0.0.1 mock-frontegg.test" | sudo tee -a /etc/hosts
 
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
