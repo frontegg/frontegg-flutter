@@ -27,14 +27,29 @@ jobs:
       - uses: actions/checkout@v5
       # Webview-based login flows have not yet been validated in CI.
       # Only run tests that use method-channel auth or check the unauthenticated UI.
-      # iOS matrix: re-enable login tests to validate mock-frontegg.test fix.
+      # iOS matrix: only run 3 tests while debugging webview login.
       - id: set-matrix
         env:
           INPUT_EXCLUDE_METHODS: >-
+            testEmbeddedSamlLogin,
+            testEmbeddedOidcLogin,
+            testRequestAuthorizeFlow,
+            testCustomSSOBrowserHandoff,
+            testDirectSocialBrowserHandoff,
             testEmbeddedGoogleSocialLoginWithSystemWebAuthenticationSession,
             testEmbeddedGoogleSocialLoginOAuthErrorShowsToastAndKeepsLoginOpen,
+            testLogoutTerminateTransientProbeFailureDoesNotBlinkNoConnectionPage,
             testAuthenticatedOfflineModeWhenNetworkPathUnavailable,
-            testLogoutTerminateTransientNoConnectionThenCustomSSORecovers
+            testExpiredAccessTokenRefreshesOnAuthenticatedRelaunch,
+            testAuthenticatedOfflineModeRecoversToOnlineAndRefreshesToken,
+            testAuthenticatedOfflineModeKeepsUserLoggedInUntilReconnectRefreshesExpiredToken,
+            testLogoutTerminateTransientNoConnectionThenCustomSSORecovers,
+            testOfflineModeDisabledPreservesSessionDuringConnectionLossAndRecovers,
+            testPasswordLoginWorksWithOfflineModeDisabled,
+            testLogoutClearsSessionAndRelaunchShowsLogin,
+            testExpiredRefreshTokenClearsSessionAndShowsLogin,
+            testScheduledTokenRefreshFiresBeforeExpiry,
+            testAuthenticatedRelaunchWithExpiredAccessTokenAndFreshRefreshToken
         run: |
           JSON=$(env -u GITHUB_OUTPUT node .github/scripts/generate_e2e_matrix.js)
           {

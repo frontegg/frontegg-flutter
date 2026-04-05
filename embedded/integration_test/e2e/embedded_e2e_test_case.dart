@@ -190,7 +190,15 @@ class EmbeddedE2ETestCase {
       if (pumpFrame) await $.pump();
       if (_semFinder(label).evaluate().isNotEmpty) return;
     }
-    throw AssertionError('Timeout waiting for semantics label=$label');
+    // Collect diagnostic info about which semantic labels ARE visible.
+    final allSemantics = <String>[];
+    for (final candidate in ['LoginPageRoot', 'UserPageRoot', 'AuthenticatedOfflineRoot', 'NoConnectionPageRoot']) {
+      if (_semFinder(candidate).evaluate().isNotEmpty) allSemantics.add(candidate);
+    }
+    throw AssertionError(
+      'Timeout waiting for semantics label=$label '
+      '(visible: ${allSemantics.isEmpty ? "none" : allSemantics.join(", ")})',
+    );
   }
 
   /// When [pumpFrame] is false, only real-time delays run — avoids deadlocks when
