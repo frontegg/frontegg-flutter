@@ -48,7 +48,8 @@ jobs:
             testLogoutClearsSessionAndRelaunchShowsLogin,
             testExpiredRefreshTokenClearsSessionAndShowsLogin,
             testScheduledTokenRefreshFiresBeforeExpiry,
-            testAuthenticatedRelaunchWithExpiredAccessTokenAndFreshRefreshToken
+            testAuthenticatedRelaunchWithExpiredAccessTokenAndFreshRefreshToken,
+            testRequestAuthorizeFlow
         run: |
           JSON=$(env -u GITHUB_OUTPUT node .github/scripts/generate_e2e_matrix.js)
           {
@@ -77,7 +78,8 @@ jobs:
             testLogoutClearsSessionAndRelaunchShowsLogin,
             testExpiredRefreshTokenClearsSessionAndShowsLogin,
             testScheduledTokenRefreshFiresBeforeExpiry,
-            testAuthenticatedRelaunchWithExpiredAccessTokenAndFreshRefreshToken
+            testAuthenticatedRelaunchWithExpiredAccessTokenAndFreshRefreshToken,
+            testRequestAuthorizeFlow
         run: |
           JSON=$(env -u GITHUB_OUTPUT node .github/scripts/generate_e2e_matrix.js)
           {
