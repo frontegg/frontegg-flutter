@@ -1,8 +1,11 @@
 import UIKit
 import Flutter
 import SwiftUI
+import os.log
 
 import FronteggSwift
+
+private let e2eLog = OSLog(subsystem: "com.frontegg.demo.e2e", category: "E2E")
 
 @main
 @objc class AppDelegate: FlutterAppDelegate {
@@ -15,11 +18,14 @@ import FronteggSwift
         DefaultLoader.customLoaderView = AnyView(Text("Loading..."))
 
         if let controller = window?.rootViewController as? FlutterViewController {
+            os_log("[E2E] Registered e2e channel on window rootVC", log: e2eLog, type: .info)
             let e2eChannel = FlutterMethodChannel(
                 name: "frontegg_e2e",
                 binaryMessenger: controller.binaryMessenger
             )
             e2eChannel.setMethodCallHandler(handleE2EMethodCall)
+        } else {
+            os_log("[E2E] WARNING: window?.rootViewController is nil, e2e channel NOT registered", log: e2eLog, type: .error)
         }
 
         return super.application(application, didFinishLaunchingWithOptions: launchOptions)
@@ -71,10 +77,13 @@ import FronteggSwift
             }
             let resetState = args["resetState"] as? Bool ?? true
             let forceNetworkPathOffline = args["forceNetworkPathOffline"] as? Bool ?? false
+            os_log("[E2E] initializeForE2E: baseUrl=%{public}@, clientId=%{public}@, resetState=%d", log: e2eLog, type: .info, baseUrl, clientId, resetState ? 1 : 0)
             Task { @MainActor in
 #if DEBUG
+                os_log("[E2E] DEBUG block active", log: e2eLog, type: .info)
                 if resetState {
                     await FronteggApp.shared.resetForTesting(baseUrlOverride: baseUrl)
+                    os_log("[E2E] resetForTesting done", log: e2eLog, type: .info)
                 }
                 FronteggApp.shared.configureTestingNetworkPathAvailability(
                     forceNetworkPathOffline ? false : nil
@@ -84,8 +93,11 @@ import FronteggSwift
                 } else if let offline = args["enableOfflineMode"] as? NSNumber {
                     FronteggApp.shared.configureTestingOfflineMode(offline.boolValue)
                 }
+#else
+                os_log("[E2E] DEBUG block NOT active — #if DEBUG is false", log: e2eLog, type: .error)
 #endif
                 FronteggApp.shared.shouldPromptSocialLoginConsent = false
+                os_log("[E2E] calling manualInit embeddedMode=%d", log: e2eLog, type: .info, FronteggApp.shared.auth.embeddedMode ? 1 : 0)
                 FronteggApp.shared.manualInit(
                     baseUrl: baseUrl,
                     cliendId: clientId,
@@ -96,6 +108,7 @@ import FronteggSwift
                     handleLoginWithSocialProvider: true,
                     entitlementsEnabled: false
                 )
+                os_log("[E2E] manualInit done, baseUrl=%{public}@, embeddedMode=%d", log: e2eLog, type: .info, FronteggApp.shared.baseUrl, FronteggApp.shared.auth.embeddedMode ? 1 : 0)
                 result(nil)
             }
 
