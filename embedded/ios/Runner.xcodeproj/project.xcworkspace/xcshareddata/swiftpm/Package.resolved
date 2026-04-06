@@ -5,7 +5,7 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/frontegg/frontegg-ios-swift.git",
       "state" : {
-        "revision" : "94245149133a10adc3c228ef18343c8b5371606a",
+        "revision" : "d5949e15d7f5faabef3b676a3e73216427c6e7b5",
         "version" : "1.2.79"
       }
     },

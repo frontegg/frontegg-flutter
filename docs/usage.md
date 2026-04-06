@@ -227,8 +227,23 @@ class FronteggState {
   final bool initializing;
   final bool showLoader;
   final bool appLink;
+  final bool refreshingToken;
+  final bool isOfflineMode;
 }
 ```
+
+#### Android: enabling offline mode
+
+The native Android SDK reads offline settings from your app module’s `BuildConfig` (typically `android/app/build.gradle` or `build.gradle.kts`). Add:
+
+```groovy
+buildConfigField "boolean", "FRONTEGG_ENABLE_OFFLINE_MODE", "true"
+buildConfigField "int", "FRONTEGG_NETWORK_MONITORING_INTERVAL_SECONDS", "10"
+```
+
+When `FRONTEGG_ENABLE_OFFLINE_MODE` is `true`, the SDK keeps the session with stored tokens if the network is poor or unavailable, and `FronteggState.isOfflineMode` updates for your Flutter UI. The default is `false` (same as disabling the feature: `isOfflineMode` stays `false`). iOS continues to use the equivalent settings in `Frontegg.plist` (see the native Frontegg iOS guide).
+
+**Optional:** if you rely on auto-reconnect after offline, you can tune the ContentProvider debounce via manifest metadata on `com.frontegg.android.init.FronteggInitProvider` (`frontegg.autoreconnect.debounceMs`), as documented for the Android SDK.
 
 You can access the current state of `FronteggFlutter` in two ways:
 

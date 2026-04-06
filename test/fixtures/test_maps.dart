@@ -125,6 +125,7 @@ const tFronteggStateMap = {
   "showLoader": false,
   "appLink": true,
   "refreshingToken": false,
+  "isOfflineMode": false,
 };
 
 const tLoadingFronteggStateMap = {
@@ -137,6 +138,7 @@ const tLoadingFronteggStateMap = {
   "showLoader": true,
   "appLink": false,
   "refreshingToken": true,
+  "isOfflineMode": false,
 };
 
 const tLoadedFronteggStateMap = {
@@ -149,4 +151,5 @@ const tLoadedFronteggStateMap = {
   "showLoader": true,
   "appLink": false,
   "refreshingToken": false,
+  "isOfflineMode": false,
 };

@@ -10,6 +10,7 @@ import 'theme.dart';
 import 'utils.dart';
 import 'widgets/footer.dart';
 import 'widgets/frontegg_app_bar.dart';
+import 'widgets/offline_mode_banner.dart';
 
 /// UserPage
 class UserPage extends StatefulWidget {
@@ -65,6 +66,7 @@ class _UserPageState extends State<UserPage> {
                         const SizedBox(height: 40),
                         if (_messageWidget != null) _messageWidget!,
                         const SizedBox(height: 16),
+                        OfflineModeBanner(visible: state.isOfflineMode),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 24),
                           child: Card(
