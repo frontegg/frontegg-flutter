@@ -17,16 +17,15 @@ private let e2eLog = OSLog(subsystem: "com.frontegg.demo.e2e", category: "E2E")
 
         DefaultLoader.customLoaderView = AnyView(Text("Loading..."))
 
-        if let controller = window?.rootViewController as? FlutterViewController {
-            os_log("[E2E] Registered e2e channel on window rootVC", log: e2eLog, type: .info)
-            let e2eChannel = FlutterMethodChannel(
-                name: "frontegg_e2e",
-                binaryMessenger: controller.binaryMessenger
-            )
-            e2eChannel.setMethodCallHandler(handleE2EMethodCall)
-        } else {
-            os_log("[E2E] WARNING: window?.rootViewController is nil, e2e channel NOT registered", log: e2eLog, type: .error)
-        }
+        // Register the E2E method channel.  Use the FlutterPluginRegistry API
+        // so it works even when window.rootViewController is not yet available
+        // (UIScene lifecycle / Xcode 16.4).
+        let registrar = self.registrar(forPlugin: "FronteggE2E")!
+        let e2eChannel = FlutterMethodChannel(
+            name: "frontegg_e2e",
+            binaryMessenger: registrar.messenger()
+        )
+        e2eChannel.setMethodCallHandler(handleE2EMethodCall)
 
         return super.application(application, didFinishLaunchingWithOptions: launchOptions)
     }
