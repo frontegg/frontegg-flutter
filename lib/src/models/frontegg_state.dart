@@ -29,6 +29,9 @@ class FronteggState {
   /// Whether the token is currently being refreshed.
   final bool refreshingToken;
 
+  /// Whether the SDK considers the app in offline mode (native offline-mode feature enabled).
+  final bool isOfflineMode;
+
   /// Creates a [FronteggState] instance with the given parameters.
   const FronteggState({
     this.accessToken,
@@ -40,6 +43,7 @@ class FronteggState {
     this.showLoader = true,
     this.appLink = false,
     this.refreshingToken = false,
+    this.isOfflineMode = false,
   });
 
   @override
@@ -55,7 +59,8 @@ class FronteggState {
           initializing == other.initializing &&
           appLink == other.appLink &&
           showLoader == other.showLoader &&
-          refreshingToken == other.refreshingToken;
+          refreshingToken == other.refreshingToken &&
+          isOfflineMode == other.isOfflineMode;
 
   @override
   int get hashCode =>
@@ -67,7 +72,8 @@ class FronteggState {
       initializing.hashCode ^
       appLink.hashCode ^
       showLoader.hashCode ^
-      refreshingToken.hashCode;
+      refreshingToken.hashCode ^
+      isOfflineMode.hashCode;
 
   Map<String, dynamic> toMap() {
     return {
@@ -80,6 +86,7 @@ class FronteggState {
       "appLink": appLink,
       "showLoader": showLoader,
       "refreshingToken": refreshingToken,
+      "isOfflineMode": isOfflineMode,
     };
   }
 
@@ -96,11 +103,12 @@ class FronteggState {
       showLoader: map["showLoader"] as bool,
       appLink: map["appLink"] as bool,
       refreshingToken: map["refreshingToken"] as bool,
+      isOfflineMode: (map["isOfflineMode"] as bool?) ?? false,
     );
   }
 
   @override
   String toString() {
-    return 'FronteggState{accessToken: $accessToken, refreshToken: $refreshToken, user: $user, isAuthenticated: $isAuthenticated, isLoading: $isLoading, initializing: $initializing, showLoader: $showLoader, appLink: $appLink, refreshingToken: $refreshingToken}';
+    return 'FronteggState{accessToken: $accessToken, refreshToken: $refreshToken, user: $user, isAuthenticated: $isAuthenticated, isLoading: $isLoading, initializing: $initializing, showLoader: $showLoader, appLink: $appLink, refreshingToken: $refreshingToken, isOfflineMode: $isOfflineMode}';
   }
 }

@@ -16,5 +16,10 @@
 	<!-- Keep user logged in after reinstall -->
 	<key>keepUserLoggedInAfterReinstall</key>
 	<true/>
+	<!-- Offline mode (parity with Android embedded demo) -->
+	<key>enableOfflineMode</key>
+	<true/>
+	<key>networkMonitoringInterval</key>
+	<integer>10</integer>
 </dict>
 </plist>
