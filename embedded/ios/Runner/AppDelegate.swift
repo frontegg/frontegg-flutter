@@ -1,11 +1,8 @@
 import UIKit
 import Flutter
 import SwiftUI
-import os.log
 
 import FronteggSwift
-
-private let e2eLog = OSLog(subsystem: "com.frontegg.demo.e2e", category: "E2E")
 
 @main
 @objc class AppDelegate: FlutterAppDelegate {
@@ -26,6 +23,7 @@ private let e2eLog = OSLog(subsystem: "com.frontegg.demo.e2e", category: "E2E")
             binaryMessenger: registrar.messenger()
         )
         e2eChannel.setMethodCallHandler(handleE2EMethodCall)
+        NSLog("[E2E] e2e channel registered via FlutterPluginRegistry")
 
         return super.application(application, didFinishLaunchingWithOptions: launchOptions)
     }
@@ -76,13 +74,13 @@ private let e2eLog = OSLog(subsystem: "com.frontegg.demo.e2e", category: "E2E")
             }
             let resetState = args["resetState"] as? Bool ?? true
             let forceNetworkPathOffline = args["forceNetworkPathOffline"] as? Bool ?? false
-            os_log("[E2E] initializeForE2E: baseUrl=%{public}@, clientId=%{public}@, resetState=%d", log: e2eLog, type: .info, baseUrl, clientId, resetState ? 1 : 0)
+            NSLog("[E2E] initializeForE2E: baseUrl=%@, resetState=%d", baseUrl, resetState ? 1 : 0)
             Task { @MainActor in
 #if DEBUG
-                os_log("[E2E] DEBUG block active", log: e2eLog, type: .info)
+                NSLog("[E2E] DEBUG block active")
                 if resetState {
                     await FronteggApp.shared.resetForTesting(baseUrlOverride: baseUrl)
-                    os_log("[E2E] resetForTesting done", log: e2eLog, type: .info)
+                    NSLog("[E2E] resetForTesting done")
                 }
                 FronteggApp.shared.configureTestingNetworkPathAvailability(
                     forceNetworkPathOffline ? false : nil
@@ -93,10 +91,10 @@ private let e2eLog = OSLog(subsystem: "com.frontegg.demo.e2e", category: "E2E")
                     FronteggApp.shared.configureTestingOfflineMode(offline.boolValue)
                 }
 #else
-                os_log("[E2E] DEBUG block NOT active — #if DEBUG is false", log: e2eLog, type: .error)
+                NSLog("[E2E] DEBUG block NOT active")
 #endif
                 FronteggApp.shared.shouldPromptSocialLoginConsent = false
-                os_log("[E2E] calling manualInit embeddedMode=%d", log: e2eLog, type: .info, FronteggApp.shared.auth.embeddedMode ? 1 : 0)
+                NSLog("[E2E] pre-manualInit embeddedMode=%d, baseUrl=%@", FronteggApp.shared.auth.embeddedMode ? 1 : 0, FronteggApp.shared.baseUrl)
                 FronteggApp.shared.manualInit(
                     baseUrl: baseUrl,
                     cliendId: clientId,
@@ -107,7 +105,7 @@ private let e2eLog = OSLog(subsystem: "com.frontegg.demo.e2e", category: "E2E")
                     handleLoginWithSocialProvider: true,
                     entitlementsEnabled: false
                 )
-                os_log("[E2E] manualInit done, baseUrl=%{public}@, embeddedMode=%d", log: e2eLog, type: .info, FronteggApp.shared.baseUrl, FronteggApp.shared.auth.embeddedMode ? 1 : 0)
+                NSLog("[E2E] manualInit done, baseUrl=%@, embeddedMode=%d", FronteggApp.shared.baseUrl, FronteggApp.shared.auth.embeddedMode ? 1 : 0)
                 result(nil)
             }
 
