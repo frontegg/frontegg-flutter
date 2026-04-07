@@ -71,22 +71,22 @@ jobs:
             echo "$JSON"
             echo "MATRIX_JSON_EOF"
           } >> "$GITHUB_OUTPUT"
-      # Android matrix: the Android SDK does NOT support offline mode yet, so all
-      # tests that depend on offline behaviour (forceNetworkPathOffline / NoConnection
-      # UI / connection-loss recovery) are excluded.  Webview-login tests are also
-      # excluded until we find an Android equivalent of FronteggRuntime.isTesting.
+      # Android matrix: per frontegg-android-kotlin PR #233, the Android SDK
+      # never had a localhost block in its WebView (unlike iOS).  Cleartext to
+      # 127.0.0.1 already works via usesCleartextTraffic + network_security_config.
+      # The reflection-based FronteggE2eEmbeddedInitializer.kt mirrors the new
+      # initializeEmbeddedForLocalE2E API for the v1.3.24 SDK we ship today.
+      #
+      # Offline-mode tests still excluded — NetworkGate / setE2eForceNetworkPathOffline
+      # only land in v1.3.26+.  Browser-handoff and Google social tests excluded
+      # until they're verified to work with the current setup.
       - id: set-matrix-android
         env:
           INPUT_EXCLUDE_METHODS: >-
-            testPasswordLoginAndSessionRestore,
-            testEmbeddedSamlLogin,
-            testEmbeddedOidcLogin,
-            testRequestAuthorizeFlow,
             testCustomSSOBrowserHandoff,
             testDirectSocialBrowserHandoff,
             testEmbeddedGoogleSocialLoginWithSystemWebAuthenticationSession,
             testEmbeddedGoogleSocialLoginOAuthErrorShowsToastAndKeepsLoginOpen,
-            testLogoutTerminateTransientProbeFailureDoesNotBlinkNoConnectionPage,
             testAuthenticatedOfflineModeWhenNetworkPathUnavailable,
             testExpiredAccessTokenRefreshesOnAuthenticatedRelaunch,
             testAuthenticatedOfflineModeRecoversToOnlineAndRefreshesToken,
@@ -94,10 +94,11 @@ jobs:
             testLogoutTerminateTransientNoConnectionThenCustomSSORecovers,
             testOfflineModeDisabledPreservesSessionDuringConnectionLossAndRecovers,
             testPasswordLoginWorksWithOfflineModeDisabled,
-            testLogoutClearsSessionAndRelaunchShowsLogin,
             testExpiredRefreshTokenClearsSessionAndShowsLogin,
             testScheduledTokenRefreshFiresBeforeExpiry,
-            testAuthenticatedRelaunchWithExpiredAccessTokenAndFreshRefreshToken
+            testAuthenticatedRelaunchWithExpiredAccessTokenAndFreshRefreshToken,
+            testRequestAuthorizeFlow,
+            testLogoutTerminateTransientProbeFailureDoesNotBlinkNoConnectionPage
         run: |
           JSON=$(env -u GITHUB_OUTPUT node .github/scripts/generate_e2e_matrix.js)
           {
