@@ -20,11 +20,36 @@ run_patrol() {
   if [[ "${PATROL_VERBOSE:-}" == "1" ]]; then
     cmd+=(--verbose)
   fi
+  local capture
+  capture="$(mktemp)"
+  set +e
   if [[ -n "${PATROL_LOG_FILE:-}" ]]; then
-    "${cmd[@]}" 2>&1 | tee -a "$PATROL_LOG_FILE"
-    return "${PIPESTATUS[0]}"
+    "${cmd[@]}" 2>&1 | tee -a "$PATROL_LOG_FILE" | tee "$capture"
+    local rc="${PIPESTATUS[0]}"
+  else
+    "${cmd[@]}" 2>&1 | tee "$capture"
+    local rc="${PIPESTATUS[0]}"
   fi
-  "${cmd[@]}"
+  set -e
+  # Patrol CLI 3.6.0 has a known bug in PatrolLogReader (`Bad state: No element`)
+  # that crashes the wrapper AFTER tests finish, returning a non-zero exit code
+  # even when every test passed.  Recover by trusting the xcodebuild test summary
+  # captured in the same output.
+  if [[ "$rc" -ne 0 ]] && grep -q "Bad state: No element" "$capture" \
+       && grep -q "PatrolLogReader.readEntries" "$capture"; then
+    if grep -q "❌ Failed: 0" "$capture" && grep -q "✅ Successful:" "$capture"; then
+      echo "::warning::Patrol CLI crashed in PatrolLogReader after success — treating as pass"
+      rm -f "$capture"
+      return 0
+    fi
+    if grep -q "test result: PASSED" "$capture" && ! grep -q "test result: FAILED" "$capture"; then
+      echo "::warning::Patrol CLI crashed in PatrolLogReader after success — treating as pass"
+      rm -f "$capture"
+      return 0
+    fi
+  fi
+  rm -f "$capture"
+  return "$rc"
 }
 
 # Best-effort recovery between retries (Android emulator / adb flakes, e.g. exit 224).
