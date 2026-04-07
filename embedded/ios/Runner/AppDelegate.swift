@@ -10,6 +10,13 @@ import FronteggSwift
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
     ) -> Bool {
+#if DEBUG
+        // Tell FronteggSwift this is an E2E test build so it allows the embedded
+        // WebView to navigate to the localhost mock server (FronteggRuntime.isTesting).
+        setenv("frontegg-testing", "true", 1)
+        NSLog("[E2E] frontegg-testing env set")
+#endif
+
         GeneratedPluginRegistrant.register(with: self)
 
         DefaultLoader.customLoaderView = AnyView(Text("Loading..."))
