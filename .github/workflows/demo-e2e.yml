@@ -159,8 +159,8 @@ jobs:
           if-no-files-found: ignore
 
   embedded-e2e-ios:
-    # Standard macOS runner (xlarge can fail when org hits spending / billing limits).
-    runs-on: macos-15
+    # Apple Silicon runner — matches frontegg-ios-swift demo-e2e workflow.
+    runs-on: macos-15-xlarge
     timeout-minutes: 120
     needs: matrix
     strategy:
