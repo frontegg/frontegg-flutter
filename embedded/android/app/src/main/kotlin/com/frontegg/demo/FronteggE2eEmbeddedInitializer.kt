@@ -6,6 +6,7 @@ import com.frontegg.android.services.FronteggAppService
 import com.frontegg.android.utils.FronteggConstantsProvider
 import com.frontegg.android.utils.SentryHelper
 import com.frontegg.android.utils.isActivityEnabled
+import com.frontegg.flutter.FronteggFlutterPlugin
 
 /**
  * Mirrors [com.frontegg.android.FronteggApp.initializeEmbeddedForLocalE2E] for published SDKs
@@ -58,6 +59,15 @@ object FronteggE2eEmbeddedInitializer {
         val companion = fronteggCompanion()
         val f = companion.javaClass.getDeclaredField("instance").apply { isAccessible = true }
         f.set(companion, service)
+
+        // Re-attach the Flutter plugin's state listener to the new singleton.
+        // The listener captured observable references on the OLD instance at
+        // plugin attach time; without re-subscribing, Flutter would never see
+        // state updates from the mock-server-bound instance and the Flutter UI
+        // would stay stuck on LoginPageRoot.
+        runCatching {
+            FronteggFlutterPlugin.activeStateListener?.subscribe()
+        }
     }
 
     private fun fronteggCompanion(): Any {
