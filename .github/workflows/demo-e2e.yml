@@ -179,6 +179,12 @@ jobs:
       - name: Enable Swift Package Manager
         run: flutter config --enable-swift-package-manager
 
+      - name: Reset SwiftPM caches (force fresh FronteggSwift resolution)
+        run: |
+          rm -rf ~/Library/Developer/Xcode/DerivedData
+          rm -rf ~/Library/Caches/org.swift.swiftpm
+          rm -rf ~/Library/org.swift.swiftpm
+
       - name: Install Patrol CLI
         run: dart pub global activate patrol_cli 3.6.0
 
@@ -194,6 +200,13 @@ jobs:
       - name: Install pods
         working-directory: embedded/ios
         run: pod install
+
+      - name: Verify FronteggSwift revision pinned in plugin
+        run: |
+          echo "=== ios/frontegg_flutter/Package.swift ==="
+          grep -A1 "frontegg-ios-swift" ios/frontegg_flutter/Package.swift
+          echo "=== embedded/ios/Runner.xcworkspace/.../Package.resolved ==="
+          cat embedded/ios/Runner.xcworkspace/xcshareddata/swiftpm/Package.resolved | grep -A4 frontegg-ios-swift
 
       # Match frontegg-ios-swift demo-e2e: same DEVELOPMENT_TEAM in the Xcode project and
       # iPhone 16 Pro simulator. Shard tests via E2E_METHODS + E2E_TEST_FILTER (same as Android).

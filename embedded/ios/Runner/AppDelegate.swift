@@ -14,7 +14,9 @@ import FronteggSwift
         // Tell FronteggSwift this is an E2E test build so it allows the embedded
         // WebView to navigate to the localhost mock server (FronteggRuntime.isTesting).
         setenv("frontegg-testing", "true", 1)
-        NSLog("[E2E] frontegg-testing env set")
+        let viaC = String(cString: getenv("frontegg-testing") ?? "<nil>")
+        let viaProcessInfo = ProcessInfo.processInfo.environment["frontegg-testing"] ?? "<nil>"
+        NSLog("[E2E] env via getenv=%@, via ProcessInfo=%@", viaC, viaProcessInfo)
 #endif
 
         GeneratedPluginRegistrant.register(with: self)
