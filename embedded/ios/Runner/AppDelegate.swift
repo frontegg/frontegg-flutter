@@ -11,11 +11,12 @@ import FronteggSwift
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
     ) -> Bool {
 #if DEBUG
-        // E2EBootstrap.m's +load already set frontegg-testing=true before main()
-        // — verify it's visible to ProcessInfo (which the SDK reads).
+        // Tell FronteggSwift this is an E2E test build so it allows the embedded
+        // WebView to navigate to the localhost mock server (FronteggRuntime.isTesting).
+        setenv("frontegg-testing", "true", 1)
         let viaC = String(cString: getenv("frontegg-testing") ?? "<nil>")
         let viaProcessInfo = ProcessInfo.processInfo.environment["frontegg-testing"] ?? "<nil>"
-        NSLog("[E2E] AppDelegate env: getenv=%@, ProcessInfo=%@", viaC, viaProcessInfo)
+        NSLog("[E2E] env via getenv=%@, via ProcessInfo=%@", viaC, viaProcessInfo)
 #endif
 
         GeneratedPluginRegistrant.register(with: self)
