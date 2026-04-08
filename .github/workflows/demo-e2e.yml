@@ -187,8 +187,12 @@ jobs:
           report_paths: e2e-artifacts/*.xml
           annotate_only: true
 
+      # continue-on-error: transient GitHub Actions blob-storage ENOTFOUND has
+      # failed entire shards whose tests passed cleanly.  Artifact loss is
+      # annoying but not a reason to mark the suite red.
       - uses: actions/upload-artifact@v6
         if: always()
+        continue-on-error: true
         with:
           name: flutter-e2e-shard-${{ matrix['shard-index'] }}
           path: e2e-artifacts/
@@ -280,6 +284,7 @@ jobs:
 
       - uses: actions/upload-artifact@v6
         if: always()
+        continue-on-error: true
         with:
           name: flutter-e2e-ios-shard-${{ matrix['shard-index'] }}
           path: |
@@ -304,6 +309,7 @@ jobs:
 
       - name: Upload summary
         uses: actions/upload-artifact@v6
+        continue-on-error: true
         with:
           name: e2e-summary
           path: e2e-summary.md
