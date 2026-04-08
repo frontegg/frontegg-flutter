@@ -1,3 +1,19 @@
+## v1.0.42
+## Summary
+Adds embedded-demo **Patrol** end-to-end tests that mirror the native iOS/Android embedded E2E catalog: local HTTP mock auth server, shared scenario names, and sharded GitHub Actions jobs.
+
+## What changed
+- **App**: `E2ETestMode` MethodChannel (Android Kotlin + iOS Swift), E2E-only controls and **Semantics** labels on the embedded login/user flows; logout + JWT `token_version` exposure for tests.
+- **Tests**: `integration_test/e2e/` — mock server, harness, `patrolTest` suite aligned with `e2e/scenario-catalog.json`.
+- **CI**: `demo-e2e.yml` plus scripts to generate the matrix, run shards, and combine summaries.
+
+## Verification
+- [ ] `demo-e2e` workflow passes on this PR (Android shards + iOS job).
+
+_Opened to validate remote CI; follow-up fixes expected if Patrol/emulator/Xcode need tuning._
+
+Made with [Cursor](https://cursor.com)
+
 ## v1.0.41
 Fixed bug with session management for offline mode.
 

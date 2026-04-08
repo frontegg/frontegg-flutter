@@ -1,3 +1,6 @@
+## v1.0.41
+Fixed bug with session management for offline mode.
+
 ## v1.0.40
 - Added entitlements and roles feature support
 - Bump IOS and Android versions
