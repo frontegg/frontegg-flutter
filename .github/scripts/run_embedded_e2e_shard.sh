@@ -32,20 +32,35 @@ run_patrol() {
   fi
   set -e
   # Patrol CLI 3.6.0 has a known bug in PatrolLogReader (`Bad state: No element`)
-  # that crashes the wrapper AFTER tests finish, returning a non-zero exit code
-  # even when every test passed.  Recover by trusting the xcodebuild test summary
-  # captured in the same output.
+  # that crashes the wrapper, returning a non-zero exit code.
+  #
+  # Case 1: crash AFTER every test passed — treat as pass.
+  # Case 2: crash BEFORE any test result was reported — flake, let the
+  #         outer retry loop try again instead of failing the shard.
+  # Case 3: crash WITH an observed FAILED result — genuine failure, propagate.
   if [[ "$rc" -ne 0 ]] && grep -q "Bad state: No element" "$capture" \
        && grep -q "PatrolLogReader.readEntries" "$capture"; then
-    if grep -q "❌ Failed: 0" "$capture" && grep -q "✅ Successful:" "$capture"; then
-      echo "::warning::Patrol CLI crashed in PatrolLogReader after success — treating as pass"
+    local has_failed_result
+    has_failed_result=0
+    if grep -q "test result: FAILED" "$capture"; then has_failed_result=1; fi
+    if grep -q "❌ Failed: [1-9]" "$capture"; then has_failed_result=1; fi
+
+    if [[ "$has_failed_result" -eq 0 ]]; then
+      if grep -q "❌ Failed: 0" "$capture" && grep -q "✅ Successful:" "$capture"; then
+        echo "::warning::Patrol CLI crashed in PatrolLogReader after success — treating as pass"
+        rm -f "$capture"
+        return 0
+      fi
+      if grep -q "test result: PASSED" "$capture"; then
+        echo "::warning::Patrol CLI crashed in PatrolLogReader after success — treating as pass"
+        rm -f "$capture"
+        return 0
+      fi
+      # Crash BEFORE any test result was emitted — pure Patrol flake.
+      # Return a distinct exit code so the outer retry loop retries.
+      echo "::warning::Patrol CLI crashed in PatrolLogReader before any test result — treating as flake, will retry"
       rm -f "$capture"
-      return 0
-    fi
-    if grep -q "test result: PASSED" "$capture" && ! grep -q "test result: FAILED" "$capture"; then
-      echo "::warning::Patrol CLI crashed in PatrolLogReader after success — treating as pass"
-      rm -f "$capture"
-      return 0
+      return 77
     fi
   fi
   rm -f "$capture"
@@ -79,6 +94,11 @@ run_with_retries() {
     fi
     attempt=$((attempt + 1))
   done
+  # Normalize sentinel exit codes (77 = patrol flake, retries exhausted) to 1
+  # so the shell step fails with a clean non-zero rather than a surprising code.
+  if [[ "$status" -eq 77 ]]; then
+    return 1
+  fi
   return "$status"
 }
 
