@@ -31,7 +31,6 @@ target 'Runner' do
   use_frameworks!
   use_modular_headers!
 
-  # FronteggSwift comes from frontegg_flutter (SPM or podspec), do not add here to avoid duplicate Sentry.framework
   flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
 
   target 'RunnerUITests' do

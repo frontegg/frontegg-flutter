@@ -1,0 +1,315 @@
+name: Demo Embedded E2E (Flutter)
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+permissions:
+  contents: read
+  checks: write
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches: [master, main]
+  workflow_dispatch:
+
+concurrency:
+  group: demo-e2e-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  matrix:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+      matrix_android: ${{ steps.set-matrix-android.outputs.matrix_android }}
+    steps:
+      - uses: actions/checkout@v5
+      # Webview-based login flows have not yet been validated in CI.
+      # iOS matrix: tests that work in the current Patrol/Flutter setup.
+      #
+      # WEBVIEW LOGIN BLOCKER: All tests that require an embedded WebView login
+      # are excluded.  The Frontegg iOS SDK's CustomWebView blocks navigation
+      # to 127.0.0.1, and the only way to whitelist it (FronteggRuntime.isTesting,
+      # added in master) requires `frontegg-testing=true` to be in
+      # ProcessInfo.processInfo.environment AT PROCESS START.  Patrol launches
+      # the Flutter app via XCUITest with default launch params and gives us no
+      # hook to inject app.launchEnvironment, so we cannot meet that contract.
+      # See frontegg-ios-swift demo-embedded-e2e for the working pattern (uses
+      # XCUIApplication.launchEnvironment directly from the test class).
+      #
+      # ANDROID PARITY: The Android Frontegg SDK has no equivalent of
+      # FronteggRuntime.isTesting, no LocalMockAuthServer, no manualInit, and
+      # no offline mode — confirmed by reading frontegg-android-kotlin master.
+      # Webview-login E2E will require upstream SDK work on the Android side.
+      - id: set-matrix
+        env:
+          INPUT_EXCLUDE_METHODS: >-
+            testPasswordLoginAndSessionRestore,
+            testEmbeddedSamlLogin,
+            testEmbeddedOidcLogin,
+            testCustomSSOBrowserHandoff,
+            testDirectSocialBrowserHandoff,
+            testEmbeddedGoogleSocialLoginWithSystemWebAuthenticationSession,
+            testEmbeddedGoogleSocialLoginOAuthErrorShowsToastAndKeepsLoginOpen,
+            testLogoutTerminateTransientProbeFailureDoesNotBlinkNoConnectionPage,
+            testAuthenticatedOfflineModeWhenNetworkPathUnavailable,
+            testExpiredAccessTokenRefreshesOnAuthenticatedRelaunch,
+            testAuthenticatedOfflineModeRecoversToOnlineAndRefreshesToken,
+            testAuthenticatedOfflineModeKeepsUserLoggedInUntilReconnectRefreshesExpiredToken,
+            testLogoutTerminateTransientNoConnectionThenCustomSSORecovers,
+            testOfflineModeDisabledPreservesSessionDuringConnectionLossAndRecovers,
+            testPasswordLoginWorksWithOfflineModeDisabled,
+            testLogoutClearsSessionAndRelaunchShowsLogin,
+            testExpiredRefreshTokenClearsSessionAndShowsLogin,
+            testScheduledTokenRefreshFiresBeforeExpiry,
+            testAuthenticatedRelaunchWithExpiredAccessTokenAndFreshRefreshToken
+        run: |
+          JSON=$(env -u GITHUB_OUTPUT node .github/scripts/generate_e2e_matrix.js)
+          {
+            echo "matrix<<MATRIX_JSON_EOF"
+            echo "$JSON"
+            echo "MATRIX_JSON_EOF"
+          } >> "$GITHUB_OUTPUT"
+      # Android matrix: only non-login tests pass today.
+      #
+      # Tried enabling testPasswordLoginAndSessionRestore / testEmbeddedSamlLogin /
+      # testEmbeddedOidcLogin / testLogoutClearsSessionAndRelaunchShowsLogin — all
+      # fail with `visible: LoginPageRoot` after 60s, same signature as iOS.  The
+      # reflection-based singleton replace + re-subscribe fix resolves the stale-
+      # observer problem but there's a second issue in the Android login flow that
+      # isn't diagnosable from CI logs alone (Patrol doesn't surface logcat).
+      # Likely candidates: EmbeddedAuthActivity not receiving the deep-link
+      # callback through CustomSchemeActivity, or the SDK picking up stale
+      # BuildConfig values despite the rebind.  Revisit once frontegg-android-kotlin
+      # v1.3.26 ships the first-party `initializeEmbeddedForLocalE2E` API.
+      - id: set-matrix-android
+        env:
+          INPUT_EXCLUDE_METHODS: >-
+            testPasswordLoginAndSessionRestore,
+            testEmbeddedSamlLogin,
+            testEmbeddedOidcLogin,
+            testRequestAuthorizeFlow,
+            testCustomSSOBrowserHandoff,
+            testDirectSocialBrowserHandoff,
+            testEmbeddedGoogleSocialLoginWithSystemWebAuthenticationSession,
+            testEmbeddedGoogleSocialLoginOAuthErrorShowsToastAndKeepsLoginOpen,
+            testLogoutTerminateTransientProbeFailureDoesNotBlinkNoConnectionPage,
+            testAuthenticatedOfflineModeWhenNetworkPathUnavailable,
+            testExpiredAccessTokenRefreshesOnAuthenticatedRelaunch,
+            testAuthenticatedOfflineModeRecoversToOnlineAndRefreshesToken,
+            testAuthenticatedOfflineModeKeepsUserLoggedInUntilReconnectRefreshesExpiredToken,
+            testLogoutTerminateTransientNoConnectionThenCustomSSORecovers,
+            testOfflineModeDisabledPreservesSessionDuringConnectionLossAndRecovers,
+            testPasswordLoginWorksWithOfflineModeDisabled,
+            testLogoutClearsSessionAndRelaunchShowsLogin,
+            testExpiredRefreshTokenClearsSessionAndShowsLogin,
+            testScheduledTokenRefreshFiresBeforeExpiry,
+            testAuthenticatedRelaunchWithExpiredAccessTokenAndFreshRefreshToken
+        run: |
+          JSON=$(env -u GITHUB_OUTPUT node .github/scripts/generate_e2e_matrix.js)
+          {
+            echo "matrix_android<<MATRIX_JSON_ANDROID_EOF"
+            echo "$JSON"
+            echo "MATRIX_JSON_ANDROID_EOF"
+          } >> "$GITHUB_OUTPUT"
+
+  embedded-e2e-android:
+    runs-on: ubuntu-latest
+    # 1 test/shard + build + emulator; allow long token/offline scenarios
+    timeout-minutes: 120
+    needs: matrix
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJson(needs.matrix.outputs.matrix_android) }}
+    env:
+      # Retries double runtime and often hit the job timeout while the first run is stuck.
+      PATROL_MAX_RETRIES: "2"
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Install Patrol CLI
+        run: dart pub global activate patrol_cli 3.6.0
+
+      - name: Install dependencies
+        working-directory: embedded
+        run: flutter pub get
+
+      - name: Validate E2E scenario catalog
+        run: env -u GITHUB_OUTPUT node .github/scripts/generate_e2e_matrix.js > /dev/null
+
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      - name: Build debug APK + test APK
+        working-directory: embedded
+        run: patrol build android --target integration_test/e2e/embedded_e2e_test.dart
+
+      - name: Run embedded E2E on emulator
+        env:
+          E2E_METHODS: ${{ matrix['test-methods'] }}
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 31
+          arch: x86_64
+          profile: pixel_6
+          disable-animations: true
+          emulator-boot-timeout: 300
+          emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim
+          script: bash .github/scripts/run_embedded_e2e_shard.sh
+
+      - name: Collect test reports
+        if: always()
+        run: |
+          mkdir -p e2e-artifacts
+          find . -name "TEST-*.xml" -exec cp -f {} e2e-artifacts/ \; 2>/dev/null || true
+
+      # Annotate only: do not create a second GitHub Check per shard (the matrix job
+      # already reports pass/fail; duplicate check_name was cluttering the PR checks list).
+      - name: JUnit report (annotations + job summary)
+        uses: mikepenz/action-junit-report@v5
+        if: always()
+        with:
+          report_paths: e2e-artifacts/*.xml
+          annotate_only: true
+
+      # continue-on-error: transient GitHub Actions blob-storage ENOTFOUND has
+      # failed entire shards whose tests passed cleanly.  Artifact loss is
+      # annoying but not a reason to mark the suite red.
+      - uses: actions/upload-artifact@v6
+        if: always()
+        continue-on-error: true
+        with:
+          name: flutter-e2e-shard-${{ matrix['shard-index'] }}
+          path: e2e-artifacts/
+          if-no-files-found: ignore
+
+  embedded-e2e-ios:
+    # Apple Silicon runner — matches frontegg-ios-swift demo-e2e workflow.
+    runs-on: macos-15-xlarge
+    timeout-minutes: 120
+    needs: matrix
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJson(needs.matrix.outputs.matrix) }}
+    env:
+      PATROL_MAX_RETRIES: "2"
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+
+      - name: Enable Swift Package Manager
+        run: flutter config --enable-swift-package-manager
+
+      - name: Reset SwiftPM caches (force fresh FronteggSwift resolution)
+        run: |
+          rm -rf ~/Library/Developer/Xcode/DerivedData
+          rm -rf ~/Library/Caches/org.swift.swiftpm
+          rm -rf ~/Library/org.swift.swiftpm
+
+      - name: Install Patrol CLI
+        run: dart pub global activate patrol_cli 3.6.0
+
+      - name: Install dependencies
+        working-directory: embedded
+        run: flutter pub get
+
+      - name: Fix generated SPM platform version
+        run: |
+          PKG="embedded/ios/Flutter/ephemeral/Packages/FlutterGeneratedPluginSwiftPackage/Package.swift"
+          sed -i '' 's/.iOS("13.0")/.iOS("14.0")/' "$PKG"
+
+      - name: Install pods
+        working-directory: embedded/ios
+        run: pod install
+
+      - name: Verify FronteggSwift revision pinned in plugin
+        run: |
+          echo "=== ios/frontegg_flutter/Package.swift ==="
+          grep -A1 "frontegg-ios-swift" ios/frontegg_flutter/Package.swift
+          echo "=== embedded/ios/Runner.xcworkspace/.../Package.resolved ==="
+          cat embedded/ios/Runner.xcworkspace/xcshareddata/swiftpm/Package.resolved | grep -A4 frontegg-ios-swift
+
+      # Match frontegg-ios-swift demo-e2e: same DEVELOPMENT_TEAM in the Xcode project and
+      # iPhone 16 Pro simulator. Shard tests via E2E_METHODS + E2E_TEST_FILTER (same as Android).
+      - name: Run embedded E2E on iOS Simulator
+        env:
+          E2E_METHODS: ${{ matrix['test-methods'] }}
+          PATROL_VERBOSE: "1"
+        run: |
+          set -euo pipefail
+          LOG="${RUNNER_TEMP}/ios-e2e-shard-${{ matrix['shard-index'] }}.log"
+          : > "$LOG"
+          export PATROL_LOG_FILE="$LOG"
+          UDID=$(xcrun simctl list devices available -j | jq -r '
+            [.devices | to_entries[].value[]
+              | select(.isAvailable == true and .name == "iPhone 16 Pro")]
+            | .[0].udid // empty')
+          if [[ -z "$UDID" || "$UDID" == "null" ]]; then
+            UDID=$(xcrun simctl list devices available -j | jq -r '
+              [.devices | to_entries[] | .value[]
+                | select(.isAvailable == true and (.name | startswith("iPhone")))]
+              | sort_by(.name) | .[0].udid // empty')
+          fi
+          if [[ -z "$UDID" || "$UDID" == "null" ]]; then
+            echo "::error::No available iPhone simulator"
+            xcrun simctl list devices available
+            exit 1
+          fi
+          export IOS_DEVICE="$UDID"
+          echo "::notice::Using iOS Simulator UDID=$UDID"
+          xcrun simctl boot "$UDID" 2>/dev/null || true
+          xcrun simctl bootstatus "$UDID" -b
+          open -a Simulator || true
+          sleep 5
+          bash .github/scripts/run_embedded_e2e_shard.sh
+
+      - uses: actions/upload-artifact@v6
+        if: always()
+        continue-on-error: true
+        with:
+          name: flutter-e2e-ios-shard-${{ matrix['shard-index'] }}
+          path: |
+            ${{ runner.temp }}/ios-e2e-shard-${{ matrix['shard-index'] }}.log
+            embedded/build/ios_integ/
+          if-no-files-found: ignore
+
+  summary:
+    runs-on: ubuntu-latest
+    needs: [embedded-e2e-android, embedded-e2e-ios]
+    if: always()
+    steps:
+      - uses: actions/download-artifact@v6
+        continue-on-error: true
+        with:
+          path: all-e2e
+
+      - uses: actions/checkout@v5
+
+      - name: Combine summary
+        run: node .github/scripts/combine_e2e_summary.js --artifacts-dir all-e2e --summary e2e-summary.md
+
+      - name: Upload summary
+        uses: actions/upload-artifact@v6
+        continue-on-error: true
+        with:
+          name: e2e-summary
+          path: e2e-summary.md

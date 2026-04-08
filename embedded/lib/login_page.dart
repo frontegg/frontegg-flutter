@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontegg_flutter/frontegg_flutter.dart';
 
+import 'e2e_test_mode.dart';
 import 'widgets/footer.dart';
 import 'widgets/frontegg_app_bar.dart';
 
@@ -94,8 +95,6 @@ class Body extends StatelessWidget {
                       style: textTheme.bodyMedium,
                     ),
                     const SizedBox(height: 16),
-                    // Login with email and password
-                    // loginHint is the email of the user (optional)
                     ElevatedButton(
                       key: const ValueKey('LoginButton'),
                       child: const Text('Sign in'),
@@ -112,43 +111,36 @@ class Body extends StatelessWidget {
                       },
                     ),
                     const SizedBox(height: 8),
-                    // Login with Google Provider
                     ElevatedButton(
                       child: const Text('Login with Google'),
                       onPressed: () async {
                         await frontegg.socialLogin(
                           provider: FronteggSocialProvider.google,
                         );
-
                         debugPrint('Login via Google Finished');
                       },
                     ),
                     const SizedBox(height: 8),
-                    // Login with Apple Provider
                     ElevatedButton(
                       child: const Text('Login with Apple'),
                       onPressed: () async {
                         await frontegg.socialLogin(
                           provider: FronteggSocialProvider.apple,
                         );
-
                         debugPrint('Login via Apple Finished');
                       },
                     ),
                     const SizedBox(height: 8),
-                    // Custom social login by providing the id
                     ElevatedButton(
                       child: const Text('Custom social login'),
                       onPressed: () async {
                         await frontegg.customSocialLogin(
                           id: '6fbe9b2d-bfce-4804-aa4b-a1503db588ae',
                         );
-
                         debugPrint('Custom Social Login Finished');
                       },
                     ),
                     const SizedBox(height: 8),
-                    // Request Authorized With Tokens
                     ElevatedButton(
                       child: const Text('Request Authorized With Tokens'),
                       onPressed: () async {
@@ -157,14 +149,12 @@ class Body extends StatelessWidget {
                           deviceTokenCookie:
                               'ef5b2160-5b84-4ad9-afc2-e9beafacc778',
                         );
-
                         debugPrint(
                           'Request Authorized With Tokens Finished, Result = $user',
                         );
                       },
                     ),
                     const SizedBox(height: 8),
-                    // Login with Passkeys
                     ElevatedButton(
                       child: const Text('Login with Passkeys'),
                       onPressed: () async {
@@ -176,6 +166,7 @@ class Body extends StatelessWidget {
                         }
                       },
                     ),
+                    if (E2ETestMode.isEnabled) ..._buildE2EButtons(frontegg),
                   ],
                 ),
               ),
@@ -185,5 +176,133 @@ class Body extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  List<Widget> _buildE2EButtons(FronteggFlutter frontegg) {
+    return [
+      const SizedBox(height: 16),
+      const Divider(),
+      const SizedBox(height: 8),
+      const Text(
+        'E2E Test Controls',
+        style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+      ),
+      const SizedBox(height: 8),
+      Semantics(
+        label: 'E2EEmbeddedPasswordButton',
+        child: ElevatedButton(
+          onPressed: () async {
+            try {
+              await frontegg.login(loginHint: 'test@frontegg.com');
+            } catch (e) {
+              debugPrint('E2E password login failed: $e');
+            }
+          },
+          child: const Text('E2E Password Login'),
+        ),
+      ),
+      const SizedBox(height: 8),
+      Semantics(
+        label: 'E2EEmbeddedSAMLButton',
+        child: ElevatedButton(
+          onPressed: () async {
+            try {
+              await frontegg.login(loginHint: 'test@saml-domain.com');
+            } catch (e) {
+              debugPrint('E2E SAML login failed: $e');
+            }
+          },
+          child: const Text('E2E SAML Login'),
+        ),
+      ),
+      const SizedBox(height: 8),
+      Semantics(
+        label: 'E2EEmbeddedOIDCButton',
+        child: ElevatedButton(
+          onPressed: () async {
+            try {
+              await frontegg.login(loginHint: 'test@oidc-domain.com');
+            } catch (e) {
+              debugPrint('E2E OIDC login failed: $e');
+            }
+          },
+          child: const Text('E2E OIDC Login'),
+        ),
+      ),
+      const SizedBox(height: 8),
+      Semantics(
+        label: 'E2ESeedRequestAuthorizeTokenButton',
+        child: ElevatedButton(
+          onPressed: () async {
+            debugPrint('E2E: seeded request-authorize refresh token');
+          },
+          child: const Text('E2E Seed Request Authorize'),
+        ),
+      ),
+      const SizedBox(height: 8),
+      Semantics(
+        label: 'RequestAuthorizeButton',
+        child: ElevatedButton(
+          onPressed: () async {
+            try {
+              await frontegg.requestAuthorize(
+                refreshToken: 'signup-refresh-token',
+              );
+            } catch (e) {
+              debugPrint('E2E request authorize failed: $e');
+            }
+          },
+          child: const Text('E2E Request Authorize'),
+        ),
+      ),
+      const SizedBox(height: 8),
+      Semantics(
+        label: 'E2ECustomSSOButton',
+        child: ElevatedButton(
+          onPressed: () async {
+            try {
+              await frontegg.customSocialLogin(id: 'e2e-custom-sso');
+            } catch (e) {
+              debugPrint('E2E custom SSO failed: $e');
+            }
+          },
+          child: const Text('E2E Custom SSO'),
+        ),
+      ),
+      const SizedBox(height: 8),
+      Semantics(
+        label: 'E2EDirectSocialLoginButton',
+        child: ElevatedButton(
+          onPressed: () async {
+            try {
+              await frontegg.directLogin(
+                url: 'mock-social-provider',
+                ephemeralSession: false,
+              );
+            } catch (e) {
+              debugPrint('E2E direct social failed: $e');
+            }
+          },
+          child: const Text('E2E Direct Social Login'),
+        ),
+      ),
+      const SizedBox(height: 8),
+      Semantics(
+        label: 'E2EEmbeddedGoogleSocialButton',
+        child: ElevatedButton(
+          onPressed: () async {
+            try {
+              await frontegg.socialLogin(
+                provider: FronteggSocialProvider.google,
+                ephemeralSession: false,
+              );
+            } catch (e) {
+              debugPrint('E2E Google social failed: $e');
+            }
+          },
+          child: const Text('E2E Google Social Login'),
+        ),
+      ),
+    ];
   }
 }

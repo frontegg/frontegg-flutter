@@ -13,7 +13,11 @@ let package = Package(
     ],
     dependencies: [
         .package(name: "FlutterFramework", path: "../FlutterFramework"),
-        .package(url: "https://github.com/frontegg/frontegg-ios-swift.git", exact: "1.2.79"),
+        // Pin to a master commit that includes FronteggRuntime.isTesting support,
+        // which is required for the embedded WebView to allow navigation to
+        // localhost mock servers in E2E tests.  Released versions (≤1.2.79) do
+        // not have this and unconditionally block 127.0.0.1 navigation.
+        .package(url: "https://github.com/frontegg/frontegg-ios-swift.git", revision: "f6ffe223cd3cafd80104d27e65c71d24c00a6e86"),
     ],
     targets: [
         .target(

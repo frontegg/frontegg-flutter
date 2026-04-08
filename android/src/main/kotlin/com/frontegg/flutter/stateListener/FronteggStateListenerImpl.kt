@@ -93,6 +93,7 @@ class FronteggStateListenerImpl(
             showLoader = fronteggAuth.showLoader.value,
             appLink = fronteggAuth.useAssetsLinks,
             refreshingToken = fronteggAuth.refreshingToken.value,
+            isOfflineMode = false,
         )
 
         sendState(state)
@@ -133,6 +134,7 @@ class FronteggStateListenerImpl(
             showLoader = fronteggAuth.showLoader.value,
             appLink = fronteggAuth.useAssetsLinks,
             refreshingToken = fronteggAuth.refreshingToken.value,
+            isOfflineMode = false,
         )
 
         sendState(state)
