@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:patrol/patrol.dart';
 
 import 'embedded_e2e_test_case.dart';
@@ -33,10 +32,20 @@ void e2ePatrolTest(String name, PatrolTesterCallback callback) {
 /// Full embedded E2E suite mirroring Swift `DemoEmbeddedE2ETests` and
 /// Kotlin `EmbeddedE2ETests`.
 void main() {
-  // Prevent Google Fonts from making HTTP requests during tests — the
-  // emulator/simulator often has no internet, and a failed font fetch
-  // throws an exception during teardown that marks the test as failed.
-  GoogleFonts.config.allowRuntimeFetching = false;
+  // Google Fonts fetches fail on emulators/simulators (no internet → HTTP
+  // error, or allowRuntimeFetching=false → missing-asset error).  Either way
+  // the exception fires asynchronously during/after the test and marks it as
+  // failed even though the actual assertions passed.  Swallow font-loading
+  // errors so they don't pollute test results.
+  final defaultOnError = FlutterError.onError;
+  FlutterError.onError = (details) {
+    if (details.toString().contains('GoogleFonts') ||
+        details.toString().contains('google_fonts') ||
+        details.toString().contains('Failed to load font')) {
+      return; // swallow
+    }
+    defaultOnError?.call(details);
+  };
 
   final tc = EmbeddedE2ETestCase();
 
