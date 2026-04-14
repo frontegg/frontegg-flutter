@@ -100,15 +100,36 @@ class EmbeddedE2ETestCase {
   }
 
   Future<void> tapSemantics(PatrolIntegrationTester $, String label, {Duration timeout = const Duration(seconds: 10)}) async {
-    await waitForSemantics($, label, timeout: timeout);
-    final finder = _semFinder(label).first;
-    await $.tester.ensureVisible(finder);
-    await Future.delayed(const Duration(milliseconds: 300));
-    await $.pump();
-    await $.tester.tap(finder);
-    // Do not pump() after tap: embedded login can present a native webview
-    // immediately; WidgetTester.pump then blocks and never returns, so job hits CI timeout.
-    await Future.delayed(const Duration(milliseconds: 500));
+    final deadline = DateTime.now().add(timeout);
+    while (DateTime.now().isBefore(deadline)) {
+      await Future.delayed(const Duration(milliseconds: 200));
+      await $.pump();
+      final matches = _semFinder(label).evaluate().toList(growable: false);
+      if (matches.isEmpty) continue;
+      final finder = find.byWidget(matches.first.widget);
+      try {
+        await $.tester.ensureVisible(finder);
+        await Future.delayed(const Duration(milliseconds: 300));
+        await $.pump();
+        if (finder.evaluate().isEmpty) continue;
+        await $.tester.tap(finder);
+        // Do not pump() after tap: embedded login can present a native webview
+        // immediately; WidgetTester.pump then blocks and never returns, so job hits CI timeout.
+        await Future.delayed(const Duration(milliseconds: 500));
+        return;
+      } catch (_) {
+        // UI can rebuild between ensureVisible/tap; retry until timeout.
+      }
+    }
+
+    final allSemantics = <String>[];
+    for (final candidate in ['LoginPageRoot', 'UserPageRoot', 'AuthenticatedOfflineRoot', 'NoConnectionPageRoot']) {
+      if (_semFinder(candidate).evaluate().isNotEmpty) allSemantics.add(candidate);
+    }
+    throw AssertionError(
+      'Timeout tapping semantics label=$label '
+      '(visible: ${allSemantics.isEmpty ? "none" : allSemantics.join(", ")})',
+    );
   }
 
   Future<void> loginWithPassword(
