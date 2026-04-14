@@ -57,6 +57,6 @@ data class FronteggState(
                 appLink == state.appLink &&
                 showLoader == state.showLoader &&
                 refreshingToken == state.refreshingToken &&
-                isOfflineMode == state.isOfflineMode
+                isOfflineMode == state.isOfflineMode;
     }
 }

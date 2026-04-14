@@ -4,18 +4,35 @@ on:
   push:
     branches-ignore:
       - master
+
 jobs:
+  check-pr:
+    runs-on: ubuntu-latest
+    outputs:
+      has_pr: ${{ steps.check.outputs.has_pr }}
+    steps:
+      - id: check
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          PR_COUNT=$(gh pr list --repo "$GITHUB_REPOSITORY" --head "$GITHUB_REF_NAME" --state open --json number --jq length)
+          echo "has_pr=$( [ "$PR_COUNT" -gt 0 ] && echo true || echo false )" >> "$GITHUB_OUTPUT"
+
   build:
-    runs-on: 'macos-latest-large'
+    needs: check-pr
+    # Skip when an open PR exists — PR-triggered workflows already cover this branch.
+    if: needs.check-pr.outputs.has_pr != 'true'
+    # Standard runner avoids macos-latest-large, which requires higher org
+    # spending limits and fails fast when billing / quota is exceeded.
+    runs-on: macos-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v5
 
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          architecture: x64
-          flutter-version: 3.41.0
+          channel: stable
 
       - name: Enable Swift Package Manager (SPM)
         run: flutter config --enable-swift-package-manager

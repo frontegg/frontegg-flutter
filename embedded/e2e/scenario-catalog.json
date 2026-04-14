@@ -1,0 +1,114 @@
+{
+  "tests": [
+    {
+      "method": "testPasswordLoginAndSessionRestore",
+      "title": "Password login survives relaunch",
+      "description": "Logs in with the embedded password flow, relaunches the app without resetting state, and verifies the authenticated session is restored."
+    },
+    {
+      "method": "testEmbeddedSamlLogin",
+      "title": "Embedded SAML login via mock Okta",
+      "description": "Triggers a SAML login hint, taps the mock Okta button in the embedded WebView, and verifies authentication."
+    },
+    {
+      "method": "testEmbeddedOidcLogin",
+      "title": "Embedded OIDC login via mock Okta",
+      "description": "Triggers an OIDC login hint, taps the mock Okta button in the embedded WebView, and verifies authentication."
+    },
+    {
+      "method": "testRequestAuthorizeFlow",
+      "title": "Request authorize with seeded refresh token",
+      "description": "Seeds a refresh token, triggers requestAuthorize, and verifies the session is established."
+    },
+    {
+      "method": "testCustomSSOBrowserHandoff",
+      "title": "Custom SSO browser handoff completes login",
+      "description": "Initiates a custom SSO flow that opens a browser, mock server completes the handoff, and the user is authenticated."
+    },
+    {
+      "method": "testDirectSocialBrowserHandoff",
+      "title": "Direct social browser handoff completes login",
+      "description": "Initiates a direct social login that opens a browser, mock server completes the handoff, and the user is authenticated."
+    },
+    {
+      "method": "testEmbeddedGoogleSocialLoginWithSystemWebAuthenticationSession",
+      "title": "Google social login via system web auth session",
+      "description": "Triggers Google social login, the Custom Tab loads the mock Google page, auto-completes, and the user is authenticated."
+    },
+    {
+      "method": "testEmbeddedGoogleSocialLoginOAuthErrorShowsToastAndKeepsLoginOpen",
+      "title": "Google social OAuth error shows toast",
+      "description": "Queues an OAuth error for the social callback, triggers Google social login, and verifies the error code appears in the UI."
+    },
+    {
+      "method": "testColdLaunchTransientProbeTimeoutsDoNotBlinkNoConnectionPage",
+      "title": "Transient probe timeouts do not blink NoConnection",
+      "description": "Queues slow probe responses, cold-launches the app, and verifies no NoConnection overlay appears."
+    },
+    {
+      "method": "testLogoutTerminateTransientProbeFailureDoesNotBlinkNoConnectionPage",
+      "title": "Post-logout probe failures do not blink NoConnection",
+      "description": "Logs in, logs out, queues probe failures, relaunches, and verifies no NoConnection overlay appears."
+    },
+    {
+      "method": "testAuthenticatedOfflineModeWhenNetworkPathUnavailable",
+      "title": "Offline mode activates when network path unavailable",
+      "description": "Logs in, relaunches with forced offline, and verifies the offline mode badge and preserved token version."
+    },
+    {
+      "method": "testExpiredAccessTokenRefreshesOnAuthenticatedRelaunch",
+      "title": "Expired access token refreshes on authenticated relaunch",
+      "description": "Logs in with short access TTL, waits for expiry, relaunches, and verifies the token is refreshed."
+    },
+    {
+      "method": "testAuthenticatedOfflineModeRecoversToOnlineAndRefreshesToken",
+      "title": "Offline mode recovers to online and refreshes token",
+      "description": "Logs in, goes offline, then comes back online, and verifies the token version changes."
+    },
+    {
+      "method": "testAuthenticatedOfflineModeKeepsUserLoggedInUntilReconnectRefreshesExpiredToken",
+      "title": "Offline mode keeps user logged in until reconnect refreshes expired token",
+      "description": "Logs in with short TTLs, goes offline, waits for access expiry, reconnects, and verifies token refresh."
+    },
+    {
+      "method": "testLogoutTerminateTransientNoConnectionThenCustomSSORecovers",
+      "title": "NoConnection after logout recovers via custom SSO",
+      "description": "Logs in, logs out, queues probe failure, sees NoConnection, retries, then logs in via custom SSO."
+    },
+    {
+      "method": "testColdLaunchWithOfflineModeDisabledReachesLoginQuickly",
+      "title": "Cold launch with offline mode disabled reaches login quickly",
+      "description": "Queues probe failures, launches with offline mode disabled, and verifies login page appears quickly."
+    },
+    {
+      "method": "testOfflineModeDisabledPreservesSessionDuringConnectionLossAndRecovers",
+      "title": "Offline mode disabled preserves session during connection loss",
+      "description": "Logs in with offline mode disabled, queues a connection drop, relaunches, and verifies the session is preserved."
+    },
+    {
+      "method": "testPasswordLoginWorksWithOfflineModeDisabled",
+      "title": "Password login works with offline mode disabled",
+      "description": "Launches with offline mode disabled and verifies password login still works."
+    },
+    {
+      "method": "testLogoutClearsSessionAndRelaunchShowsLogin",
+      "title": "Logout clears session and relaunch shows login",
+      "description": "Logs in, logs out, relaunches, and verifies the login page is shown."
+    },
+    {
+      "method": "testExpiredRefreshTokenClearsSessionAndShowsLogin",
+      "title": "Expired refresh token clears session and shows login",
+      "description": "Logs in with very short refresh TTL, waits for expiry, relaunches with reset, and verifies login page."
+    },
+    {
+      "method": "testScheduledTokenRefreshFiresBeforeExpiry",
+      "title": "Scheduled token refresh fires before access token expiry",
+      "description": "Logs in with a 45s access TTL, waits ~35s, and verifies the SDK sent a refresh request."
+    },
+    {
+      "method": "testAuthenticatedRelaunchWithExpiredAccessTokenAndFreshRefreshToken",
+      "title": "Relaunch with expired access token refreshes via valid refresh token",
+      "description": "Logs in with a very short access TTL, terminates after access expires but before refresh expires, relaunches, and verifies the token is refreshed."
+    }
+  ]
+}

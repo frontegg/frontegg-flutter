@@ -20,13 +20,13 @@ class FronteggStateListenerImpl: FronteggStateListener {
     func subscribe() {
         let auth = fronteggApp.auth
         var stateChange: AnyPublisher<Void, Never> {
-            return Publishers.Merge6(
+            return Publishers.MergeMany(
                 auth.$refreshingToken.map { _ in },
                 auth.$isAuthenticated.map {_ in },
                 auth.$isLoading.map {_ in },
                 auth.$initializing.map {_ in },
                 auth.$showLoader.map {_ in },
-                auth.$isOfflineMode.map {_ in }
+                auth.$isOfflineMode.map { _ in },
             )
             .eraseToAnyPublisher()
         }

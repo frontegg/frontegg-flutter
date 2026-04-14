@@ -10,10 +10,30 @@ import FronteggSwift
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
     ) -> Bool {
+#if DEBUG
+        // Tell FronteggSwift this is an E2E test build so it allows the embedded
+        // WebView to navigate to the localhost mock server (FronteggRuntime.isTesting).
+        setenv("frontegg-testing", "true", 1)
+        let viaC = String(cString: getenv("frontegg-testing") ?? "<nil>")
+        let viaProcessInfo = ProcessInfo.processInfo.environment["frontegg-testing"] ?? "<nil>"
+        NSLog("[E2E] env via getenv=%@, via ProcessInfo=%@", viaC, viaProcessInfo)
+#endif
+
         GeneratedPluginRegistrant.register(with: self)
 
         DefaultLoader.customLoaderView = AnyView(Text("Loading..."))
-        
+
+        // Register the E2E method channel.  Use the FlutterPluginRegistry API
+        // so it works even when window.rootViewController is not yet available
+        // (UIScene lifecycle / Xcode 16.4).
+        let registrar = self.registrar(forPlugin: "FronteggE2E")!
+        let e2eChannel = FlutterMethodChannel(
+            name: "frontegg_e2e",
+            binaryMessenger: registrar.messenger()
+        )
+        e2eChannel.setMethodCallHandler(handleE2EMethodCall)
+        NSLog("[E2E] e2e channel registered via FlutterPluginRegistry")
+
         return super.application(application, didFinishLaunchingWithOptions: launchOptions)
     }
     
@@ -52,6 +72,65 @@ import FronteggSwift
         return false
     }
     
+    private func handleE2EMethodCall(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
+        switch call.method {
+        case "initializeForE2E":
+            guard let args = call.arguments as? [String: Any],
+                  let baseUrl = args["baseUrl"] as? String,
+                  let clientId = args["clientId"] as? String else {
+                result(FlutterError(code: "MISSING_PARAM", message: "baseUrl and clientId required", details: nil))
+                return
+            }
+            let resetState = args["resetState"] as? Bool ?? true
+            let forceNetworkPathOffline = args["forceNetworkPathOffline"] as? Bool ?? false
+            NSLog("[E2E] initializeForE2E: baseUrl=%@, resetState=%d", baseUrl, resetState ? 1 : 0)
+            Task { @MainActor in
+#if DEBUG
+                NSLog("[E2E] DEBUG block active")
+                if resetState {
+                    await FronteggApp.shared.resetForTesting(baseUrlOverride: baseUrl)
+                    NSLog("[E2E] resetForTesting done")
+                }
+                FronteggApp.shared.configureTestingNetworkPathAvailability(
+                    forceNetworkPathOffline ? false : nil
+                )
+                if let offline = args["enableOfflineMode"] as? Bool {
+                    FronteggApp.shared.configureTestingOfflineMode(offline)
+                } else if let offline = args["enableOfflineMode"] as? NSNumber {
+                    FronteggApp.shared.configureTestingOfflineMode(offline.boolValue)
+                }
+#else
+                NSLog("[E2E] DEBUG block NOT active")
+#endif
+                FronteggApp.shared.shouldPromptSocialLoginConsent = false
+                NSLog("[E2E] pre-manualInit embeddedMode=%d, baseUrl=%@", FronteggApp.shared.auth.embeddedMode ? 1 : 0, FronteggApp.shared.baseUrl)
+                FronteggApp.shared.manualInit(
+                    baseUrl: baseUrl,
+                    cliendId: clientId,
+                    handleLoginWithSocialLogin: true,
+                    handleLoginWithSSO: true,
+                    handleLoginWithCustomSSO: true,
+                    handleLoginWithCustomSocialLoginProvider: true,
+                    handleLoginWithSocialProvider: true,
+                    entitlementsEnabled: false
+                )
+                NSLog("[E2E] manualInit done, baseUrl=%@, embeddedMode=%d", FronteggApp.shared.baseUrl, FronteggApp.shared.auth.embeddedMode ? 1 : 0)
+                result(nil)
+            }
+
+        case "resetForTesting":
+            FronteggApp.shared.auth.logout { _ in
+                result(nil)
+            }
+
+        case "writeBootstrap", "consumeBootstrap":
+            result(nil)
+
+        default:
+            result(FlutterMethodNotImplemented)
+        }
+    }
+
     func showToast(message: String) {
         guard let window = UIApplication.shared.windows.first(where: { $0.isKeyWindow }) else { return }
 

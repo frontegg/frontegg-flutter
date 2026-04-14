@@ -1,5 +1,11 @@
 import 'package:frontegg_flutter/frontegg_flutter.dart';
 
+bool _readBool(Object? value) {
+  if (value is bool) return value;
+  if (value is num) return value != 0;
+  return false;
+}
+
 /// Represents the authentication state in the Frontegg system.
 class FronteggState {
   /// The access token for authenticated requests, or `null` if not authenticated.
@@ -29,7 +35,7 @@ class FronteggState {
   /// Whether the token is currently being refreshed.
   final bool refreshingToken;
 
-  /// Whether the SDK considers the app in offline mode (native offline-mode feature enabled).
+  /// Whether the SDK considers the app in offline / no-connection UX (native-driven).
   final bool isOfflineMode;
 
   /// Creates a [FronteggState] instance with the given parameters.
@@ -103,7 +109,7 @@ class FronteggState {
       showLoader: map["showLoader"] as bool,
       appLink: map["appLink"] as bool,
       refreshingToken: map["refreshingToken"] as bool,
-      isOfflineMode: (map["isOfflineMode"] as bool?) ?? false,
+      isOfflineMode: _readBool(map["isOfflineMode"]),
     );
   }
 

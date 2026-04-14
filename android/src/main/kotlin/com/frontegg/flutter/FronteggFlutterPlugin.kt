@@ -26,14 +26,15 @@ class FronteggFlutterPlugin : FlutterPlugin, ActivityAware, ActivityProvider {
             this,
             flutterPluginBinding.applicationContext,
         )
-        
+
         channel = MethodChannel(flutterPluginBinding.binaryMessenger, METHOD_CHANNEL_NAME)
         channel.setMethodCallHandler(methodCallHandler)
 
         stateEventChannel =
             EventChannel(flutterPluginBinding.binaryMessenger, STATE_EVENT_CHANNEL_NAME)
         stateListener = FronteggStateListenerImpl(flutterPluginBinding.applicationContext)
-        
+        activeStateListener = stateListener
+
         // Set the state listener in method call handler
         methodCallHandler.setStateListener(stateListener!!)
 
@@ -52,6 +53,7 @@ class FronteggFlutterPlugin : FlutterPlugin, ActivityAware, ActivityProvider {
     override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
         channel.setMethodCallHandler(null)
         context = null
+        if (activeStateListener === stateListener) activeStateListener = null
         stateListener?.dispose()
     }
 
@@ -78,5 +80,16 @@ class FronteggFlutterPlugin : FlutterPlugin, ActivityAware, ActivityProvider {
     companion object {
         const val METHOD_CHANNEL_NAME = "frontegg_flutter"
         const val STATE_EVENT_CHANNEL_NAME = "frontegg_flutter/state_stream"
+
+        /**
+         * E2E hook: kept here so the demo app's bootstrap code can re-attach the
+         * state observers after replacing the [com.frontegg.android.FronteggApp]
+         * singleton.  Without this, the listener captured at plugin attach time
+         * remains subscribed to the dead instance and Flutter never sees state
+         * updates from the new (mock-server-bound) instance.
+         */
+        @JvmStatic
+        var activeStateListener: FronteggStateListenerImpl? = null
+            internal set
     }
 }
