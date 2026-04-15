@@ -11,6 +11,7 @@ import 'theme.dart';
 import 'utils.dart';
 import 'widgets/footer.dart';
 import 'widgets/frontegg_app_bar.dart';
+import 'widgets/offline_mode_banner.dart';
 
 /// UserPage
 class UserPage extends StatefulWidget {
@@ -66,27 +67,11 @@ class _UserPageState extends State<UserPage> {
                         const SizedBox(height: 40),
                         if (_messageWidget != null) _messageWidget!,
                         const SizedBox(height: 16),
-                        if (E2ETestMode.isEnabled &&
-                            E2ETestMode.forceNetworkPathOffline)
-                          Padding(
-                            padding: const EdgeInsets.only(
-                              left: 24,
-                              right: 24,
-                              bottom: 8,
-                            ),
-                            child: Align(
-                              alignment: Alignment.centerLeft,
-                              child: Semantics(
-                                label: 'OfflineModeBadge',
-                                child: Text(
-                                  'Offline Mode',
-                                  style: textTheme.titleSmall?.copyWith(
-                                    color: const Color(0xFF888888),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
+                        OfflineModeBanner(
+                          visible: state.isOfflineMode ||
+                              (E2ETestMode.isEnabled &&
+                                  E2ETestMode.forceNetworkPathOffline),
+                        ),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 24),
                           child: Card(

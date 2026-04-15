@@ -82,9 +82,9 @@ void main() {
   e2ePatrolTest('testRequestAuthorizeFlow', ($) async {
     await tc.launchApp($);
     await tc.waitForLoginPage($, timeout: const Duration(seconds: 35));
-    await tc.tapSemantics($, 'E2ESeedRequestAuthorizeTokenButton');
+    await tc.tapByKey($, 'E2ESeedRequestAuthorizeTokenButtonKey');
     await Future.delayed(const Duration(seconds: 2));
-    await tc.tapSemantics($, 'RequestAuthorizeButton');
+    await tc.tapByKey($, 'RequestAuthorizeButtonKey');
     await tc.waitForUserEmail($, 'signup@frontegg.com', timeout: const Duration(seconds: 120));
   });
 

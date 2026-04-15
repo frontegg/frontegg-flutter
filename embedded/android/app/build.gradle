@@ -66,6 +66,8 @@ android {
         buildConfigField "Boolean", 'FRONTEGG_USE_ASSETS_LINKS', "true"
         buildConfigField "Boolean", 'FRONTEGG_USE_CHROME_CUSTOM_TABS', "true"
         buildConfigField "String", 'FRONTEGG_DEEP_LINK_SCHEME', "\"test\""
+        buildConfigField "boolean", "FRONTEGG_ENABLE_OFFLINE_MODE", "true"
+        buildConfigField "int", "FRONTEGG_NETWORK_MONITORING_INTERVAL_SECONDS", "10"
 
         testInstrumentationRunner "pl.leancode.patrol.PatrolJUnitRunner"
         testInstrumentationRunnerArguments clearPackageData: "true"
@@ -124,5 +126,5 @@ flutter {
 
 dependencies {
     androidTestUtil "androidx.test:orchestrator:1.5.1"
-    implementation 'com.frontegg.sdk:android:1.3.24'
+    implementation 'com.frontegg.sdk:android:1.3.25'
 }

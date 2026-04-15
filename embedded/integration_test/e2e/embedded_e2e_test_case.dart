@@ -111,6 +111,26 @@ class EmbeddedE2ETestCase {
     await Future.delayed(const Duration(milliseconds: 500));
   }
 
+  Future<void> tapByKey(PatrolIntegrationTester $, String keyValue, {Duration timeout = const Duration(seconds: 10)}) async {
+    final finder = find.byKey(ValueKey<String>(keyValue));
+    final deadline = DateTime.now().add(timeout);
+    while (DateTime.now().isBefore(deadline)) {
+      await Future.delayed(const Duration(milliseconds: 250));
+      await $.pump();
+      final matches = finder.evaluate().toList(growable: false);
+      if (matches.isEmpty) continue;
+      final target = find.byWidget(matches.first.widget);
+      await $.tester.ensureVisible(target);
+      await Future.delayed(const Duration(milliseconds: 250));
+      await $.pump();
+      if (target.evaluate().isEmpty) continue;
+      await $.tester.tap(target);
+      await Future.delayed(const Duration(milliseconds: 500));
+      return;
+    }
+    throw AssertionError('Timeout tapping key=$keyValue');
+  }
+
   Future<void> loginWithPassword(
     PatrolIntegrationTester $, {
     Duration emailTimeout = const Duration(seconds: 60),

@@ -37,6 +37,7 @@ class FronteggStateListenerImpl(
             fronteggAuth.initializing.observable,
             fronteggAuth.showLoader.observable,
             fronteggAuth.refreshingToken.observable,
+            fronteggAuth.isOfflineMode.observable,
         ).subscribe {
             notifyChanges()
         }
@@ -93,7 +94,7 @@ class FronteggStateListenerImpl(
             showLoader = fronteggAuth.showLoader.value,
             appLink = fronteggAuth.useAssetsLinks,
             refreshingToken = fronteggAuth.refreshingToken.value,
-            isOfflineMode = false,
+            isOfflineMode = fronteggAuth.isOfflineMode.value,
         )
 
         sendState(state)
@@ -134,7 +135,7 @@ class FronteggStateListenerImpl(
             showLoader = fronteggAuth.showLoader.value,
             appLink = fronteggAuth.useAssetsLinks,
             refreshingToken = fronteggAuth.refreshingToken.value,
-            isOfflineMode = false,
+            isOfflineMode = fronteggAuth.isOfflineMode.value,
         )
 
         sendState(state)

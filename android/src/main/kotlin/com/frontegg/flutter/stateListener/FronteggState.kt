@@ -12,8 +12,7 @@ data class FronteggState(
     val showLoader: Boolean,
     val appLink: Boolean,
     val refreshingToken: Boolean,
-    /** Mirrors iOS; Android SDK does not expose this yet — keep false until wired. */
-    val isOfflineMode: Boolean = false,
+    val isOfflineMode: Boolean,
 ) {
     fun toMap(): Map<String, Any?> {
         return mapOf(

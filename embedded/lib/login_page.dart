@@ -233,6 +233,7 @@ class Body extends StatelessWidget {
       Semantics(
         label: 'E2ESeedRequestAuthorizeTokenButton',
         child: ElevatedButton(
+          key: const ValueKey('E2ESeedRequestAuthorizeTokenButtonKey'),
           onPressed: () async {
             debugPrint('E2E: seeded request-authorize refresh token');
           },
@@ -243,6 +244,7 @@ class Body extends StatelessWidget {
       Semantics(
         label: 'RequestAuthorizeButton',
         child: ElevatedButton(
+          key: const ValueKey('RequestAuthorizeButtonKey'),
           onPressed: () async {
             try {
               await frontegg.requestAuthorize(
