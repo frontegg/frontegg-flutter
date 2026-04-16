@@ -14,5 +14,8 @@
     <string>f717b75f-e09a-48cc-a84e-e20a8454a9cf</string>
 	<key>logLevel</key>
 	<string>trace</string>
+	<!-- Set to true to disable automatic token refresh -->
+	<key>disableAutoRefresh</key>
+	<false/>
 </dict>
 </plist>

@@ -68,6 +68,8 @@ android {
         buildConfigField "String", 'FRONTEGG_DEEP_LINK_SCHEME', "\"test\""
         buildConfigField "boolean", "FRONTEGG_ENABLE_OFFLINE_MODE", "true"
         buildConfigField "int", "FRONTEGG_NETWORK_MONITORING_INTERVAL_SECONDS", "10"
+        // Set to true to disable automatic token refresh.
+        buildConfigField "boolean", "FRONTEGG_DISABLE_AUTO_REFRESH", "false"
 
         testInstrumentationRunner "pl.leancode.patrol.PatrolJUnitRunner"
         testInstrumentationRunnerArguments clearPackageData: "true"
