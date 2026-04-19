@@ -23,6 +23,6 @@
 	<integer>10</integer>
 	<!-- Set to true to disable automatic token refresh -->
 	<key>disableAutoRefresh</key>
-	<false/>
+	<true/>
 </dict>
 </plist>
