@@ -1,3 +1,7 @@
+## v1.0.42
+- Bump frontegg-android-kotlin sdk to 1.3.25 version.
+- Added offlie mode support for flutter-sdk.
+
 ## v1.0.41
 Fixed bug with session management for offline mode.
 

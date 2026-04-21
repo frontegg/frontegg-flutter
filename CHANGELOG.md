@@ -1,3 +1,6 @@
+## v1.0.43
+Added support for disable automatic token refresh
+
 ## v1.0.42
 - Bump frontegg-android-kotlin sdk to 1.3.25 version.
 - Added offlie mode support for flutter-sdk.
