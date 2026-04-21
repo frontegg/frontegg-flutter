@@ -245,6 +245,29 @@ When `FRONTEGG_ENABLE_OFFLINE_MODE` is `true`, the SDK keeps the session with st
 
 **Optional:** if you rely on auto-reconnect after offline, you can tune the ContentProvider debounce via manifest metadata on `com.frontegg.android.init.FronteggInitProvider` (`frontegg.autoreconnect.debounceMs`), as documented for the Android SDK.
 
+#### Disable automatic token refresh
+
+You can disable automatic token refresh in Flutter projects through the native SDK configuration.
+
+Android (`android/app/build.gradle`):
+
+```groovy
+buildConfigField "boolean", "FRONTEGG_DISABLE_AUTO_REFRESH", "true"
+```
+
+iOS (`Frontegg.plist`):
+
+```xml
+<key>disableAutoRefresh</key>
+<true/>
+```
+
+Behavior:
+
+- Default is `false` (automatic refresh stays enabled).
+- When enabled, SDK internal/automatic refresh flows are blocked (including timer-based/background auto refresh).
+- Manual refresh APIs are still available (for example, `await frontegg.refreshToken()`).
+
 You can access the current state of `FronteggFlutter` in two ways:
 
 1. Get `currentState`:
