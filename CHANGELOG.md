@@ -1,3 +1,6 @@
+## v1.0.44
+Bump frontegg-ios-swift version to 1.3.3.
+
 ## v1.0.43
 Added support for disable automatic token refresh
 
