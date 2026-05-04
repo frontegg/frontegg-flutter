@@ -85,10 +85,13 @@ run_with_retries() {
       echo "::warning::Patrol attempt $((attempt - 1)) failed; retrying ($attempt/$MAX_RETRIES)..."
       recover_between_retries
     fi
-    set +e
-    run_patrol "${patrol_args[@]}"
-    status=$?
-    set -e
+    # `|| status=$?` keeps errexit from killing the script when run_patrol
+    # returns non-zero. `set +e` alone is unsafe here: run_patrol toggles
+    # errexit internally and leaves it ON before `return 77`, so by the time
+    # control returns to this line errexit is back on and bash exits before
+    # `status=$?` runs — masking flakes as fatal failures and skipping retries.
+    status=0
+    run_patrol "${patrol_args[@]}" || status=$?
     if [[ "$status" -eq 0 ]]; then
       return 0
     fi
