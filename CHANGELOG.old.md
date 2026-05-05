@@ -1,3 +1,11 @@
+## v1.0.46
+Bump frontegg-android-kotlin version to 1.3.28.
+- Trust server tenant on fresh login instead of stale cache.
+- Gate `AndroidDebugConfigurationChecker` on host app debuggable flag.
+
+## v1.0.45
+Bump frontegg-android-kotlin sdk to 1.3.27.
+
 ## v1.0.44
 Bump frontegg-ios-swift version to 1.3.3.
 
