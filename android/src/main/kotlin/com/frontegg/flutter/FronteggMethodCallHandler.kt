@@ -362,8 +362,12 @@ class FronteggMethodCallHandler(
         val tenantId =
             call.argument<String>("tenantId") ?: throw ArgumentNotFoundException("tenantId")
 
-        context.fronteggAuth.switchTenant(tenantId) {
-            result.success(null)
+        context.fronteggAuth.switchTenant(tenantId) { success ->
+            if (success) {
+                result.success(null)
+            } else {
+                result.error("switch_tenant_failed", "Failed to switch tenant", null)
+            }
         }
     }
 
