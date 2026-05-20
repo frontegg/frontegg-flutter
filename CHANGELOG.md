@@ -1,3 +1,7 @@
+## v1.0.48
+Bump frontegg-kotlin sdk to 1.3.32.
+Bump frontegg-ios sfk to 1.3.7.
+
 ## v1.0.47
 ## Summary
 - Trust server tenant on fresh login instead of stale cache.
