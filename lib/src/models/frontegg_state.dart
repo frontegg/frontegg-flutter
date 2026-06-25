@@ -1,10 +1,5 @@
-import 'package:frontegg_flutter/frontegg_flutter.dart';
-
-bool _readBool(Object? value) {
-  if (value is bool) return value;
-  if (value is num) return value != 0;
-  return false;
-}
+import 'package:frontegg_flutter/src/inner_utils.dart';
+import 'package:frontegg_flutter/src/models/frontegg_user.dart';
 
 /// Represents the authentication state in the Frontegg system.
 class FronteggState {
@@ -103,13 +98,13 @@ class FronteggState {
       accessToken: map["accessToken"] as String?,
       refreshToken: map["refreshToken"] as String?,
       user: user != null ? FronteggUser.fromMap(user) : null,
-      isAuthenticated: map["isAuthenticated"] as bool,
-      isLoading: map["isLoading"] as bool,
-      initializing: map["initializing"] as bool,
-      showLoader: map["showLoader"] as bool,
-      appLink: map["appLink"] as bool,
-      refreshingToken: map["refreshingToken"] as bool,
-      isOfflineMode: _readBool(map["isOfflineMode"]),
+      isAuthenticated: readPlatformBool(map["isAuthenticated"]),
+      isLoading: readPlatformBool(map["isLoading"]),
+      initializing: readPlatformBool(map["initializing"]),
+      showLoader: readPlatformBool(map["showLoader"]),
+      appLink: readPlatformBool(map["appLink"]),
+      refreshingToken: readPlatformBool(map["refreshingToken"]),
+      isOfflineMode: readPlatformBool(map["isOfflineMode"]),
     );
   }
 

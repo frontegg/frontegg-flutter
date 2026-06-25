@@ -28,11 +28,27 @@ void main() {
 
     test(
       "should return a valid Loaded model",
-      () async {
-        // Act
+      () {
         final result = FronteggState.fromMap(tLoadedFronteggStateMap);
-        // Assert
         expect(result, equals(tLoadedFronteggState));
+      },
+    );
+
+    test(
+      "should parse iOS platform-channel bools encoded as ints",
+      () {
+        final map = Map<Object?, Object?>.from(tLoadedFronteggStateMap);
+        map["isAuthenticated"] = 1;
+        map["isLoading"] = 0;
+        map["initializing"] = 0;
+        map["showLoader"] = 0;
+        map["isOfflineMode"] = 0;
+
+        final result = FronteggState.fromMap(map);
+
+        expect(result.isAuthenticated, isTrue);
+        expect(result.isLoading, isFalse);
+        expect(result.user, isNotNull);
       },
     );
   });
