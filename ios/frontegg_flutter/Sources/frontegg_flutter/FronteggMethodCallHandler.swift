@@ -1,6 +1,8 @@
 import Foundation
 import FronteggSwift
 import Flutter
+import SwiftUI
+import UIKit
 
 class FronteggMethodCallHandler {
     private var fronteggApp: FronteggApp
@@ -43,6 +45,8 @@ class FronteggMethodCallHandler {
             isSteppedUp(call: call, result: result)
         case "loadEntitlements":
             loadEntitlements(call: call, result: result)
+        case "openAdminPortal":
+            openAdminPortal(result: result)
             
         default:
             result(FlutterMethodNotImplemented)
@@ -356,5 +360,44 @@ class FronteggMethodCallHandler {
         ) { success in
             result(success)
         }
+    }
+
+    private func openAdminPortal(result: @escaping FlutterResult) {
+        DispatchQueue.main.async {
+            guard let viewController = Self.topViewController() else {
+                result(FlutterError(
+                    code: "NO_VIEW_CONTROLLER",
+                    message: "Cannot open Admin Portal without an active view controller",
+                    details: nil
+                ))
+                return
+            }
+
+            if #available(iOS 14.0, *) {
+                let host = UIHostingController(rootView: AdminPortalView())
+                host.modalPresentationStyle = .pageSheet
+                viewController.present(host, animated: true)
+                result(nil)
+            } else {
+                result(FlutterError(
+                    code: "UNSUPPORTED",
+                    message: "Admin Portal requires iOS 14+",
+                    details: nil
+                ))
+            }
+        }
+    }
+
+    private static func topViewController() -> UIViewController? {
+        let keyWindow = UIApplication.shared.connectedScenes
+            .compactMap { $0 as? UIWindowScene }
+            .flatMap { $0.windows }
+            .first { $0.isKeyWindow }
+
+        var topController = keyWindow?.rootViewController
+        while let presented = topController?.presentedViewController {
+            topController = presented
+        }
+        return topController
     }
 }

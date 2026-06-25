@@ -58,7 +58,7 @@ class FronteggTenant {
       creatorEmail: map["creatorEmail"] as String?,
       creatorName: map["creatorName"] as String?,
       vendorId: map["vendorId"] as String,
-      isReseller: map["isReseller"] as bool,
+      isReseller: readPlatformBool(map["isReseller"]),
       metadata: map["metadata"] as String,
       createdAt: (map["createdAt"] as String).toDateTime(),
       updatedAt: (map["updatedAt"] as String).toDateTime(),

@@ -1,4 +1,5 @@
 import "package:flutter/foundation.dart";
+import "package:frontegg_flutter/src/inner_utils.dart";
 
 import "frontegg_tenant.dart";
 import "frontegg_user_role.dart";
@@ -82,7 +83,7 @@ class FronteggUser {
     return FronteggUser(
       id: map["id"] as String,
       email: map["email"] as String,
-      mfaEnrolled: map["mfaEnrolled"] as bool,
+      mfaEnrolled: readPlatformBool(map["mfaEnrolled"]),
       name: map["name"] as String,
       profilePictureUrl: map["profilePictureUrl"] as String,
       phoneNumber: map["phoneNumber"] as String?,
@@ -102,10 +103,10 @@ class FronteggUser {
           .toList(),
       activeTenant:
           FronteggTenant.fromMap(map["activeTenant"] as Map<Object?, Object?>),
-      activatedForTenant: map["activatedForTenant"] as bool,
+      activatedForTenant: readPlatformBool(map["activatedForTenant"]),
       metadata: map["metadata"] as String?,
-      verified: map["verified"] as bool,
-      superUser: map["superUser"] as bool,
+      verified: readPlatformBool(map["verified"]),
+      superUser: readPlatformBool(map["superUser"]),
     );
   }
 

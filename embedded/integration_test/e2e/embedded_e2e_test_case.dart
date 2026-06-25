@@ -99,16 +99,28 @@ class EmbeddedE2ETestCase {
     await waitForText($, email, timeout: timeout);
   }
 
-  Future<void> tapSemantics(PatrolIntegrationTester $, String label, {Duration timeout = const Duration(seconds: 10)}) async {
+  Future<void> tapSemantics(
+    PatrolIntegrationTester $,
+    String label, {
+    Duration timeout = const Duration(seconds: 10),
+    int maxScrollAttempts = 6,
+  }) async {
     await waitForSemantics($, label, timeout: timeout);
     final finder = _semFinder(label).first;
-    await $.tester.ensureVisible(finder);
-    await Future.delayed(const Duration(milliseconds: 300));
-    await $.pump();
-    await $.tester.tap(finder);
-    // Do not pump() after tap: embedded login can present a native webview
-    // immediately; WidgetTester.pump then blocks and never returns, so job hits CI timeout.
-    await Future.delayed(const Duration(milliseconds: 500));
+    for (var attempt = 0; attempt <= maxScrollAttempts; attempt++) {
+      await $.tester.scrollUntilVisible(finder, 300);
+      await Future.delayed(const Duration(milliseconds: 300));
+      await $.pump();
+      if (finder.evaluate().isEmpty) continue;
+      try {
+        await $.tester.tap(finder);
+        await Future.delayed(const Duration(milliseconds: 500));
+        return;
+      } catch (_) {
+        if (attempt == maxScrollAttempts) rethrow;
+      }
+    }
+    throw AssertionError('Could not tap semantics label=$label');
   }
 
   Future<void> tapByKey(PatrolIntegrationTester $, String keyValue, {Duration timeout = const Duration(seconds: 10)}) async {

@@ -51,7 +51,7 @@ class FronteggUserRole {
     return FronteggUserRole(
       id: map["id"] as String,
       key: map["key"] as String,
-      isDefault: map["isDefault"] as bool,
+      isDefault: readPlatformBool(map["isDefault"]),
       name: map["name"] as String,
       description: map["description"] as String?,
       permissions: (map["permissions"] as List<Object?>)

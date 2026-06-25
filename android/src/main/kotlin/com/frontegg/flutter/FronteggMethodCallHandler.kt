@@ -2,6 +2,7 @@ package com.frontegg.flutter
 
 import android.content.Context
 import android.util.Base64
+import com.frontegg.android.AdminPortalActivity
 import com.frontegg.android.EmbeddedAuthActivity
 import com.frontegg.android.exceptions.FronteggException
 import com.frontegg.android.fronteggAuth
@@ -54,6 +55,8 @@ class FronteggMethodCallHandler(
             "forceStateUpdate" -> forceStateUpdate(result)
 
             "loadEntitlements" -> loadEntitlements(call, result)
+
+            "openAdminPortal" -> openAdminPortal(result)
 
             else -> result.notImplemented()
         }
@@ -423,5 +426,20 @@ class FronteggMethodCallHandler(
         ) { success ->
             result.success(success)
         }
+    }
+
+    private fun openAdminPortal(result: MethodChannel.Result) {
+        val activity = activityProvider.getActivity()
+        if (activity == null) {
+            result.error(
+                "NO_ACTIVITY",
+                "Cannot open Admin Portal without an active Activity",
+                null,
+            )
+            return
+        }
+
+        AdminPortalActivity.open(activity)
+        result.success(null)
     }
 }

@@ -112,4 +112,9 @@ abstract class FronteggPlatform extends PlatformInterface {
   Future<void> forceStateUpdate() {
     throw UnimplementedError("forceStateUpdate() has not been implemented.");
   }
+
+  /// Opens the embedded Frontegg Admin Portal.
+  Future<void> openAdminPortal() {
+    throw UnimplementedError("openAdminPortal() has not been implemented.");
+  }
 }

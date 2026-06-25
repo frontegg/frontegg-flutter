@@ -40,6 +40,7 @@
 | `requestAuthorize` | - `refreshToken` (required): String<br>- `deviceTokenCookie`: String? | Initiates authorization request. Returns `FronteggUser` if successful, `null` if fails. |
 | `isSteppedUp` | `maxAge`: Duration? | Checks if user has completed step-up authentication. |
 | `stepUp` | `maxAge`: Duration? | Initiates the step-up authentication process. |
+| `openAdminPortal` | None | Opens the embedded Frontegg Admin Portal in a native WebView. |
 
 ### Utility Methods
 

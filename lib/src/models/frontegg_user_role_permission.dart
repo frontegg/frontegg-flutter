@@ -45,7 +45,7 @@ class FronteggUserRolePermission {
       name: map["name"] as String,
       categoryId: map["categoryId"] as String,
       description: map["description"] as String?,
-      fePermission: map["fePermission"] as bool,
+      fePermission: readPlatformBool(map["fePermission"]),
       createdAt: (map["createdAt"] as String).toDateTime(),
       updatedAt: (map["updatedAt"] as String).toDateTime(),
     );
