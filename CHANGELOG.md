@@ -1,3 +1,8 @@
+## v1.0.49
+Bump frontegg-android-kotlin SDK to 1.3.34.
+Bump frontegg-ios-swift SDK to 1.3.10.
+Added `openAdminPortal()` API to open the embedded Admin Portal. Added "Open Admin Portal" button to all demo apps.
+
 ## v1.0.48
 Bump frontegg-kotlin sdk to 1.3.32.
 Bump frontegg-ios sfk to 1.3.7.
