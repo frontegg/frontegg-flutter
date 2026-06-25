@@ -223,3 +223,26 @@ Future<void> performSensitiveAction() async {
     // Continue with the sensitive action
 }
 ```
+
+## Admin Portal (Beta)
+
+The Admin Portal is a hosted page that lets end users manage their account, profile, sessions, and tenant settings. The Flutter SDK exposes `openAdminPortal()` which delegates to the native SDKs:
+
+- **Android** — launches `AdminPortalActivity` (full-screen `WebView`)
+- **iOS** — presents `AdminPortalView` as a page sheet (`WKWebView`)
+
+The portal loads `${baseUrl}/oauth/portal?appId=<applicationId>` and shares the SDK session, so authenticated users are not asked to sign in again.
+
+> **Beta.** The API may change in future minor releases. Pin to an exact SDK version when embedding this in a shipping app.
+
+### Multi-app prerequisite
+
+For multi-app workspaces, configure `applicationId` in your native setup (see [Multi-app support](#multi-app-support)). Without `?appId=` the portal renders **"Application not found"** after sign-in.
+
+### Open the portal
+
+```dart
+await frontegg.openAdminPortal();
+```
+
+The portal is dismissed when the user swipes down (iOS) or taps the built-in close button. On Android, `window.close()` finishes the activity automatically.

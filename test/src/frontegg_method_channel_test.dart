@@ -62,6 +62,8 @@ void main() {
             return null;
           case FronteggMethodChannel.stepUpMethodName:
             return null;
+          case FronteggMethodChannel.openAdminPortalMethodName:
+            return null;
         }
         throw Exception("${methodCall.method} Not Implemented");
       },
@@ -129,6 +131,10 @@ void main() {
 
   test('stepUP()', () async {
     await platform.stepUp();
+  });
+
+  test('openAdminPortal()', () async {
+    await platform.openAdminPortal();
   });
 
   group('StateEventChannel', () {

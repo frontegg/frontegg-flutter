@@ -219,6 +219,30 @@ class _UserPageState extends State<UserPage> {
                                       bottom: 8,
                                     ),
                                     child: Semantics(
+                                      label: 'OpenAdminPortalButton',
+                                      child: ElevatedButton(
+                                        key: const ValueKey('OpenAdminPortalButton'),
+                                        onPressed: () async {
+                                          try {
+                                            await frontegg.openAdminPortal();
+                                          } catch (e) {
+                                            _showFailureMessage(
+                                              "Failed to open Admin Portal: $e",
+                                            );
+                                          }
+                                        },
+                                        child: const Text("Open Admin Portal"),
+                                      ),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                      top: 8.0,
+                                      left: 10.5,
+                                      right: 10.5,
+                                      bottom: 8,
+                                    ),
+                                    child: Semantics(
                                       label: 'LogoutButton',
                                       child: ElevatedButton(
                                         key: const ValueKey('LogoutButton'),

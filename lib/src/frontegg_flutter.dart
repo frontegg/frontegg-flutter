@@ -339,6 +339,16 @@ class FronteggFlutter {
         ),
       );
 
+  /// Opens the embedded Frontegg Admin Portal.
+  ///
+  /// The portal loads `${baseUrl}/oauth/portal` in a native WebView that shares
+  /// the SDK session, so authenticated users are not asked to sign in again.
+  ///
+  /// Throws a [FronteggException] if the portal cannot be opened.
+  Future<void> openAdminPortal() => _runAction(() async {
+        await FronteggPlatform.instance.openAdminPortal();
+      });
+
   Future<T> _runAction<T>(Future<T> Function() action) async {
     try {
       return await action();

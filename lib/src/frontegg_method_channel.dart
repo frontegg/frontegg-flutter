@@ -27,6 +27,7 @@ class FronteggMethodChannel extends FronteggPlatform {
   static const String stepUpMethodName = "stepUp";
   static const String isSteppedUpMethodName = "isSteppedUp";
   static const String loadEntitlementsMethodName = "loadEntitlements";
+  static const String openAdminPortalMethodName = "openAdminPortal";
 
   /// MethodChannel used for invoking platform-specific methods.
   @visibleForTesting
@@ -255,4 +256,8 @@ class FronteggMethodChannel extends FronteggPlatform {
             },
           )) ??
           false;
+
+  @override
+  Future<void> openAdminPortal() =>
+      methodChannel.invokeMethod(openAdminPortalMethodName);
 }
