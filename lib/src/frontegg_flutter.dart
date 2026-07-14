@@ -339,6 +339,25 @@ class FronteggFlutter {
         ),
       );
 
+  /// Returns the [Entitlement] for the given feature key.
+  ///
+  /// Evaluated on-device from the state populated by the last successful
+  /// [loadEntitlements] call — call [loadEntitlements] first (returns
+  /// `isEntitled: false, justification: "ENTITLEMENTS_NOT_LOADED"` otherwise).
+  Future<Entitlement> getFeatureEntitlement(String featureKey) => _runAction(
+        () => FronteggPlatform.instance.getFeatureEntitlement(featureKey),
+      );
+
+  /// Returns the [Entitlement] for the given permission key.
+  ///
+  /// Evaluated on-device from the state populated by the last successful
+  /// [loadEntitlements] call — call [loadEntitlements] first (returns
+  /// `isEntitled: false, justification: "ENTITLEMENTS_NOT_LOADED"` otherwise).
+  Future<Entitlement> getPermissionEntitlement(String permissionKey) =>
+      _runAction(
+        () => FronteggPlatform.instance.getPermissionEntitlement(permissionKey),
+      );
+
   /// Opens the embedded Frontegg Admin Portal.
   ///
   /// The portal loads `${baseUrl}/oauth/portal` in a native WebView that shares

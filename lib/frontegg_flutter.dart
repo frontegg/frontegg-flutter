@@ -1,5 +1,6 @@
 export 'src/frontegg_flutter.dart';
 export 'src/frontegg_provider.dart';
+export 'src/models/entitlement.dart';
 export 'src/models/frontegg_constants.dart';
 export 'src/models/frontegg_state.dart';
 export 'src/models/frontegg_tenant.dart';

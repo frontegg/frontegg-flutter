@@ -62,6 +62,10 @@ void main() {
             return null;
           case FronteggMethodChannel.stepUpMethodName:
             return null;
+          case FronteggMethodChannel.getFeatureEntitlementMethodName:
+            return {"isEntitled": true, "justification": null};
+          case FronteggMethodChannel.getPermissionEntitlementMethodName:
+            return {"isEntitled": false, "justification": "MISSING_PERMISSION"};
           case FronteggMethodChannel.openAdminPortalMethodName:
             return null;
         }
@@ -127,6 +131,18 @@ void main() {
 
   test('isSteppedUp()', () async {
     await platform.isSteppedUp();
+  });
+
+  test('getFeatureEntitlement() parses the channel result', () async {
+    final result = await platform.getFeatureEntitlement('my-feature');
+    expect(result.isEntitled, isTrue);
+    expect(result.justification, isNull);
+  });
+
+  test('getPermissionEntitlement() parses the channel result', () async {
+    final result = await platform.getPermissionEntitlement('my-perm');
+    expect(result.isEntitled, isFalse);
+    expect(result.justification, 'MISSING_PERMISSION');
   });
 
   test('stepUP()', () async {

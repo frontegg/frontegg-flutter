@@ -1,5 +1,6 @@
 import "package:flutter/foundation.dart";
 import "package:flutter/services.dart";
+import "package:frontegg_flutter/src/models/entitlement.dart";
 
 import "frontegg_platform_interface.dart";
 
@@ -27,6 +28,9 @@ class FronteggMethodChannel extends FronteggPlatform {
   static const String stepUpMethodName = "stepUp";
   static const String isSteppedUpMethodName = "isSteppedUp";
   static const String loadEntitlementsMethodName = "loadEntitlements";
+  static const String getFeatureEntitlementMethodName = "getFeatureEntitlement";
+  static const String getPermissionEntitlementMethodName =
+      "getPermissionEntitlement";
   static const String openAdminPortalMethodName = "openAdminPortal";
 
   /// MethodChannel used for invoking platform-specific methods.
@@ -244,6 +248,26 @@ class FronteggMethodChannel extends FronteggPlatform {
   @override
   Future<void> forceStateUpdate() =>
       methodChannel.invokeMethod<void>("forceStateUpdate");
+
+  @override
+  Future<Entitlement> getFeatureEntitlement(String featureKey) async =>
+      Entitlement.fromMap(
+        (await methodChannel.invokeMethod<Map<Object?, Object?>>(
+              getFeatureEntitlementMethodName,
+              {"key": featureKey},
+            )) ??
+            const {},
+      );
+
+  @override
+  Future<Entitlement> getPermissionEntitlement(String permissionKey) async =>
+      Entitlement.fromMap(
+        (await methodChannel.invokeMethod<Map<Object?, Object?>>(
+              getPermissionEntitlementMethodName,
+              {"key": permissionKey},
+            )) ??
+            const {},
+      );
 
   @override
   Future<bool> loadEntitlements({

@@ -6,6 +6,7 @@ import com.frontegg.android.AdminPortalActivity
 import com.frontegg.android.EmbeddedAuthActivity
 import com.frontegg.android.exceptions.FronteggException
 import com.frontegg.android.fronteggAuth
+import com.frontegg.android.models.Entitlement
 import com.frontegg.android.services.StorageProvider
 import com.frontegg.flutter.stateListener.FronteggStateListenerImpl
 import io.flutter.plugin.common.MethodCall
@@ -55,6 +56,8 @@ class FronteggMethodCallHandler(
             "forceStateUpdate" -> forceStateUpdate(result)
 
             "loadEntitlements" -> loadEntitlements(call, result)
+            "getFeatureEntitlement" -> getFeatureEntitlement(call, result)
+            "getPermissionEntitlement" -> getPermissionEntitlement(call, result)
 
             "openAdminPortal" -> openAdminPortal(result)
 
@@ -427,6 +430,36 @@ class FronteggMethodCallHandler(
             result.success(success)
         }
     }
+
+    private fun getFeatureEntitlement(
+        call: MethodCall,
+        result: MethodChannel.Result,
+    ) {
+        val key = call.argument<String>("key")
+        if (key == null) {
+            result.error("MISSING_PARAMS", "Missing feature key", null)
+            return
+        }
+        result.success(entitlementToMap(context.fronteggAuth.getFeatureEntitlements(key)))
+    }
+
+    private fun getPermissionEntitlement(
+        call: MethodCall,
+        result: MethodChannel.Result,
+    ) {
+        val key = call.argument<String>("key")
+        if (key == null) {
+            result.error("MISSING_PARAMS", "Missing permission key", null)
+            return
+        }
+        result.success(entitlementToMap(context.fronteggAuth.getPermissionEntitlements(key)))
+    }
+
+    private fun entitlementToMap(entitlement: Entitlement): Map<String, Any?> =
+        mapOf(
+            "isEntitled" to entitlement.isEntitled,
+            "justification" to entitlement.justification,
+        )
 
     private fun openAdminPortal(result: MethodChannel.Result) {
         val activity = activityProvider.getActivity()

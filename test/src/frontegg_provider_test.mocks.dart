@@ -42,6 +42,16 @@ class _FakeFronteggConstants_1 extends _i1.SmartFake
         );
 }
 
+class _FakeEntitlement_2 extends _i1.SmartFake implements _i2.Entitlement {
+  _FakeEntitlement_2(
+    Object parent,
+    Invocation parentInvocation,
+  ) : super(
+          parent,
+          parentInvocation,
+        );
+}
+
 /// A class which mocks [FronteggFlutter].
 ///
 /// See the documentation for Mockito's code generation for more information.
@@ -140,6 +150,66 @@ class MockFronteggFlutter extends _i1.Mock implements _i2.FronteggFlutter {
       ) as _i3.Future<void>);
 
   @override
+  _i3.Future<void> directLogin({
+    required String? url,
+    bool? ephemeralSession = true,
+    Map<String, String>? additionalQueryParams,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #directLogin,
+          [],
+          {
+            #url: url,
+            #ephemeralSession: ephemeralSession,
+            #additionalQueryParams: additionalQueryParams,
+          },
+        ),
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
+
+  @override
+  _i3.Future<void> socialLogin({
+    required _i2.FronteggSocialProvider? provider,
+    bool? ephemeralSession = true,
+    Map<String, String>? additionalQueryParams,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #socialLogin,
+          [],
+          {
+            #provider: provider,
+            #ephemeralSession: ephemeralSession,
+            #additionalQueryParams: additionalQueryParams,
+          },
+        ),
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
+
+  @override
+  _i3.Future<void> customSocialLogin({
+    required String? id,
+    bool? ephemeralSession = true,
+    Map<String, String>? additionalQueryParams,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #customSocialLogin,
+          [],
+          {
+            #id: id,
+            #ephemeralSession: ephemeralSession,
+            #additionalQueryParams: additionalQueryParams,
+          },
+        ),
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
+
+  @override
   _i3.Future<bool> refreshToken() => (super.noSuchMethod(
         Invocation.method(
           #refreshToken,
@@ -175,6 +245,16 @@ class MockFronteggFlutter extends _i1.Mock implements _i2.FronteggFlutter {
       ) as _i3.Future<_i2.FronteggConstants>);
 
   @override
+  _i3.Future<void> forceStateUpdate() => (super.noSuchMethod(
+        Invocation.method(
+          #forceStateUpdate,
+          [],
+        ),
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
+
+  @override
   _i3.Future<_i2.FronteggUser?> requestAuthorize({
     required String? refreshToken,
     String? deviceTokenCookie,
@@ -190,4 +270,78 @@ class MockFronteggFlutter extends _i1.Mock implements _i2.FronteggFlutter {
         ),
         returnValue: _i3.Future<_i2.FronteggUser?>.value(),
       ) as _i3.Future<_i2.FronteggUser?>);
+
+  @override
+  _i3.Future<bool> isSteppedUp({Duration? maxAge}) => (super.noSuchMethod(
+        Invocation.method(
+          #isSteppedUp,
+          [],
+          {#maxAge: maxAge},
+        ),
+        returnValue: _i3.Future<bool>.value(false),
+      ) as _i3.Future<bool>);
+
+  @override
+  _i3.Future<void> stepUp({Duration? maxAge}) => (super.noSuchMethod(
+        Invocation.method(
+          #stepUp,
+          [],
+          {#maxAge: maxAge},
+        ),
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
+
+  @override
+  _i3.Future<bool> loadEntitlements({bool? forceRefresh = false}) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #loadEntitlements,
+          [],
+          {#forceRefresh: forceRefresh},
+        ),
+        returnValue: _i3.Future<bool>.value(false),
+      ) as _i3.Future<bool>);
+
+  @override
+  _i3.Future<_i2.Entitlement> getFeatureEntitlement(String? featureKey) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getFeatureEntitlement,
+          [featureKey],
+        ),
+        returnValue: _i3.Future<_i2.Entitlement>.value(_FakeEntitlement_2(
+          this,
+          Invocation.method(
+            #getFeatureEntitlement,
+            [featureKey],
+          ),
+        )),
+      ) as _i3.Future<_i2.Entitlement>);
+
+  @override
+  _i3.Future<_i2.Entitlement> getPermissionEntitlement(String? permissionKey) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getPermissionEntitlement,
+          [permissionKey],
+        ),
+        returnValue: _i3.Future<_i2.Entitlement>.value(_FakeEntitlement_2(
+          this,
+          Invocation.method(
+            #getPermissionEntitlement,
+            [permissionKey],
+          ),
+        )),
+      ) as _i3.Future<_i2.Entitlement>);
+
+  @override
+  _i3.Future<void> openAdminPortal() => (super.noSuchMethod(
+        Invocation.method(
+          #openAdminPortal,
+          [],
+        ),
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
 }
