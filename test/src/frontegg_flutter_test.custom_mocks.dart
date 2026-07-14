@@ -6,6 +6,7 @@
 import 'dart:async' as _i3;
 
 import 'package:frontegg_flutter/src/frontegg_platform_interface.dart' as _i2;
+import 'package:frontegg_flutter/src/models/entitlement.dart' as _i4;
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:plugin_platform_interface/plugin_platform_interface.dart'
     as _i3;
@@ -143,6 +144,30 @@ class MockFronteggPlatform extends _i1.Mock
         ),
         returnValue: _i3.Future<Map<Object?, Object?>?>.value(),
       ) as _i3.Future<Map<Object?, Object?>?>);
+
+  @override
+  _i3.Future<_i4.Entitlement> getFeatureEntitlement(String? featureKey) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getFeatureEntitlement,
+          [featureKey],
+        ),
+        returnValue: _i3.Future<_i4.Entitlement>.value(
+          const _i4.Entitlement(isEntitled: false),
+        ),
+      ) as _i3.Future<_i4.Entitlement>);
+
+  @override
+  _i3.Future<_i4.Entitlement> getPermissionEntitlement(String? permissionKey) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getPermissionEntitlement,
+          [permissionKey],
+        ),
+        returnValue: _i3.Future<_i4.Entitlement>.value(
+          const _i4.Entitlement(isEntitled: false),
+        ),
+      ) as _i3.Future<_i4.Entitlement>);
 
   @override
   _i3.Future<Map<String, Object>?> requestAuthorize({

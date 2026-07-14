@@ -45,6 +45,10 @@ class FronteggMethodCallHandler {
             isSteppedUp(call: call, result: result)
         case "loadEntitlements":
             loadEntitlements(call: call, result: result)
+        case "getFeatureEntitlement":
+            getFeatureEntitlement(call: call, result: result)
+        case "getPermissionEntitlement":
+            getPermissionEntitlement(call: call, result: result)
         case "openAdminPortal":
             openAdminPortal(result: result)
             
@@ -360,6 +364,37 @@ class FronteggMethodCallHandler {
         ) { success in
             result(success)
         }
+    }
+
+    private func getFeatureEntitlement(
+        call: FlutterMethodCall,
+        result: @escaping FlutterResult
+    ) {
+        guard let arguments = call.arguments as? [String: Any?],
+              let key = arguments["key"] as? String
+        else {
+            return result(FlutterError(code: "MISSING_PARAMS", message: "Missing feature key", details: nil))
+        }
+        result(Self.entitlementToDict(fronteggApp.auth.getFeatureEntitlements(featureKey: key)))
+    }
+
+    private func getPermissionEntitlement(
+        call: FlutterMethodCall,
+        result: @escaping FlutterResult
+    ) {
+        guard let arguments = call.arguments as? [String: Any?],
+              let key = arguments["key"] as? String
+        else {
+            return result(FlutterError(code: "MISSING_PARAMS", message: "Missing permission key", details: nil))
+        }
+        result(Self.entitlementToDict(fronteggApp.auth.getPermissionEntitlements(permissionKey: key)))
+    }
+
+    private static func entitlementToDict(_ entitlement: Entitlement) -> [String: Any?] {
+        [
+            "isEntitled": entitlement.isEntitled,
+            "justification": entitlement.justification,
+        ]
     }
 
     private func openAdminPortal(result: @escaping FlutterResult) {

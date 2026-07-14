@@ -18,6 +18,29 @@ jobs:
           PR_COUNT=$(gh pr list --repo "$GITHUB_REPOSITORY" --head "$GITHUB_REF_NAME" --state open --json number --jq length)
           echo "has_pr=$( [ "$PR_COUNT" -gt 0 ] && echo true || echo false )" >> "$GITHUB_OUTPUT"
 
+  # Lightweight Dart analyze + unit tests. Unlike `build` (below), this is NOT gated on
+  # has_pr, so unit tests run on every push — including PR branches — cheaply on ubuntu
+  # (the expensive app builds stay in `build`, which is skipped when a PR exists).
+  dart-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Analyze code
+        run: flutter analyze lib test
+
+      - name: Run tests
+        run: flutter test
+
   build:
     needs: check-pr
     # Skip when an open PR exists — PR-triggered workflows already cover this branch.

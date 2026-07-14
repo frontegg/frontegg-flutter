@@ -1,4 +1,5 @@
 import "package:frontegg_flutter/src/frontegg_method_channel.dart";
+import "package:frontegg_flutter/src/models/entitlement.dart";
 import "package:plugin_platform_interface/plugin_platform_interface.dart";
 
 abstract class FronteggPlatform extends PlatformInterface {
@@ -101,6 +102,18 @@ abstract class FronteggPlatform extends PlatformInterface {
   /// Triggers a manual entitlements load on the native SDKs.
   ///
   /// Returns `true` if entitlements were successfully loaded, otherwise `false`.
+  Future<Entitlement> getFeatureEntitlement(String featureKey) {
+    throw UnimplementedError(
+      "getFeatureEntitlement() has not been implemented.",
+    );
+  }
+
+  Future<Entitlement> getPermissionEntitlement(String permissionKey) {
+    throw UnimplementedError(
+      "getPermissionEntitlement() has not been implemented.",
+    );
+  }
+
   Future<bool> loadEntitlements({
     bool forceRefresh = false,
   }) {

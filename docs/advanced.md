@@ -130,6 +130,33 @@ final success = await frontegg.loadEntitlements(forceRefresh: true);
 - `forceRefresh: true` — always performs a network request.
 - `forceRefresh: false` — uses the SDK cache when possible.
 
+### Checking a feature or permission entitlement
+
+After entitlements are loaded (automatically on login or via `loadEntitlements`), query
+whether the current user is entitled to a specific feature or permission. The check is
+evaluated on-device against the loaded state and returns an [`Entitlement`]:
+
+```dart
+final frontegg = FronteggFlutter();
+await frontegg.loadEntitlements();
+
+final feature = await frontegg.getFeatureEntitlement('my-feature-key');
+if (feature.isEntitled) {
+  // grant access
+} else {
+  debugPrint('Not entitled: ${feature.justification}'); // e.g. MISSING_FEATURE
+}
+
+final permission = await frontegg.getPermissionEntitlement('my-permission-key');
+```
+
+`Entitlement` exposes:
+
+- `isEntitled` — whether the user is entitled.
+- `justification` — when `isEntitled` is `false`, the reason code (`MISSING_FEATURE`,
+  `MISSING_PERMISSION`, `BUNDLE_EXPIRED`, or the SDK preconditions `NOT_AUTHENTICATED`,
+  `ENTITLEMENTS_DISABLED`, `ENTITLEMENTS_NOT_LOADED`).
+
 ## Android
 
 ### Multi-app support

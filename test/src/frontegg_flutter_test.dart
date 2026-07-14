@@ -350,6 +350,37 @@ void main() {
     });
   });
 
+  group('getFeatureEntitlement()', () {
+    test('should call FronteggPlatform.instance.getFeatureEntitlement()',
+        () async {
+      // Arrange
+      const expected = Entitlement(isEntitled: true);
+      when(fronteggPlatform.getFeatureEntitlement('my-feature'))
+          .thenAnswer((_) async => expected);
+      // Act
+      final result = await frontegg.getFeatureEntitlement('my-feature');
+      // Assert
+      expect(result, expected);
+      verify(fronteggPlatform.getFeatureEntitlement('my-feature')).called(1);
+    });
+  });
+
+  group('getPermissionEntitlement()', () {
+    test('should call FronteggPlatform.instance.getPermissionEntitlement()',
+        () async {
+      // Arrange
+      const expected =
+          Entitlement(isEntitled: false, justification: 'MISSING_PERMISSION');
+      when(fronteggPlatform.getPermissionEntitlement('my-perm'))
+          .thenAnswer((_) async => expected);
+      // Act
+      final result = await frontegg.getPermissionEntitlement('my-perm');
+      // Assert
+      expect(result, expected);
+      verify(fronteggPlatform.getPermissionEntitlement('my-perm')).called(1);
+    });
+  });
+
   group('stepUp()', () {
     test('should call FronteggPlatform.instance.stepUp()', () async {
       // Arrange
