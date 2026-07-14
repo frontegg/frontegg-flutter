@@ -1,20 +1,19 @@
 ## v1.0.50
+
 - Bump native SDKs: `frontegg-android-kotlin` **1.3.34 → 1.3.35**, `frontegg-ios-swift` (FronteggSwift) **1.3.10 → 1.3.11**.
 
-What this picks up:
+### What this picks up from the native SDKs
 
-- Fixed: embedded step-up renders the MFA challenge instead of a blank page — the embedded login WebView exposes the native `getTokens` token bridge and a new step-up web driver routes the hosted login box to its step-up page, completing with an elevated (stepped-up) token. Requires hosted login box ≥ 7.118.0. (FR-24939)
-- Fixed (iOS): step-up authorize URL emits OIDC-compliant integer `max_age`; connectivity observer stays alive across repeated offline/online cycles. (FR-25783)
-- Fixed (Android): token refresh no longer stalls on short-TTL environments (refresh dedup keyed on token identity); deprecated `startActivityForResult` removed. (FR-19725)
+- **Fixed:** embedded step-up renders the MFA challenge instead of a blank page — the embedded login WebView exposes the native `getTokens` token bridge and a new step-up web driver routes the hosted login box to its step-up page, completing with an elevated (stepped-up) token. Requires hosted login box ≥ 7.118.0. (FR-24939)
+- **Fixed (iOS):** step-up authorize URL emits OIDC-compliant integer `max_age`; connectivity observer stays alive across repeated offline/online cycles. (FR-25783)
+- **Fixed (Android):** token refresh no longer stalls on short-TTL environments (refresh dedup keyed on token identity); deprecated `startActivityForResult` removed. (FR-19725)
 
-All version references bumped: plugin + example app Gradle pins, SPM/CocoaPods manifests, and docs.
+### Wrapper changes
 
-> Note: `com.frontegg.sdk:android:1.3.35` was released ~40 min ago and may still be syncing to Maven Central — if the Android CI job fails on dependency resolution, re-run it after sync.
-- Added: `getFeatureEntitlement(featureKey)` and `getPermissionEntitlement(permissionKey)` — query whether the current user is entitled to a specific feature/permission from Dart, returning an `Entitlement { isEntitled, justification }`. Previously only `loadEntitlements()` (a load trigger) was exposed, so apps had to decode JWT claims by hand.
+- **Added:** `getFeatureEntitlement(featureKey)` and `getPermissionEntitlement(permissionKey)` — query whether the current user is entitled to a specific feature/permission from Dart, returning an `Entitlement { isEntitled, justification }`. Previously only `loadEntitlements()` (a load trigger) was exposed, so apps had to decode JWT claims by hand. Bridged to the native `getFeatureEntitlements`/`getPermissionEntitlements` on both platforms (evaluated on-device from the state populated by `loadEntitlements`). New Dart `Entitlement` model + barrel export; Android + iOS method-call handlers; unit tests (delegation + method-channel parsing); `docs/advanced.md` examples. Closes a wrapper parity gap vs. React Native / native SDKs.
+- **CI:** added an ungated `dart-tests` job (`flutter analyze lib test` + `flutter test`) so unit tests run on PR branches (the existing `flutter test` job was skipped on PRs).
 
-Bridged to the native `getFeatureEntitlements`/`getPermissionEntitlements` on both platforms (evaluated on-device from the state populated by `loadEntitlements`). New Dart `Entitlement` model + barrel export; Android + iOS method-call handlers; unit tests (delegation + method-channel parsing); `docs/advanced.md` examples.
-
-Closes a wrapper parity gap vs. React Native / native SDKs, where the feature/permission query already exists.
+All version references bumped: plugin + example app Gradle pins, SPM manifests, and docs.
 
 ## v1.0.49
 - Bump frontegg-android-kotlin SDK to `1.3.34`
