@@ -116,8 +116,13 @@ class FronteggMethodCallHandler {
         
         let additionalQueryParams = arguments["additionalQueryParams"] as? [String: String] ?? [:]
         
-        let compelation: FronteggAuth.CompletionHandler = { _ in
-            result(nil)
+        let compelation: FronteggAuth.CompletionHandler = { res in
+            switch (res) {
+                case .success(_):
+                    result(nil)
+                case .failure(let error):
+                    result(FlutterError(code: error.failureReason ?? "unknown", message: error.localizedDescription, details: nil))
+            }
         }
         
         fronteggApp.auth.directLoginAction(
@@ -147,8 +152,13 @@ class FronteggMethodCallHandler {
         
         let additionalQueryParams = arguments["additionalQueryParams"] as? [String: String] ?? [:]
         
-        let compelation: FronteggAuth.CompletionHandler = { _ in
-            result(nil)
+        let compelation: FronteggAuth.CompletionHandler = { res in
+            switch (res) {
+                case .success(_):
+                    result(nil)
+                case .failure(let error):
+                    result(FlutterError(code: error.failureReason ?? "unknown", message: error.localizedDescription, details: nil))
+            }
         }
         
         fronteggApp.auth.directLoginAction(
@@ -179,8 +189,13 @@ class FronteggMethodCallHandler {
         
         let additionalQueryParams = arguments["additionalQueryParams"] as? [String: String] ?? [:]
         
-        let compelation: FronteggAuth.CompletionHandler = { _ in
-            result(nil)
+        let compelation: FronteggAuth.CompletionHandler = { res in
+            switch (res) {
+                case .success(_):
+                    result(nil)
+                case .failure(let error):
+                    result(FlutterError(code: error.failureReason ?? "unknown", message: error.localizedDescription, details: nil))
+            }
         }
         
         fronteggApp.auth.directLoginAction(
@@ -212,8 +227,13 @@ class FronteggMethodCallHandler {
         
         let additionalQueryParams = arguments["additionalQueryParams"] as? [String: String] ?? [:]
         
-        let compelation: FronteggAuth.CompletionHandler = { _ in
-            result(nil)
+        let compelation: FronteggAuth.CompletionHandler = { res in
+            switch (res) {
+                case .success(_):
+                    result(nil)
+                case .failure(let error):
+                    result(FlutterError(code: error.failureReason ?? "unknown", message: error.localizedDescription, details: nil))
+            }
         }
         
         fronteggApp.auth.directLoginAction(
@@ -312,8 +332,13 @@ class FronteggMethodCallHandler {
     }
     
     private func logout(result: @escaping FlutterResult) {
-        fronteggApp.auth.logout() { _ in
-            result(nil)
+        fronteggApp.auth.logout() { res in
+            switch (res) {
+                case .success(_):
+                    result(nil)
+                case .failure(let error):
+                    result(FlutterError(code: error.failureReason ?? "unknown", message: error.localizedDescription, details: nil))
+            }
         }
     }
     
@@ -329,8 +354,13 @@ class FronteggMethodCallHandler {
             return result(FlutterError(code: "MISSING_PARAMS", message: "Missing 'tenantId' argumant", details: nil))
         }
         
-        fronteggApp.auth.switchTenant(tenantId: tenantId) { _ in
-            result(nil)
+        fronteggApp.auth.switchTenant(tenantId: tenantId) { res in
+            switch (res) {
+                case .success(_):
+                    result(nil)
+                case .failure(let error):
+                    result(FlutterError(code: error.failureReason ?? "unknown", message: error.localizedDescription, details: nil))
+            }
         }
     }
     

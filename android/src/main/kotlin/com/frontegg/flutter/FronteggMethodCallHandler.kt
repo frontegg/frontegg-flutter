@@ -112,8 +112,8 @@ class FronteggMethodCallHandler(
         val data = call.argument<String>("data") ?: throw ArgumentNotFoundException("data")
         if (context.fronteggAuth.isEmbeddedMode) {
             withActivityOrError(result) {
-                context.fronteggAuth.directLoginAction(it, type, data) {
-                    result.success(null)
+                context.fronteggAuth.directLoginAction(it, type, data) { error ->
+                    completeAuthResult(error, result) { result.success(null) }
                 }
             }
         } else {
@@ -233,8 +233,8 @@ class FronteggMethodCallHandler(
                     activity = activity,
                     type = "social-login",
                     data = provider,
-                    callback = {
-                        result.success(null)
+                    callback = { error ->
+                        completeAuthResult(error, result) { result.success(null) }
                     }
                 )
             }
@@ -263,8 +263,8 @@ class FronteggMethodCallHandler(
                 activity = activity,
                 type = "custom-social-login",
                 data = id,
-                callback = {
-                    result.success(null)
+                callback = { error ->
+                    completeAuthResult(error, result) { result.success(null) }
                 }
             )
         }
@@ -353,15 +353,8 @@ class FronteggMethodCallHandler(
             context.fronteggAuth.login(
                 activity = it,
                 loginHint = loginHint,
-                callback = {
-                    // Force state update after successful authentication
-                    // This is especially important for hosted mode
-                    GlobalScope.launch(Dispatchers.Main) {
-                        // Trigger state listener to update Flutter
-                        // The state listener will automatically detect changes
-                        // and send updated state to Flutter
-                    }
-                    result.success(null)
+                callback = { error ->
+                    completeAuthResult(error, result) { result.success(null) }
                 }
             )
         }
@@ -526,4 +519,28 @@ internal fun withActivityOrError(
         return
     }
     block(activity)
+}
+
+/**
+ * Routes an auth callback's optional error to the Flutter [result] (FR-25942). The native
+ * `login`/`directLoginAction` callbacks are `((Exception?) -> Unit)?`; the plugin used to ignore
+ * the error and always call `result.success(null)`, so a cancelled or failed authentication
+ * looked like success to Dart. On a non-null error the result is completed with `result.error(...)`;
+ * only when there is no error does [onSuccess] run. Top-level so it can be unit-tested without a
+ * Context/Activity (which can't be mocked in this toolchain).
+ */
+internal fun completeAuthResult(
+    error: Exception?,
+    result: MethodChannel.Result,
+    onSuccess: () -> Unit,
+) {
+    if (error == null) {
+        onSuccess()
+        return
+    }
+    if (error is FronteggException) {
+        result.error(error.message ?: "unknown", error.message ?: "Authentication failed", null)
+    } else {
+        result.error("unknown", error.localizedMessage ?: "Authentication failed", null)
+    }
 }
