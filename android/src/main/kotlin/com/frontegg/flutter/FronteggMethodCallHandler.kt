@@ -35,6 +35,9 @@ class FronteggMethodCallHandler(
         this.stateListener = listener
     }
 
+    private fun withActivityOrError(result: MethodChannel.Result, block: (android.app.Activity) -> Unit) =
+        withActivityOrError(activityProvider, result, block)
+
     override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
         when (call.method) {
             "login" -> login(call, result)
@@ -78,7 +81,7 @@ class FronteggMethodCallHandler(
     private fun stepUp(call: MethodCall, result: MethodChannel.Result) {
         val maxAge = call.argument<Int>("maxAge")
 
-        activityProvider.getActivity()?.let {
+        withActivityOrError(result) {
             context.fronteggAuth.stepUp(
                 activity = it,
                 maxAge = maxAge?.toDuration(DurationUnit.SECONDS)
@@ -108,7 +111,7 @@ class FronteggMethodCallHandler(
         val type = call.argument<String>("type") ?: throw ArgumentNotFoundException("type")
         val data = call.argument<String>("data") ?: throw ArgumentNotFoundException("data")
         if (context.fronteggAuth.isEmbeddedMode) {
-            activityProvider.getActivity()?.let {
+            withActivityOrError(result) {
                 context.fronteggAuth.directLoginAction(it, type, data) {
                     result.success(null)
                 }
@@ -133,7 +136,7 @@ class FronteggMethodCallHandler(
             return
         }
 
-        activityProvider.getActivity()?.let { activity ->
+        withActivityOrError(result) { activity ->
             try {
                 val directLogin: Map<String, Any> = mapOf(
                     "type" to "direct",
@@ -199,7 +202,7 @@ class FronteggMethodCallHandler(
             return
         }
         
-        activityProvider.getActivity()?.let { activity ->
+        withActivityOrError(result) { activity ->
             // Try to use loginWithSocialLoginProvider if available
             try {
                 // Convert string provider to SocialLoginProvider enum
@@ -253,7 +256,7 @@ class FronteggMethodCallHandler(
             return
         }
 
-        activityProvider.getActivity()?.let { activity ->
+        withActivityOrError(result) { activity ->
             // Use directLoginAction for both embedded and hosted modes
             // The Android SDK handles the mode internally
             context.fronteggAuth.directLoginAction(
@@ -294,7 +297,7 @@ class FronteggMethodCallHandler(
     }
 
     private fun registerPasskeys(result: MethodChannel.Result) {
-        activityProvider.getActivity()?.let {
+        withActivityOrError(result) {
             context.fronteggAuth.registerPasskeys(it) { error ->
                 if (error == null) {
                     result.success(null)
@@ -319,7 +322,7 @@ class FronteggMethodCallHandler(
     }
 
     private fun loginWithPasskeys(result: MethodChannel.Result) {
-        activityProvider.getActivity()?.let {
+        withActivityOrError(result) {
             context.fronteggAuth.loginWithPasskeys(it) { error ->
                 if (error == null) {
                     result.success(null)
@@ -346,7 +349,7 @@ class FronteggMethodCallHandler(
     private fun login(call: MethodCall, result: MethodChannel.Result) {
         val loginHint = call.argument<String>("loginHint")
 
-        activityProvider.getActivity()?.let {
+        withActivityOrError(result) {
             context.fronteggAuth.login(
                 activity = it,
                 loginHint = loginHint,
@@ -502,3 +505,25 @@ internal fun buildFronteggConstants(
         "deepLinkScheme" to deepLinkScheme,
         "useDiskCacheWebview" to useDiskCacheWebview,
     )
+
+/**
+ * Runs [block] with the current Activity, or completes [result] with an error when no
+ * Activity is attached (backgrounded app / config-change window). Without completing the
+ * result, the activity-dependent methods left the Dart Future hanging forever (FR-25943).
+ */
+internal fun withActivityOrError(
+    activityProvider: ActivityProvider,
+    result: MethodChannel.Result,
+    block: (android.app.Activity) -> Unit,
+) {
+    val activity = activityProvider.getActivity()
+    if (activity == null) {
+        result.error(
+            "frontegg.error",
+            "No active Activity available for this operation (app backgrounded or between Activity instances)",
+            null,
+        )
+        return
+    }
+    block(activity)
+}
