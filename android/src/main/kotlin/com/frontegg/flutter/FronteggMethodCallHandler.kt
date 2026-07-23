@@ -400,14 +400,15 @@ class FronteggMethodCallHandler(
     private fun getConstants(result: MethodChannel.Result) {
         val storage = StorageProvider.getInnerStorage()
         result.success(
-            mapOf(
-                Pair("baseUrl", storage.baseUrl),
-                Pair("applicationId", storage.applicationId),
-                Pair("useAssetsLinks", storage.useAssetsLinks),
-                Pair("useChromeCustomTabs", storage.useChromeCustomTabs),
-                Pair("bundleId", storage.packageName),
-                Pair("deepLinkScheme", storage.deepLinkScheme),
-                Pair("useDiskCacheWebview", storage.useDiskCacheWebview),
+            buildFronteggConstants(
+                baseUrl = storage.baseUrl,
+                clientId = storage.clientId,
+                applicationId = storage.applicationId,
+                useAssetsLinks = storage.useAssetsLinks,
+                useChromeCustomTabs = storage.useChromeCustomTabs,
+                bundleId = storage.packageName,
+                deepLinkScheme = storage.deepLinkScheme,
+                useDiskCacheWebview = storage.useDiskCacheWebview,
             )
         )
     }
@@ -476,3 +477,28 @@ class FronteggMethodCallHandler(
         result.success(null)
     }
 }
+
+/**
+ * Builds the constants map returned to Dart's `FronteggConstants.fromMap`.
+ * Extracted so the key set (which must match the Dart contract) is unit-testable.
+ */
+internal fun buildFronteggConstants(
+    baseUrl: String,
+    clientId: String,
+    applicationId: String?,
+    useAssetsLinks: Boolean,
+    useChromeCustomTabs: Boolean,
+    bundleId: String,
+    deepLinkScheme: String?,
+    useDiskCacheWebview: Boolean,
+): Map<String, Any?> =
+    mapOf(
+        "baseUrl" to baseUrl,
+        "clientId" to clientId,
+        "applicationId" to applicationId,
+        "useAssetsLinks" to useAssetsLinks,
+        "useChromeCustomTabs" to useChromeCustomTabs,
+        "bundleId" to bundleId,
+        "deepLinkScheme" to deepLinkScheme,
+        "useDiskCacheWebview" to useDiskCacheWebview,
+    )
