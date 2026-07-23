@@ -18,6 +18,11 @@ class FronteggStateListenerImpl: FronteggStateListener {
     }
     
     func subscribe() {
+        // Cancel any prior subscriptions first: onListen can run again (e.g. Flutter hot restart
+        // or re-listen) and appending to `cancellables` without clearing leaked Combine sinks and
+        // fired updateState() once per accumulated sink (FR-25944).
+        dispose()
+
         let auth = fronteggApp.auth
         var stateChange: AnyPublisher<Void, Never> {
             return Publishers.MergeMany(
@@ -54,6 +59,15 @@ class FronteggStateListenerImpl: FronteggStateListener {
         }).store(in: &cancellables)
     }
     
+    func forceNotifyChanges() {
+        // Hop off the calling thread before updateState(): sendState() uses DispatchQueue.main.sync,
+        // and forceStateUpdate is invoked from the method-channel handler on the main thread, so a
+        // direct call would deadlock. This mirrors how the Combine sinks dispatch updateState().
+        DispatchQueue.global(qos: .userInteractive).async {
+            self.updateState()
+        }
+    }
+
     private func updateState() {
         let auth =  self.fronteggApp.auth
         

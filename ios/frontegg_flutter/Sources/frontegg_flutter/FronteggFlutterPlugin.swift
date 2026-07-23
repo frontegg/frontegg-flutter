@@ -15,6 +15,7 @@ public class FronteggFlutterPlugin: NSObject, FlutterPlugin {
         
         let stateEventChannel = FlutterEventChannel(name: stateEventChanelName, binaryMessenger: registrar.messenger())
         stateListener = FronteggStateListenerImpl(fronteggApp: fronteggApp)
+        methodCallHandler.setStateListener(stateListener!)
         let streamHandler = StateStreamHandler(stateListener: stateListener!)
         stateEventChannel.setStreamHandler(streamHandler)
         

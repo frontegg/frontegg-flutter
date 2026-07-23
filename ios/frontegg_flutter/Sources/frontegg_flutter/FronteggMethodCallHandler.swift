@@ -6,9 +6,14 @@ import UIKit
 
 class FronteggMethodCallHandler {
     private var fronteggApp: FronteggApp
-    
+    private var stateListener: FronteggStateListener? = nil
+
     init(fronteggApp: FronteggApp) {
         self.fronteggApp = fronteggApp
+    }
+
+    func setStateListener(_ listener: FronteggStateListener) {
+        self.stateListener = listener
     }
     
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
@@ -51,7 +56,9 @@ class FronteggMethodCallHandler {
             getPermissionEntitlement(call: call, result: result)
         case "openAdminPortal":
             openAdminPortal(result: result)
-            
+        case "forceStateUpdate":
+            forceStateUpdate(result: result)
+
         default:
             result(FlutterMethodNotImplemented)
         }
@@ -364,6 +371,14 @@ class FronteggMethodCallHandler {
         }
     }
     
+    private func forceStateUpdate(result: @escaping FlutterResult) {
+        // FR-25944: iOS had no case for "forceStateUpdate" → the default branch returned
+        // FlutterMethodNotImplemented, surfacing as MissingPluginException in Dart. Trigger a
+        // one-off state emit so the Flutter side receives the current auth state on demand.
+        stateListener?.forceNotifyChanges()
+        result(nil)
+    }
+
     private func refreshToken(result: @escaping FlutterResult) {
         DispatchQueue.global(qos: .userInteractive).async {
             Task {

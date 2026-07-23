@@ -8,6 +8,7 @@ import com.frontegg.android.exceptions.FronteggException
 import com.frontegg.android.fronteggAuth
 import com.frontegg.android.models.Entitlement
 import com.frontegg.android.services.StorageProvider
+import com.frontegg.flutter.stateListener.FronteggStateListener
 import com.frontegg.flutter.stateListener.FronteggStateListenerImpl
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
@@ -409,11 +410,8 @@ class FronteggMethodCallHandler(
         )
     }
 
-    private fun forceStateUpdate(result: MethodChannel.Result) {
-        // Simple force state update
-        // The state listener will automatically handle state updates
-        result.success(null)
-    }
+    private fun forceStateUpdate(result: MethodChannel.Result) =
+        forceStateUpdate(stateListener, result)
 
     private fun loadEntitlements(
         call: MethodCall,
@@ -543,4 +541,15 @@ internal fun completeAuthResult(
     } else {
         result.error("unknown", error.localizedMessage ?: "Authentication failed", null)
     }
+}
+
+/**
+ * Emits the current auth state to Flutter on demand (FR-25944). `forceStateUpdate` used to be a
+ * no-op that completed the result without ever notifying the listener, so a `forceStateUpdate()`
+ * call from Dart never delivered a refreshed state. Top-level so it can be unit-tested without a
+ * Context/Activity (which can't be mocked in this toolchain).
+ */
+internal fun forceStateUpdate(stateListener: FronteggStateListener?, result: MethodChannel.Result) {
+    stateListener?.forceNotifyChanges()
+    result.success(null)
 }

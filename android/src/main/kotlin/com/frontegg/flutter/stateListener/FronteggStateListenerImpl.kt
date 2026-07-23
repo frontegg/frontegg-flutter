@@ -48,7 +48,7 @@ class FronteggStateListenerImpl(
      * Force notify changes to Flutter
      * This is useful for hosted mode when state changes don't trigger automatically
      */
-    fun forceNotifyChanges() {
+    override fun forceNotifyChanges() {
         notifyChanges()
     }
 
