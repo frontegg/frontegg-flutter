@@ -1,3 +1,8 @@
+# v1.0.50
+
+- Updated native SDKs to `frontegg-ios-swift` 1.3.11 / `frontegg-android-kotlin` 1.3.35 — fixes embedded step-up showing a blank page instead of the MFA challenge (requires hosted login box ≥ 7.118.0)
+- Added `getFeatureEntitlement()` and `getPermissionEntitlement()` to query feature/permission entitlements on-device
+
 ## v1.0.49
 - Bump frontegg-android-kotlin SDK to `1.3.34`
 - Bump frontegg-ios-swift SDK to `1.3.10`
