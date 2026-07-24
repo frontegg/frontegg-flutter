@@ -8,6 +8,7 @@ import com.frontegg.android.exceptions.FronteggException
 import com.frontegg.android.fronteggAuth
 import com.frontegg.android.models.Entitlement
 import com.frontegg.android.services.StorageProvider
+import com.frontegg.flutter.stateListener.FronteggStateListener
 import com.frontegg.flutter.stateListener.FronteggStateListenerImpl
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
@@ -34,6 +35,9 @@ class FronteggMethodCallHandler(
     fun setStateListener(listener: FronteggStateListenerImpl) {
         this.stateListener = listener
     }
+
+    private fun withActivityOrError(result: MethodChannel.Result, block: (android.app.Activity) -> Unit) =
+        withActivityOrError(activityProvider, result, block)
 
     override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
         when (call.method) {
@@ -78,7 +82,7 @@ class FronteggMethodCallHandler(
     private fun stepUp(call: MethodCall, result: MethodChannel.Result) {
         val maxAge = call.argument<Int>("maxAge")
 
-        activityProvider.getActivity()?.let {
+        withActivityOrError(result) {
             context.fronteggAuth.stepUp(
                 activity = it,
                 maxAge = maxAge?.toDuration(DurationUnit.SECONDS)
@@ -108,9 +112,9 @@ class FronteggMethodCallHandler(
         val type = call.argument<String>("type") ?: throw ArgumentNotFoundException("type")
         val data = call.argument<String>("data") ?: throw ArgumentNotFoundException("data")
         if (context.fronteggAuth.isEmbeddedMode) {
-            activityProvider.getActivity()?.let {
-                context.fronteggAuth.directLoginAction(it, type, data) {
-                    result.success(null)
+            withActivityOrError(result) {
+                context.fronteggAuth.directLoginAction(it, type, data) { error ->
+                    completeAuthResult(error, result) { result.success(null) }
                 }
             }
         } else {
@@ -133,7 +137,7 @@ class FronteggMethodCallHandler(
             return
         }
 
-        activityProvider.getActivity()?.let { activity ->
+        withActivityOrError(result) { activity ->
             try {
                 val directLogin: Map<String, Any> = mapOf(
                     "type" to "direct",
@@ -199,7 +203,7 @@ class FronteggMethodCallHandler(
             return
         }
         
-        activityProvider.getActivity()?.let { activity ->
+        withActivityOrError(result) { activity ->
             // Try to use loginWithSocialLoginProvider if available
             try {
                 // Convert string provider to SocialLoginProvider enum
@@ -230,8 +234,8 @@ class FronteggMethodCallHandler(
                     activity = activity,
                     type = "social-login",
                     data = provider,
-                    callback = {
-                        result.success(null)
+                    callback = { error ->
+                        completeAuthResult(error, result) { result.success(null) }
                     }
                 )
             }
@@ -253,15 +257,15 @@ class FronteggMethodCallHandler(
             return
         }
 
-        activityProvider.getActivity()?.let { activity ->
+        withActivityOrError(result) { activity ->
             // Use directLoginAction for both embedded and hosted modes
             // The Android SDK handles the mode internally
             context.fronteggAuth.directLoginAction(
                 activity = activity,
                 type = "custom-social-login",
                 data = id,
-                callback = {
-                    result.success(null)
+                callback = { error ->
+                    completeAuthResult(error, result) { result.success(null) }
                 }
             )
         }
@@ -294,7 +298,7 @@ class FronteggMethodCallHandler(
     }
 
     private fun registerPasskeys(result: MethodChannel.Result) {
-        activityProvider.getActivity()?.let {
+        withActivityOrError(result) {
             context.fronteggAuth.registerPasskeys(it) { error ->
                 if (error == null) {
                     result.success(null)
@@ -319,7 +323,7 @@ class FronteggMethodCallHandler(
     }
 
     private fun loginWithPasskeys(result: MethodChannel.Result) {
-        activityProvider.getActivity()?.let {
+        withActivityOrError(result) {
             context.fronteggAuth.loginWithPasskeys(it) { error ->
                 if (error == null) {
                     result.success(null)
@@ -346,19 +350,12 @@ class FronteggMethodCallHandler(
     private fun login(call: MethodCall, result: MethodChannel.Result) {
         val loginHint = call.argument<String>("loginHint")
 
-        activityProvider.getActivity()?.let {
+        withActivityOrError(result) {
             context.fronteggAuth.login(
                 activity = it,
                 loginHint = loginHint,
-                callback = {
-                    // Force state update after successful authentication
-                    // This is especially important for hosted mode
-                    GlobalScope.launch(Dispatchers.Main) {
-                        // Trigger state listener to update Flutter
-                        // The state listener will automatically detect changes
-                        // and send updated state to Flutter
-                    }
-                    result.success(null)
+                callback = { error ->
+                    completeAuthResult(error, result) { result.success(null) }
                 }
             )
         }
@@ -400,23 +397,21 @@ class FronteggMethodCallHandler(
     private fun getConstants(result: MethodChannel.Result) {
         val storage = StorageProvider.getInnerStorage()
         result.success(
-            mapOf(
-                Pair("baseUrl", storage.baseUrl),
-                Pair("applicationId", storage.applicationId),
-                Pair("useAssetsLinks", storage.useAssetsLinks),
-                Pair("useChromeCustomTabs", storage.useChromeCustomTabs),
-                Pair("bundleId", storage.packageName),
-                Pair("deepLinkScheme", storage.deepLinkScheme),
-                Pair("useDiskCacheWebview", storage.useDiskCacheWebview),
+            buildFronteggConstants(
+                baseUrl = storage.baseUrl,
+                clientId = storage.clientId,
+                applicationId = storage.applicationId,
+                useAssetsLinks = storage.useAssetsLinks,
+                useChromeCustomTabs = storage.useChromeCustomTabs,
+                bundleId = storage.packageName,
+                deepLinkScheme = storage.deepLinkScheme,
+                useDiskCacheWebview = storage.useDiskCacheWebview,
             )
         )
     }
 
-    private fun forceStateUpdate(result: MethodChannel.Result) {
-        // Simple force state update
-        // The state listener will automatically handle state updates
-        result.success(null)
-    }
+    private fun forceStateUpdate(result: MethodChannel.Result) =
+        forceStateUpdate(stateListener, result)
 
     private fun loadEntitlements(
         call: MethodCall,
@@ -475,4 +470,86 @@ class FronteggMethodCallHandler(
         AdminPortalActivity.open(activity)
         result.success(null)
     }
+}
+
+/**
+ * Builds the constants map returned to Dart's `FronteggConstants.fromMap`.
+ * Extracted so the key set (which must match the Dart contract) is unit-testable.
+ */
+internal fun buildFronteggConstants(
+    baseUrl: String,
+    clientId: String,
+    applicationId: String?,
+    useAssetsLinks: Boolean,
+    useChromeCustomTabs: Boolean,
+    bundleId: String,
+    deepLinkScheme: String?,
+    useDiskCacheWebview: Boolean,
+): Map<String, Any?> =
+    mapOf(
+        "baseUrl" to baseUrl,
+        "clientId" to clientId,
+        "applicationId" to applicationId,
+        "useAssetsLinks" to useAssetsLinks,
+        "useChromeCustomTabs" to useChromeCustomTabs,
+        "bundleId" to bundleId,
+        "deepLinkScheme" to deepLinkScheme,
+        "useDiskCacheWebview" to useDiskCacheWebview,
+    )
+
+/**
+ * Runs [block] with the current Activity, or completes [result] with an error when no
+ * Activity is attached (backgrounded app / config-change window). Without completing the
+ * result, the activity-dependent methods left the Dart Future hanging forever (FR-25943).
+ */
+internal fun withActivityOrError(
+    activityProvider: ActivityProvider,
+    result: MethodChannel.Result,
+    block: (android.app.Activity) -> Unit,
+) {
+    val activity = activityProvider.getActivity()
+    if (activity == null) {
+        result.error(
+            "frontegg.error",
+            "No active Activity available for this operation (app backgrounded or between Activity instances)",
+            null,
+        )
+        return
+    }
+    block(activity)
+}
+
+/**
+ * Routes an auth callback's optional error to the Flutter [result] (FR-25942). The native
+ * `login`/`directLoginAction` callbacks are `((Exception?) -> Unit)?`; the plugin used to ignore
+ * the error and always call `result.success(null)`, so a cancelled or failed authentication
+ * looked like success to Dart. On a non-null error the result is completed with `result.error(...)`;
+ * only when there is no error does [onSuccess] run. Top-level so it can be unit-tested without a
+ * Context/Activity (which can't be mocked in this toolchain).
+ */
+internal fun completeAuthResult(
+    error: Exception?,
+    result: MethodChannel.Result,
+    onSuccess: () -> Unit,
+) {
+    if (error == null) {
+        onSuccess()
+        return
+    }
+    if (error is FronteggException) {
+        result.error(error.message ?: "unknown", error.message ?: "Authentication failed", null)
+    } else {
+        result.error("unknown", error.localizedMessage ?: "Authentication failed", null)
+    }
+}
+
+/**
+ * Emits the current auth state to Flutter on demand (FR-25944). `forceStateUpdate` used to be a
+ * no-op that completed the result without ever notifying the listener, so a `forceStateUpdate()`
+ * call from Dart never delivered a refreshed state. Top-level so it can be unit-tested without a
+ * Context/Activity (which can't be mocked in this toolchain).
+ */
+internal fun forceStateUpdate(stateListener: FronteggStateListener?, result: MethodChannel.Result) {
+    stateListener?.forceNotifyChanges()
+    result.success(null)
 }
