@@ -5,8 +5,6 @@
 - Fixed: `forceStateUpdate()` never emitted state (Android no-op / iOS `MissingPluginException`); also fixed the iOS Combine listener leak on re-subscribe (FR-25944).
 - Bump native SDKs to Android `1.3.36` / iOS `1.3.12`.
 
-_Supersedes #137, #138, #139, #140, #141._
-
 # v1.0.50
 
 - Updated native SDKs to `frontegg-ios-swift` 1.3.11 / `frontegg-android-kotlin` 1.3.35 — fixes embedded step-up showing a blank page instead of the MFA challenge (requires hosted login box ≥ 7.118.0)
