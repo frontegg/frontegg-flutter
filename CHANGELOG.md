@@ -1,3 +1,17 @@
+## v1.0.52
+Bumps `frontegg-ios-swift` to **1.3.17**, which fixes [FR-26132](https://frontegg.atlassian.net/browse/FR-26132) — embedded Google login failing with `Failed to get extract code from hostedLoginCallback url` despite the provider authenticating successfully. Verified end-to-end by the reporting customer on the fix branch.
+
+`Package.swift` pins the iOS SDK with `exact:`, so consumers cannot bump it themselves — a plugin release is the only route. v1.0.51 still ships iOS 1.3.12, so no released Flutter version has the fix today.
+
+Also picked up between 1.3.12 and 1.3.17: the App-Link OAuth callback no longer being treated as a magic link, which dropped the PKCE verifier and caused ER-00001 under useAssetLinks, plus better social-callback diagnostics.
+
+Version 1.3.17 is confirmed published, so the exact pin resolves. Android stays at 1.3.36.
+
+🤖 Generated with [Claude Code](https://claude.com/claude-code)
+
+
+[FR-26132]: https://frontegg.atlassian.net/browse/FR-26132?atlOrigin=eyJpIjoiNWRkNTljNzYxNjVmNDY3MDlhMDU5Y2ZhYzA5YTRkZjUiLCJwIjoiZ2l0aHViLWNvbS1KU1cifQ
+
 ## v1.0.51
 - Fixed: Android `getConstants()` omitted `clientId`, crashing `FronteggConstants.fromMap` on every call (FR-25941).
 - Fixed: activity-dependent methods hung the Dart Future when no Activity was attached; now complete with an error (FR-25943).
