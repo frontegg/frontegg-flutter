@@ -209,9 +209,9 @@ public class FronteggSwiftAdapter: NSObject {
 }
 ```
 
-4. Register your domain with Frontegg:
+4. Register your app with Frontegg:
 
-**NOTE**: Make youre you have
+**NOTE**: Make sure you have
 a [vendor token to access Frontegg APIs](https://docs.frontegg.com/reference/getting-started-with-your-api).
 
 a. Open your terminal or API tool (such as Postman or cURL).
@@ -221,12 +221,14 @@ c. Include the following JSON payload in the request body:
 
 ```json
 {
-  "appId": "{{ASSOCIATED_DOMAIN}}"
+  "appId": "{{TEAM_ID}}.{{BUNDLE_ID}}"
 }
 ```
 
-d. Replace `{{ASSOCIATED_DOMAIN}}` with the actual associated domain you want to use for the iOS
-app.
+d. Replace `{{TEAM_ID}}` with your Apple Team ID and `{{BUNDLE_ID}}` with your app's bundle
+identifier — for example, `ABCDE12345.com.example.app`. `appId` is your app's identifier, **not** a
+domain: the API accepts any string without validation, but a domain registered here produces an
+`apple-app-site-association` entry that iOS silently ignores.
 e. Repeat this step for each Frontegg environment where you want to support URL-based app opening.
 
 #### `For Swift:`
