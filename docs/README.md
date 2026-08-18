@@ -1,68 +1,136 @@
-# Frontegg Flutter SDK
-![Frontegg_Flutter_SDK](/images/frontegg-flutter.png)
+<p align="center">
+  <img src="https://raw.githubusercontent.com/frontegg/frontegg-flutter/master/images/frontegg-flutter.png" alt="Frontegg Flutter SDK" width="640" />
+</p>
 
-Welcome to the official **Frontegg Flutter SDK** — your all-in-one solution for
-integrating authentication and user management into your Flutter mobile
-app. [Frontegg](https://frontegg.com/) is a self-served user management platform, built for modern
-SaaS applications. Easily implement authentication, SSO, RBAC, multi-tenancy, and more — all from a
-single SDK.
+<h1 align="center">Frontegg Flutter SDK</h1>
 
-## 📚 Documentation
+<p align="center">
+  <strong>Authentication and user management for your Flutter app — one package, both platforms.</strong>
+</p>
 
-This repository includes:
-
-- A [Get Started](https://flutter-guide.frontegg.com/#/getting-started) guide for quick integration
-- A [Setup Guide](https://flutter-guide.frontegg.com/#/setup) with detailed setup instructions
-- An [API Reference](https://flutter-guide.frontegg.com/#/api) for detailed SDK functionality
-- [Usage Examples](https://flutter-guide.frontegg.com/#/usage) with common implementation patterns
-- [Advanced Topics](https://flutter-guide.frontegg.com/#/advanced) for complex integration scenarios
-- A [Hosted](https://github.com/frontegg/frontegg-flutter/tree/master/hosted), [Embedded](https://github.com/frontegg/frontegg-flutter/tree/master/embedded), and [Application-Id](https://github.com/frontegg/frontegg-flutter/tree/master/application_id) example projects to help you get started quickly
-
-For full documentation, visit the Frontegg Developer Portal:  
-🔗 [https://developers.frontegg.com](https://developers.frontegg.com)
+<p align="center">
+  <a href="https://pub.dev/packages/frontegg_flutter"><img src="https://img.shields.io/pub/v/frontegg_flutter?label=pub.dev&color=6c47ff" alt="pub.dev version" /></a>
+  <img src="https://img.shields.io/badge/iOS-14%2B-lightgrey" alt="iOS 14+" />
+  <img src="https://img.shields.io/badge/Android-API%2026%2B-3ddc84" alt="Android API 26+" />
+  <img src="https://img.shields.io/badge/Dart-3-0175c2" alt="Dart 3" />
+  <a href="https://github.com/frontegg/frontegg-flutter/blob/master/LICENSE"><img src="https://img.shields.io/github/license/frontegg/frontegg-flutter?color=blue" alt="Licence" /></a>
+</p>
 
 ---
 
-## 🧑‍💻 Getting Started with Frontegg
+[Frontegg](https://frontegg.com/) is a self-served user management platform for modern SaaS
+applications. Drop this SDK in and your app gets a production login screen, a live session, and a
+user object — without you writing an auth flow or touching a token.
 
-Don't have a Frontegg account yet?  
-Sign up here → [https://portal.us.frontegg.com/signup](https://portal.us.frontegg.com/signup)
-
----
-
-## 🔐 Per-tenant sessions (`enableSessionPerTenant`)
-
-The Flutter SDK supports Frontegg's **per-tenant sessions** feature through the underlying native SDKs.
-
-- On **Android**, the plugin and example apps use `com.frontegg.sdk:android:1.3.35`.
-- On **iOS**, the plugin depends on `FronteggSwift`:
-  - **Flutter 3.41+** (SPM): `1.3.17` from GitHub. Run `flutter config --enable-swift-package-manager`, then `flutter pub get` and build.
-  - Note: CocoaPods fallback is no longer supported for `FronteggSwift`.
-  - SPM integration requires **Xcode 15+**.
-
-To enable and use per-tenant sessions:
-
-1. **Enable the flag in your iOS configuration**
-   - Add the following key to your `Frontegg.plist`:
-   ```xml
-   <plist version="1.0">
-     <dict>
-       <key>enableSessionPerTenant</key>
-       <true/>
-       ...
-     </dict>
-   </plist>
-   ```
-
-2. **Enable the flag in your Android configuration**  
-   - Android: verify your Gradle config includes:
-     ```groovy
-     buildConfigField "Boolean", "FRONTEGG_ENABLE_SESSION_PER_TENANT", "true"
-     ```
+| | |
+| --- | --- |
+| **Embedded or hosted login** | An in-app webview by default, or the system browser and Chrome Custom Tabs |
+| **Every method your tenants need** | Email, social, SSO, magic link, passkeys, MFA and step-up |
+| **Sessions that stay alive** | Tokens refresh in the background; offline mode keeps users working without a connection |
+| **Built for multi-tenant SaaS** | Multi-tenancy, RBAC, entitlements and multi-region support |
 
 ---
 
-## 💬 Support
+## Install
 
-Need help? Our team is here for you:  
-[https://support.frontegg.com/frontegg/directories](https://support.frontegg.com/frontegg/directories)
+```bash
+dart pub add frontegg_flutter
+```
+
+Or in `pubspec.yaml`:
+
+```yaml
+dependencies:
+  frontegg_flutter: ^1.0.0
+```
+
+> Requires **iOS 14+** and **Android API 26+**. The [releases page](https://github.com/frontegg/frontegg-flutter/releases) has the current version.
+
+## Quick start
+
+**1 · Allow the redirect URLs.** In the Frontegg Portal, under **[ENVIRONMENT] → Authentication →
+Login method**, turn hosted login on and add one per platform:
+
+```
+# iOS
+{{IOS_BUNDLE_IDENTIFIER}}://{{FRONTEGG_BASE_URL}}/ios/oauth/callback
+
+# Android
+{{ANDROID_PACKAGE_NAME}}://{{FRONTEGG_BASE_URL}}/android/oauth/callback
+```
+
+**2 · Configure the native projects.** Android takes its domain and client ID from `build.gradle`;
+iOS reads a `Frontegg.plist`. Both are covered step by step in the
+[Get Started guide](https://flutter-guide.frontegg.com/#/getting-started) — this is the one part
+that is not Dart, and it differs per platform.
+
+**3 · Wrap your root widget.**
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:frontegg_flutter/frontegg_flutter.dart';
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: FronteggProvider(
+        child: const MainPage(),
+      ),
+    );
+  }
+}
+```
+
+**4 · Reach the SDK** anywhere below it through the `BuildContext` extension.
+
+```dart
+class MainPage extends StatelessWidget {
+  const MainPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final frontegg = context.frontegg;
+    return Scaffold(
+      body: Center(
+        child: ElevatedButton(
+          child: const Text('Login'),
+          onPressed: () async => frontegg.login(),
+        ),
+      ),
+    );
+  }
+}
+```
+
+## Documentation
+
+| Guide | What it covers |
+| --- | --- |
+| [Get Started](https://flutter-guide.frontegg.com/#/getting-started) | Requirements, environment prep, iOS and Android setup |
+| [Setup](https://flutter-guide.frontegg.com/#/setup) | Detailed configuration |
+| [API Reference](https://flutter-guide.frontegg.com/#/api) | Every method the SDK exposes |
+| [Usage Examples](https://flutter-guide.frontegg.com/#/usage) | Login flows, social providers, offline mode |
+| [Advanced Topics](https://flutter-guide.frontegg.com/#/advanced) | Complex integration scenarios |
+
+Full platform documentation lives at [developers.frontegg.com](https://developers.frontegg.com).
+
+## Example apps
+
+Three runnable projects, each a complete integration:
+
+[Hosted](https://github.com/frontegg/frontegg-flutter/tree/master/hosted) ·
+[Embedded](https://github.com/frontegg/frontegg-flutter/tree/master/embedded) ·
+[Application-Id](https://github.com/frontegg/frontegg-flutter/tree/master/application_id)
+
+## Support
+
+No Frontegg account yet? [Sign up free](https://portal.us.frontegg.com/signup).
+
+Questions, or something broken? Reach the team at
+[support.frontegg.com](https://support.frontegg.com/frontegg/directories) or
+[open an issue](https://github.com/frontegg/frontegg-flutter/issues).
+
+Licensed under the [LICENSE](https://github.com/frontegg/frontegg-flutter/blob/master/LICENSE) in this repository.
