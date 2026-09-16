@@ -46,6 +46,25 @@ then create a new configuration via `POST`. For example:
 https://api.frontegg.com/vendors/resources/associated-domains/v1/ios/{{configurationId}} 
 ```
 
+### Use the App-Link (https) OAuth redirect on iOS
+
+By default iOS returns from sign-in through a custom URL scheme, which asks the user to confirm
+before the app reopens. Add `useAssetLinks` to `Frontegg.plist` to route the callback through the
+associated domain instead, matching Android's `useAssetsLinks`:
+
+```xml
+<key>useAssetLinks</key>
+<true/>
+```
+
+The callback then becomes
+`https://{{FRONTEGG_BASE_URL}}/oauth/account/redirect/ios/{{IOS_BUNDLE_IDENTIFIER}}`, which has to
+be registered as a redirect URI in your environment, or authorization fails after the user has
+already signed in.
+
+This requires iOS 17.4 or later. On older versions the SDK falls back to the custom-scheme
+callback, so keep both redirect URIs registered.
+
 ## Configure Android AssetLinks
 
 To enable Android features like Magic Link authentication, password reset, account activation, and
@@ -132,7 +151,7 @@ keytool -list -v -keystore /PATH/file.jks -alias YourAlias -storepass *** -keypa
 ```groovy
 dependencies {
     implementation 'androidx.browser:browser:1.8.0'
-    implementation 'com.frontegg.sdk:android:1.3.12'
+    implementation 'com.frontegg.sdk:android:1.3.41'
 }
 ```
 

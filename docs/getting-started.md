@@ -26,11 +26,14 @@ authenticated without any manual effort.
 
 - Navigate to [ENVIRONMENT] → Authentication → Login method
 - Make sure hosted login is toggled on.
-- For iOS add `https://{{IOS_BUNDLE_IDENTIFIER}}://{{FRONTEGG_BASE_URL}}/ios/oauth/callback`
+- For iOS add `{{IOS_BUNDLE_IDENTIFIER}}://{{FRONTEGG_BASE_URL}}/ios/oauth/callback` **(without
+  assetlinks)**
 - For Android add `{{ANDROID_PACKAGE_NAME}}://{{FRONTEGG_BASE_URL}}/android/oauth/callback` **(
   without assetlinks)**
-- Add `Add https://{{FRONTEGG_BASE_URL}}/oauth/account/redirect/android/{{ANDROID_PACKAGE_NAME}}` *
-  *(required for assetlinks)**
+- Add `https://{{FRONTEGG_BASE_URL}}/oauth/account/redirect/ios/{{IOS_BUNDLE_IDENTIFIER}}` **(
+  required for assetlinks)**
+- Add `https://{{FRONTEGG_BASE_URL}}/oauth/account/redirect/android/{{ANDROID_PACKAGE_NAME}}` **(
+  required for assetlinks)**
 - Add `https://{{FRONTEGG_BASE_URL}}/oauth/authorize`
 - Replace `IOS_BUNDLE_IDENTIFIER` with your application identifier
 - Replace `FRONTEGG_BASE_URL` with your Frontegg domain, i.e `app-xxxx.frontegg.com` or your custom
