@@ -1,3 +1,9 @@
+## v1.0.52
+- Fixed: embedded Google login on iOS failed with `Failed to get extract code from hostedLoginCallback url` even though the provider had already authenticated the user (FR-26132).
+- Fixed: the App-Link OAuth callback was treated as a magic link, dropping the PKCE verifier and failing the token exchange with `ER-00001` when `useAssetLinks` is enabled.
+- Improved: social login callbacks that cannot be processed now log the specific reason instead of a single generic message.
+- Bump native SDK to iOS `1.3.17`.
+
 ## v1.0.51
 - Fixed: Android `getConstants()` omitted `clientId`, crashing `FronteggConstants.fromMap` on every call (FR-25941).
 - Fixed: activity-dependent methods hung the Dart Future when no Activity was attached; now complete with an error (FR-25943).
