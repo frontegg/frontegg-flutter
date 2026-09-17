@@ -71,7 +71,19 @@ jobs:
           TAG_NAME: "v${{ steps.set_current_version.outputs.CURRENT_VERSION }}"
           RELEASE_TITLE: ${{ github.event.pull_request.title }}
         run: |
-          gh release create "$TAG_NAME" --latest --notes "$RELEASE_NOTES" --title "$RELEASE_TITLE"
+          strip_bot_summaries() {
+            awk '
+              /<!-- CURSOR_SUMMARY -->/ { skip = 1 }
+              !skip { lines[++n] = $0 }
+              /<!-- \/CURSOR_SUMMARY -->/ { skip = 0 }
+              END {
+                while (n > 0 && lines[n] ~ /^[[:space:]]*$/) n--
+                for (i = 1; i <= n; i++) print lines[i]
+              }'
+          }
+
+          NOTES=$(printf '%s\n' "$RELEASE_NOTES" | strip_bot_summaries)
+          gh release create "$TAG_NAME" --latest --notes "$NOTES" --title "$RELEASE_TITLE"
 
       - uses: actions/github-script@0.8.0
         with:
