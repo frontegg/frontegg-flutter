@@ -1,3 +1,12 @@
+## v1.0.53
+- Internal: release automation no longer fails on PR descriptions containing apostrophes, and no longer copies Cursor Bugbot summaries into the changelog.
+
+> 
+> **Safer handling of PR descriptions:** the merge workflow writes the description to `GITHUB_OUTPUT` with a **random heredoc delimiter** instead of a fixed `EOF`, and the changelog steps pass text through a **`DESCRIPTION` env var** with **`printf`** instead of shell-interpolated `echo -e`—avoiding breakage when descriptions contain apostrophes or other special characters. The release-PR-update workflow’s changelog branch also stops referencing a missing `get_description` step output and uses the fetched `$DESCRIPTION` consistently.
+> 
+> <sup>Reviewed by [Cursor Bugbot](https://cursor.com/bugbot) for commit 845066d6dec9cd0f3906ee5b8de3627745fea651. Bugbot is set up for automated code reviews on this repo. Configure [here](https://www.cursor.com/dashboard/bugbot).</sup>
+<!-- /CURSOR_SUMMARY -->
+
 ## v1.0.52
 - Fixed: embedded Google login on iOS failed with `Failed to get extract code from hostedLoginCallback url` even though the provider had already authenticated the user (FR-26132).
 - Fixed: the App-Link OAuth callback was treated as a magic link, dropping the PKCE verifier and failing the token exchange with `ER-00001` when `useAssetLinks` is enabled.
