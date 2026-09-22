@@ -36,15 +36,24 @@ jobs:
            -H "Accept: application/vnd.github+json" \
            "https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}")
           
-          # Extract the description (body field)
-          DESCRIPTION=$(echo "$pr_metadata" | jq -r '.body // ""')
-          
-          # Check if DESCRIPTION is valid
+          strip_bot_summaries() {
+            awk '
+              /<!-- CURSOR_SUMMARY -->/ { skip = 1 }
+              !skip { lines[++n] = $0 }
+              /<!-- \/CURSOR_SUMMARY -->/ { skip = 0 }
+              END {
+                while (n > 0 && lines[n] ~ /^[[:space:]]*$/) n--
+                for (i = 1; i <= n; i++) print lines[i]
+              }'
+          }
+
+          DESCRIPTION=$(echo "$pr_metadata" | jq -r '.body // ""' | strip_bot_summaries)
+
           if [[ -n "$DESCRIPTION" && "$DESCRIPTION" != "null" ]]; then
-            if [[ -f "${{ env.CHANGELOG_OLD_FILE }}" ]]; then
-              echo -e "$DESCRIPTION\n\n$(cat ${{ env.CHANGELOG_OLD_FILE }})" > ${{ env.CHANGELOG_FILE }}
+            if [[ -f "$CHANGELOG_OLD_FILE" ]]; then
+              printf '%s\n\n%s\n' "$DESCRIPTION" "$(cat "$CHANGELOG_OLD_FILE")" > "$CHANGELOG_FILE"
             else
-              echo '${{ steps.get_description.outputs.DESCRIPTION }}' > ${{ env.CHANGELOG_FILE }}
+              printf '%s\n' "$DESCRIPTION" > "$CHANGELOG_FILE"
             fi
           else
             echo "No description provided in the pull request. The 'release/next' branch must provide a description for correct CHANGELOG.md generation."
