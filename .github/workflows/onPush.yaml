@@ -78,6 +78,10 @@ jobs:
           cd hosted
           flutter pub get
           cd ..
+          
+          cd scene_lifecycle
+          flutter pub get
+          cd ..
 
       - name: Analyze code
         run: flutter analyze
