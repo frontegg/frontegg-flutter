@@ -2,11 +2,12 @@ import Flutter
 import UIKit
 import FronteggSwift
 
-public class FronteggFlutterPlugin: NSObject, FlutterPlugin {
+public class FronteggFlutterPlugin: NSObject, FlutterPlugin, FlutterSceneLifeCycleDelegate {
     private static let fronteggApp = FronteggApp.shared
     private static let methodChannelName: String = "frontegg_flutter"
     private static let stateEventChanelName: String = "frontegg_flutter/state_stream"
     private static var stateListener: FronteggStateListener? = nil
+    private var pendingLaunchLinks: [URL] = []
     
     public static func register(with registrar: FlutterPluginRegistrar) {
         let methodCallHandler = FronteggMethodCallHandler(fronteggApp: fronteggApp)
@@ -20,7 +21,41 @@ public class FronteggFlutterPlugin: NSObject, FlutterPlugin {
         stateEventChannel.setStreamHandler(streamHandler)
         
         let instance = FronteggFlutterPlugin()
+        registrar.publish(instance)
         registrar.addApplicationDelegate(instance)
+        registrar.addSceneDelegate(instance)
+    }
+
+    public func scene(
+        _ scene: UIScene,
+        willConnectTo session: UISceneSession,
+        options connectionOptions: UIScene.ConnectionOptions?
+    ) -> Bool {
+        guard let connectionOptions else { return false }
+        let launchLinks = connectionOptions.userActivities.compactMap(\.webpageURL)
+            + connectionOptions.urlContexts.map(\.url)
+        pendingLaunchLinks = launchLinks.filter(Self.isFronteggLink)
+        return !pendingLaunchLinks.isEmpty
+    }
+
+    public func sceneDidBecomeActive(_ scene: UIScene) {
+        let launchLinks = pendingLaunchLinks
+        pendingLaunchLinks = []
+        _ = launchLinks.contains { FronteggAuth.shared.handleOpenUrl($0, true) }
+    }
+
+    public func scene(_ scene: UIScene, continue userActivity: NSUserActivity) -> Bool {
+        guard let link = userActivity.webpageURL else { return false }
+        return FronteggAuth.shared.handleOpenUrl(link, true)
+    }
+
+    public func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) -> Bool {
+        URLContexts.contains { FronteggAuth.shared.handleOpenUrl($0.url, true) }
+    }
+
+    static func isFronteggLink(_ link: URL) -> Bool {
+        let baseUrl = FronteggAuth.shared.baseUrl
+        return !baseUrl.isEmpty && link.absoluteString.hasPrefix(baseUrl)
     }
     
     public func detachFromEngine(for registrar: any FlutterPluginRegistrar) {
