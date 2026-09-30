@@ -58,6 +58,11 @@ class E2ETestMode {
     }
   }
 
+  static Future<Map<String, Object?>> deliverUniversalLink(String url) async {
+    final result = await _channel.invokeMethod<Map>('deliverUniversalLink', {'url': url});
+    return Map<String, Object?>.from(result ?? const {});
+  }
+
   static Future<void> initializeForE2E({
     required String baseUrl,
     required String clientId,
