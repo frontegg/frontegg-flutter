@@ -1,3 +1,12 @@
+## v1.0.53
+- Bump native SDKs to Android `1.3.41` / iOS `1.3.21`.
+- Fixed: Android no longer retries forever when a refresh token is rejected; the session now ends.
+- Fixed: Android no longer crashes when the network is unreachable while entitlements load.
+- Fixed: Android account-unlock email links open the app, and incoming deep links are checked against the configured Frontegg domain.
+- Fixed: iOS users are no longer signed out when the app relaunches after a reboot before the device is unlocked.
+- Fixed: iOS SSO sign-in failing with `Failed to login with SSO`, and the account-unlock link hanging on a spinner.
+- Fixed: sign-in now returns to the app when the Frontegg base URL includes a path.
+
 ## v1.0.52
 - Fixed: embedded Google login on iOS failed with `Failed to get extract code from hostedLoginCallback url` even though the provider had already authenticated the user (FR-26132).
 - Fixed: the App-Link OAuth callback was treated as a magic link, dropping the PKCE verifier and failing the token exchange with `ER-00001` when `useAssetLinks` is enabled.

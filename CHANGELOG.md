@@ -1,3 +1,6 @@
+## v1.0.54
+- Fixed: on iOS apps using the UIScene lifecycle (the `flutter create` default since Flutter 3.41), Frontegg links such as reset-password emails now reach the SDK instead of the app's router.
+
 ## v1.0.53
 - Bump native SDKs to Android `1.3.41` / iOS `1.3.21`.
 - Fixed: Android no longer retries forever when a refresh token is rejected; the session now ends.
