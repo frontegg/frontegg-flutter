@@ -13,6 +13,7 @@ final class RunnerTests: XCTestCase {
     super.setUp()
     continueAfterFailure = false
     waitForFlutterUI()
+    closePresentedWindow()
     RouterLog.pageNotFoundLocations = []
     FronteggAuth.shared.pendingAppLink = nil
   }
@@ -55,6 +56,13 @@ final class RunnerTests: XCTestCase {
   private func presentedControllerName() -> String? {
     let root = (windowScene.delegate as? UIWindowSceneDelegate)?.window??.rootViewController
     return root?.presentedViewController.map { String(describing: type(of: $0)) }
+  }
+
+  private func closePresentedWindow() {
+    let root = (windowScene.delegate as? UIWindowSceneDelegate)?.window??.rootViewController
+    guard root?.presentedViewController != nil else { return }
+    root?.dismiss(animated: false)
+    waitUntil("the presented window closes") { root?.presentedViewController == nil }
   }
 
   private func waitForFlutterUI() {
