@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:frontegg_flutter_embedded_example/e2e_test_mode.dart';
 import 'package:patrol/patrol.dart';
 
 import 'embedded_e2e_test_case.dart';
@@ -85,6 +86,24 @@ void main() {
     await tc.tapSemantics($, 'E2ESeedRequestAuthorizeTokenButton');
     await tc.tapSemantics($, 'RequestAuthorizeButton');
     await tc.waitForUserEmail($, 'signup@frontegg.com', timeout: const Duration(seconds: 120));
+  });
+
+  e2ePatrolTest('testResetPasswordUniversalLinkReachesFronteggSdk', ($) async {
+    final appRouterLinks = _AppRouterLinks();
+    WidgetsBinding.instance.addObserver(appRouterLinks);
+    addTearDown(() => WidgetsBinding.instance.removeObserver(appRouterLinks));
+    await tc.launchApp($);
+    await tc.waitForLoginPage($);
+
+    final resetPasswordLink =
+        '${tc.mock.urlRoot}/oauth/account/reset-password?userId=e2e-user&token=e2e-token';
+    final delivery = await E2ETestMode.deliverUniversalLink(resetPasswordLink);
+    await tc.waitDurationSeconds(3);
+
+    expect(delivery['sceneDelegate'], 'FlutterSceneDelegate');
+    expect(appRouterLinks.locations, isEmpty, reason: 'The reset-password link reached the app router');
+    expect(delivery['fronteggPendingAppLink'], resetPasswordLink);
+    expect(delivery['fronteggLoginWindowPresented'], isTrue);
   });
 
   e2ePatrolTest('testCustomSSOBrowserHandoff', ($) async {
@@ -334,4 +353,14 @@ void main() {
     await tc.launchApp($, resetState: false);
     await tc.waitForUserEmail($, 'test@frontegg.com', timeout: const Duration(seconds: 180));
   });
+}
+
+class _AppRouterLinks with WidgetsBindingObserver {
+  final locations = <String>[];
+
+  @override
+  Future<bool> didPushRouteInformation(RouteInformation routeInformation) async {
+    locations.add(routeInformation.uri.toString());
+    return true;
+  }
 }

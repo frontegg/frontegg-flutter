@@ -1,0 +1,44 @@
+name: "Scene lifecycle iOS tests"
+
+on:
+  pull_request:
+    paths:
+      - "ios/**"
+      - "scene_lifecycle/**"
+      - ".github/workflows/scene-lifecycle-ios.yml"
+
+concurrency:
+  group: scene-lifecycle-ios-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: macos-latest
+    timeout-minutes: 45
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+
+      - name: Enable Swift Package Manager (SPM)
+        run: flutter config --enable-swift-package-manager
+
+      - name: Build the app for the simulator
+        working-directory: scene_lifecycle
+        run: |
+          flutter pub get
+          flutter build ios --debug --simulator --no-codesign
+
+      - name: Run the iOS tests
+        working-directory: scene_lifecycle/ios
+        run: |
+          DEVICE_ID=$(xcrun simctl list devices available -j \
+            | jq -r '[.devices | to_entries[] | select(.key | contains("iOS")) | .value[] | select(.name | startswith("iPhone"))][0].udid')
+          echo "Simulator: $DEVICE_ID"
+          xcodebuild test -workspace Runner.xcworkspace -scheme Runner \
+            -destination "platform=iOS Simulator,id=$DEVICE_ID" \
+            -parallel-testing-enabled NO

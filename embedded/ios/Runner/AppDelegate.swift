@@ -126,6 +126,28 @@ import FronteggSwift
         case "writeBootstrap", "consumeBootstrap":
             result(nil)
 
+        case "deliverUniversalLink":
+            guard let link = (call.arguments as? [String: Any])?["url"] as? String,
+                  let url = URL(string: link) else {
+                result(FlutterError(code: "MISSING_PARAM", message: "url required", details: nil))
+                return
+            }
+            guard let scene = UIApplication.shared.connectedScenes.compactMap({ $0 as? UIWindowScene }).first,
+                  let sceneDelegate = scene.delegate as? UIWindowSceneDelegate else {
+                result(FlutterError(code: "NO_SCENE", message: "No window scene with a delegate", details: nil))
+                return
+            }
+            FronteggAuth.shared.pendingAppLink = nil
+            let activity = NSUserActivity(activityType: NSUserActivityTypeBrowsingWeb)
+            activity.webpageURL = url
+            sceneDelegate.scene?(scene, continue: activity)
+            let presented = sceneDelegate.window??.rootViewController?.presentedViewController
+            result([
+                "sceneDelegate": String(describing: type(of: sceneDelegate)),
+                "fronteggPendingAppLink": FronteggAuth.shared.pendingAppLink?.absoluteString as Any,
+                "fronteggLoginWindowPresented": presented.map { String(describing: type(of: $0)).contains("EmbeddedLoginModal") } ?? false,
+            ])
+
         default:
             result(FlutterMethodNotImplemented)
         }

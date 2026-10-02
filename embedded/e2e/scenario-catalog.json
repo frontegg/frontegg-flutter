@@ -21,6 +21,11 @@
       "description": "Seeds a refresh token, triggers requestAuthorize, and verifies the session is established."
     },
     {
+      "method": "testResetPasswordUniversalLinkReachesFronteggSdk",
+      "title": "Reset-password universal link reaches the Frontegg SDK (iOS)",
+      "description": "Delivers a reset-password universal link through the app's FlutterSceneDelegate, as iOS does when the user taps the email link, and verifies Frontegg opens it in its login window instead of the app router (FR-27288)."
+    },
+    {
       "method": "testCustomSSOBrowserHandoff",
       "title": "Custom SSO browser handoff completes login",
       "description": "Initiates a custom SSO flow that opens a browser, mock server completes the handoff, and the user is authenticated."

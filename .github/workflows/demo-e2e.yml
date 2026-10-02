@@ -90,6 +90,7 @@ jobs:
             testEmbeddedSamlLogin,
             testEmbeddedOidcLogin,
             testRequestAuthorizeFlow,
+            testResetPasswordUniversalLinkReachesFronteggSdk,
             testCustomSSOBrowserHandoff,
             testDirectSocialBrowserHandoff,
             testEmbeddedGoogleSocialLoginWithSystemWebAuthenticationSession,
