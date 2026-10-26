@@ -72,6 +72,16 @@ abstract class FronteggPlatform extends PlatformInterface {
     throw UnimplementedError("refreshToken() has not been implemented.");
   }
 
+  Future<String?> getOrRefreshAccessToken() {
+    throw UnimplementedError(
+      "getOrRefreshAccessToken() has not been implemented.",
+    );
+  }
+
+  Future<void> initWithRegion(String regionKey) {
+    throw UnimplementedError("initWithRegion() has not been implemented.");
+  }
+
   Future<void> logout() {
     throw UnimplementedError("logout() has not been implemented.");
   }

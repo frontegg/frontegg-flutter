@@ -23,6 +23,9 @@ class FronteggMethodChannel extends FronteggPlatform {
   static const String socialLoginMethodName = "socialLogin";
   static const String customSocialLoginMethodName = "customSocialLogin";
   static const String refreshTokenMethodName = "refreshToken";
+  static const String getOrRefreshAccessTokenMethodName =
+      "getOrRefreshAccessToken";
+  static const String initWithRegionMethodName = "initWithRegion";
   static const String getConstantsMethodName = "getConstants";
   static const String requestAuthorizeMethodName = "requestAuthorize";
   static const String stepUpMethodName = "stepUp";
@@ -191,6 +194,24 @@ class FronteggMethodChannel extends FronteggPlatform {
   @override
   Future<bool?> refreshToken() =>
       methodChannel.invokeMethod<bool>(refreshTokenMethodName);
+
+  /// Returns a valid access token, refreshing it first when it is about to expire.
+  ///
+  /// Returns a [Future] that completes with the access token, or `null` when there is no session.
+  @override
+  Future<String?> getOrRefreshAccessToken() =>
+      methodChannel.invokeMethod<String>(getOrRefreshAccessTokenMethodName);
+
+  /// Selects the region with [regionKey] by invoking the native platform's initWithRegion method.
+  ///
+  /// Returns a [Future] that completes when the native SDK has switched to the region.
+  @override
+  Future<void> initWithRegion(String regionKey) => methodChannel.invokeMethod(
+        initWithRegionMethodName,
+        {
+          "regionKey": regionKey,
+        },
+      );
 
   /// Logs the user out by invoking the native platform's logout method.
   ///

@@ -103,7 +103,7 @@ class _UserPageState extends State<UserPage> {
                                     // Receive access token button
                                     child: ElevatedButton(
                                       onPressed: () async {
-                                        final accessToken = state.accessToken;
+                                        final accessToken = await frontegg.getOrRefreshAccessToken();
                                         if (accessToken != null && accessToken.isNotEmpty) {
                                           await Clipboard.setData(
                                             ClipboardData(text: accessToken),

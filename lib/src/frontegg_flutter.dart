@@ -231,6 +231,39 @@ class FronteggFlutter {
         return success ?? false;
       });
 
+  /// Returns a valid access token, refreshing it first when needed.
+  ///
+  /// This is the recommended way to get a token after the app resumes from the
+  /// background, when the token held in [currentState] may already be expired.
+  /// The native SDK waits for its initialization to finish, returns the current
+  /// access token when it is valid for more than 15 seconds, and refreshes it
+  /// otherwise.
+  ///
+  /// Returns `null` when there is no session or the refresh token was rejected.
+  ///
+  /// Throws a [FronteggException] if the token could not be refreshed for
+  /// another reason, for example a network failure.
+  Future<String?> getOrRefreshAccessToken() => _runAction(
+        () => FronteggPlatform.instance.getOrRefreshAccessToken(),
+      );
+
+  /// Selects the region to authenticate against in a multi-region setup.
+  ///
+  /// The regions are configured natively (`regions` in `Frontegg.plist` on iOS,
+  /// `FronteggApp.initWithRegions` on Android) and are listed in
+  /// [FronteggConstants.regions]. The selection is persisted by the native SDK
+  /// and reported in [FronteggState.selectedRegion].
+  ///
+  /// - [regionKey]: The key of one of the configured regions.
+  ///
+  /// Throws a [FronteggException] if the app is not configured for multiple
+  /// regions or [regionKey] is not one of the configured regions.
+  ///
+  /// Returns a [Future] that completes when the region is selected.
+  Future<void> initWithRegion(String regionKey) => _runAction(
+        () => FronteggPlatform.instance.initWithRegion(regionKey),
+      );
+
   /// Logs out the user and clears user-related data.
   ///
   /// This method may perform a network request to complete the logout process.

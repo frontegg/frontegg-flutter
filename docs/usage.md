@@ -229,6 +229,7 @@ class FronteggState {
   final bool appLink;
   final bool refreshingToken;
   final bool isOfflineMode;
+  final FronteggRegionConfig? selectedRegion;
 }
 ```
 
@@ -316,6 +317,49 @@ You can access the current state of `FronteggFlutter` in two ways:
       }
     }
    ```
+
+### Get a valid access token after app resume
+
+`FronteggState.accessToken` holds the last token the native SDK published. When the app returns
+from the background, that token can already be expired while the SDK is still refreshing it. Call
+`getOrRefreshAccessToken()` before calling your API instead:
+
+```dart
+class _MyPageState extends State<MyPage> {
+  late final AppLifecycleListener lifecycleListener;
+
+  @override
+  void initState() {
+    super.initState();
+    lifecycleListener = AppLifecycleListener(onResume: loadData);
+  }
+
+  @override
+  void dispose() {
+    lifecycleListener.dispose();
+    super.dispose();
+  }
+
+  Future<void> loadData() async {
+    final accessToken = await context.frontegg.getOrRefreshAccessToken();
+    if (accessToken == null) {
+      // No session: show the login page
+      return;
+    }
+    // Call your API with 'Authorization: Bearer $accessToken'
+  }
+}
+```
+
+- Waits for the SDK to finish initializing, returns the current access token when it is valid for
+  more than 15 seconds, and refreshes it otherwise.
+- Returns `null` when there is no session or the refresh token was rejected.
+- Throws a `FronteggException` when the token could not be refreshed for another reason, for
+  example no network.
+- iOS calls `FronteggAuth.getOrRefreshAccessTokenAsync()`. On Android the plugin implements the
+  same flow with the SDK's `refreshTokenAndWait()`. Android waits up to 60 seconds for a network
+  before failing, while iOS retries the refresh up to five times and, in offline mode, returns the
+  cached token on a connectivity error.
 
 ### Logout user after application was uninstalled
 

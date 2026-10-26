@@ -28,6 +28,10 @@ class FronteggMethodCallHandler {
             switchTenant(call: call, result: result)
         case "refreshToken":
             refreshToken(result: result)
+        case "getOrRefreshAccessToken":
+            getOrRefreshAccessToken(result: result)
+        case "initWithRegion":
+            initWithRegion(call: call, result: result)
         case "logout":
             logout(result: result)
         case "getConstants":
@@ -334,7 +338,8 @@ class FronteggMethodCallHandler {
             "baseUrl": fronteggApp.baseUrl,
             "clientId": fronteggApp.clientId,
             "applicationId": fronteggApp.applicationId,
-            "bundleId": Bundle.main.bundleIdentifier as Any
+            "bundleId": Bundle.main.bundleIdentifier as Any,
+            "regions": fronteggApp.regionData.map { $0.toMap() }
         ]
     }
     
@@ -386,6 +391,36 @@ class FronteggMethodCallHandler {
                 result(success)
             }
         }
+    }
+
+    private func getOrRefreshAccessToken(result: @escaping FlutterResult) {
+        Task { @MainActor in
+            do {
+                let accessToken = try await self.fronteggApp.auth.getOrRefreshAccessTokenAsync()
+                result(accessToken)
+            } catch {
+                let failureReason = (error as? LocalizedError)?.failureReason ?? "unknown"
+                result(FlutterError(code: failureReason, message: error.localizedDescription, details: nil))
+            }
+        }
+    }
+
+    private func initWithRegion(
+        call: FlutterMethodCall,
+        result: @escaping FlutterResult
+    ) {
+        guard let arguments = call.arguments as? [String: Any?],
+              let regionKey = arguments["regionKey"] as? String
+        else {
+            return result(FlutterError(code: "MISSING_PARAMS", message: "Missing region key", details: nil))
+        }
+
+        guard fronteggApp.regionData.contains(where: { $0.key == regionKey }) else {
+            return result(FlutterError(code: "INVALID_REGION", message: "Unknown region key \(regionKey)", details: nil))
+        }
+
+        fronteggApp.initWithRegion(regionKey: regionKey)
+        result(nil)
     }
 
     private func loadEntitlements(

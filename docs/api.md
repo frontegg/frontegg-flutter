@@ -18,6 +18,7 @@
 | `registerPasskeys` | None | Registers passkeys for the user. |
 | `logout` | None | Logs out the user and clears user-related data. |
 | `refreshToken` | None | Refreshes the authentication token if needed. Returns `true` if successful. |
+| `getOrRefreshAccessToken` | None | Returns a valid access token, refreshing it first when fewer than 15 seconds remain. Returns `null` when there is no session or the refresh token was rejected. Recommended way to get a token after app resume. |
 
 ### Social & Direct Login Methods
 
@@ -32,6 +33,18 @@
 | Method | Parameters | Description |
 |--------|------------|-------------|
 | `switchTenant` | `tenantId` (required): String | Switches the user's active tenant. IDs available from `User.tenants.tenantId`. |
+
+### Multi-Region
+
+| Method | Parameters | Description |
+|--------|------------|-------------|
+| `initWithRegion` | `regionKey` (required): String | Selects one of the natively configured regions. The selection is persisted and reported in `FronteggState.selectedRegion`. |
+
+| Property | Description |
+|----------|-------------|
+| `FronteggConstants.regions` | The configured regions (`List<FronteggRegionConfig>`: `key`, `baseUrl`, `clientId`, `applicationId`). Empty for a single-region setup. |
+| `FronteggConstants.isRegional` | `true` when regions are configured. |
+| `FronteggState.selectedRegion` | The selected `FronteggRegionConfig`, or `null` when none is selected. |
 
 ### Authorization & Security
 
