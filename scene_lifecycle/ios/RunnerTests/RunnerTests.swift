@@ -12,8 +12,8 @@ final class RunnerTests: XCTestCase {
   override func setUp() {
     super.setUp()
     continueAfterFailure = false
-    waitForFlutterUI()
     closePresentedWindow()
+    waitForFlutterUI()
     RouterLog.pageNotFoundLocations = []
     FronteggAuth.shared.pendingAppLink = nil
   }
@@ -60,7 +60,9 @@ final class RunnerTests: XCTestCase {
 
   private func closePresentedWindow() {
     let root = (windowScene.delegate as? UIWindowSceneDelegate)?.window??.rootViewController
-    guard root?.presentedViewController != nil else { return }
+    guard let presented = root?.presentedViewController else { return }
+    // Dismissing mid-presentation lets the Flutter view's late viewDidDisappear pause it after it reappears.
+    waitUntil("the presented window finishes appearing") { !presented.isBeingPresented }
     root?.dismiss(animated: false)
     waitUntil("the presented window closes") { root?.presentedViewController == nil }
   }
