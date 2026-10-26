@@ -32,7 +32,11 @@ final class RunnerTests: XCTestCase {
   }
 
   func testUniversalLinkOutsideFronteggStillReachesTheAppRouter() {
+    logState("before deliver")
     deliverUniversalLink(hostAppLink)
+    logState("after deliver")
+    RunLoop.current.run(until: Date().addingTimeInterval(3))
+    logState("3s after deliver")
 
     waitUntil("the app router receives the host app's link") {
       !RouterLog.pageNotFoundLocations.isEmpty
@@ -51,6 +55,26 @@ final class RunnerTests: XCTestCase {
     let scene = windowScene
     XCTAssertEqual(String(describing: type(of: scene.delegate!)), "FlutterSceneDelegate")
     (scene.delegate as! UIWindowSceneDelegate).scene!(scene, continue: activity)
+  }
+
+  private func logState(_ label: String) {
+    let root = (windowScene.delegate as? UIWindowSceneDelegate)?.window??.rootViewController
+    let flutterViewController = root as? FlutterViewController
+    let rootName: String = root.map { String(describing: type(of: $0)) } ?? "nil"
+    let deepLinking = String(describing: Bundle.main.object(forInfoDictionaryKey: "FlutterDeepLinkingEnabled"))
+    let parts: [String] = [
+      "DIAG test \(label):",
+      "appState=\(UIApplication.shared.applicationState.rawValue)",
+      "sceneState=\(windowScene.activationState.rawValue)",
+      "root=\(rootName)",
+      "presented=\(presentedControllerName() ?? "none")",
+      "displayingFlutterUI=\(flutterViewController?.isDisplayingFlutterUI ?? false)",
+      "viewInWindow=\(flutterViewController?.viewIfLoaded?.window != nil)",
+      "deepLinking=\(deepLinking)",
+      "pageNotFound=\(RouterLog.pageNotFoundLocations)",
+      "pendingAppLink=\(String(describing: FronteggAuth.shared.pendingAppLink))",
+    ]
+    NSLog("%@", parts.joined(separator: " "))
   }
 
   private func presentedControllerName() -> String? {

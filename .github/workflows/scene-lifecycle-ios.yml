@@ -33,12 +33,39 @@ jobs:
           flutter pub get
           flutter build ios --debug --simulator --no-codesign
 
+      - name: Tool versions
+        run: |
+          flutter --version
+          xcodebuild -version
+
       - name: Run the iOS tests
         working-directory: scene_lifecycle/ios
         run: |
+          set -o pipefail
           DEVICE_ID=$(xcrun simctl list devices available -j \
             | jq -r '[.devices | to_entries[] | select(.key | contains("iOS")) | .value[] | select(.name | startswith("iPhone"))][0].udid')
           echo "Simulator: $DEVICE_ID"
+          echo "DEVICE_ID=$DEVICE_ID" >> "$GITHUB_ENV"
           xcodebuild test -workspace Runner.xcworkspace -scheme Runner \
             -destination "platform=iOS Simulator,id=$DEVICE_ID" \
-            -parallel-testing-enabled NO
+            -parallel-testing-enabled NO 2>&1 | tee "$RUNNER_TEMP/all-tests.log"
+
+      - name: Run the host-app link test on its own
+        if: always()
+        continue-on-error: true
+        working-directory: scene_lifecycle/ios
+        run: |
+          set -o pipefail
+          xcodebuild test -workspace Runner.xcworkspace -scheme Runner \
+            -destination "platform=iOS Simulator,id=$DEVICE_ID" \
+            -parallel-testing-enabled NO \
+            -only-testing:RunnerTests/RunnerTests/testUniversalLinkOutsideFronteggStillReachesTheAppRouter \
+            2>&1 | tee "$RUNNER_TEMP/isolated-test.log"
+
+      - name: Diagnostics summary
+        if: always()
+        run: |
+          for log in "$RUNNER_TEMP/all-tests.log" "$RUNNER_TEMP/isolated-test.log"; do
+            echo "===== $(basename "$log")"
+            grep -E "DIAG|Test Case|error:|Failed to handle route|Timeout waiting for first frame" "$log" || true
+          done

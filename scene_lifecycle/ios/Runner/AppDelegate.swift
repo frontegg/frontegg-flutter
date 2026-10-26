@@ -23,8 +23,10 @@ enum RouterLog {
     let registrar = engineBridge.pluginRegistry.registrar(forPlugin: "SceneLifecycleRouterLog")!
     FlutterMethodChannel(name: "scene_lifecycle/router", binaryMessenger: registrar.messenger())
       .setMethodCallHandler { call, result in
+        NSLog("%@", "DIAG native channel \(call.method) \(String(describing: call.arguments))")
         if call.method == "pageNotFound", let location = call.arguments as? String {
           RouterLog.pageNotFoundLocations.append(location)
+          NSLog("%@", "DIAG native pageNotFoundLocations=\(RouterLog.pageNotFoundLocations)")
         }
         result(nil)
       }

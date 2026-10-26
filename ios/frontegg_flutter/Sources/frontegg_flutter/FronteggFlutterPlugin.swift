@@ -46,7 +46,9 @@ public class FronteggFlutterPlugin: NSObject, FlutterPlugin, FlutterSceneLifeCyc
 
     public func scene(_ scene: UIScene, continue userActivity: NSUserActivity) -> Bool {
         guard let link = userActivity.webpageURL else { return false }
-        return FronteggAuth.shared.handleOpenUrl(link, true)
+        let handled = FronteggAuth.shared.handleOpenUrl(link, true)
+        NSLog("%@", "DIAG plugin scene continue \(link.absoluteString) handled=\(handled)")
+        return handled
     }
 
     public func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) -> Bool {
