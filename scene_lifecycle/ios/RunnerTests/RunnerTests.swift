@@ -97,6 +97,12 @@ final class RunnerTests: XCTestCase {
     logState("before deliver")
     deliverUniversalLink(hostAppLink)
     logState("after deliver")
+    let probeStart = Date()
+    for qos in [DispatchQoS.QoSClass.background, .utility, .default] {
+      DispatchQueue.global(qos: qos).async {
+        NSLog("%@", "DIAG \(qos) queue probe ran after \(Date().timeIntervalSince(probeStart))s")
+      }
+    }
     RunLoop.current.run(until: Date().addingTimeInterval(3))
     logState("3s after deliver")
 

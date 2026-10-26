@@ -56,6 +56,11 @@ jobs:
         working-directory: scene_lifecycle/ios
         run: |
           set -o pipefail
+          (
+            until grep -q "DIAG test after deliver" "$RUNNER_TEMP/isolated-test.log" 2>/dev/null; do sleep 0.5; done
+            sleep 2
+            sample "$(pgrep -x Runner | tail -1)" 5 -file "$RUNNER_TEMP/runner-sample.txt" || true
+          ) &
           xcodebuild test -workspace Runner.xcworkspace -scheme Runner \
             -destination "platform=iOS Simulator,id=$DEVICE_ID" \
             -parallel-testing-enabled NO \
@@ -69,3 +74,13 @@ jobs:
             echo "===== $(basename "$log")"
             grep -E "DIAG|Test Case|error:|Failed to handle route|Timeout waiting for first frame" "$log" || true
           done
+          echo "===== runner-sample.txt"
+          head -c 80000 "$RUNNER_TEMP/runner-sample.txt" || true
+
+      - name: Upload the Runner sample
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: runner-sample
+          path: ${{ runner.temp }}/runner-sample.txt
+          if-no-files-found: ignore
