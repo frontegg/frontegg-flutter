@@ -1,9 +1,70 @@
 import Flutter
 import FronteggSwift
+import ObjectiveC
 import UIKit
 import XCTest
 
 @testable import Runner
+
+private enum DeepLinkTrace {
+  static let install: Void = {
+    traceSceneFallback()
+    traceHandleDeeplink()
+    traceSendDeepLink()
+  }()
+
+  private static func lookUpMethod(_ className: String, _ selectorName: String) -> Method? {
+    guard let cls = NSClassFromString(className),
+          let method = class_getInstanceMethod(cls, NSSelectorFromString(selectorName)) else {
+      NSLog("%@", "DIAG trace: \(className) \(selectorName) not found")
+      return nil
+    }
+    return method
+  }
+
+  private static func traceSceneFallback() {
+    let selector = NSSelectorFromString("sceneFallbackContinueUserActivity:")
+    guard let method = lookUpMethod("FlutterPluginAppLifeCycleDelegate", "sceneFallbackContinueUserActivity:") else { return }
+    typealias Original = @convention(c) (AnyObject, Selector, AnyObject) -> Bool
+    let original = unsafeBitCast(method_getImplementation(method), to: Original.self)
+    let replacement: @convention(block) (AnyObject, AnyObject) -> Bool = { receiver, activity in
+      let handled = original(receiver, selector, activity)
+      NSLog("%@", "DIAG sceneFallbackContinueUserActivity -> \(handled)")
+      return handled
+    }
+    method_setImplementation(method, imp_implementationWithBlock(replacement))
+  }
+
+  private static func traceHandleDeeplink() {
+    let selectorName = "handleDeeplink:flutterEngine:relayToSystemIfUnhandled:"
+    let selector = NSSelectorFromString(selectorName)
+    guard let method = lookUpMethod("FlutterPluginSceneLifeCycleDelegate", selectorName) else { return }
+    typealias Original = @convention(c) (AnyObject, Selector, AnyObject?, AnyObject, Bool) -> Bool
+    let original = unsafeBitCast(method_getImplementation(method), to: Original.self)
+    let replacement: @convention(block) (AnyObject, AnyObject?, AnyObject, Bool) -> Bool = { receiver, url, engine, relay in
+      let handled = original(receiver, selector, url, engine, relay)
+      NSLog("%@", "DIAG handleDeeplink \(String(describing: url)) -> \(handled)")
+      return handled
+    }
+    method_setImplementation(method, imp_implementationWithBlock(replacement))
+  }
+
+  private static func traceSendDeepLink() {
+    typealias Completion = @convention(block) (Bool) -> Void
+    let selector = NSSelectorFromString("sendDeepLinkToFramework:completionHandler:")
+    guard let method = lookUpMethod("FlutterEngine", "sendDeepLinkToFramework:completionHandler:") else { return }
+    typealias Original = @convention(c) (AnyObject, Selector, AnyObject, @escaping Completion) -> Void
+    let original = unsafeBitCast(method_getImplementation(method), to: Original.self)
+    let replacement: @convention(block) (AnyObject, AnyObject, @escaping Completion) -> Void = { engine, url, completion in
+      NSLog("%@", "DIAG sendDeepLinkToFramework \(url)")
+      original(engine, selector, url) { success in
+        NSLog("%@", "DIAG sendDeepLinkToFramework completion success=\(success)")
+        completion(success)
+      }
+    }
+    method_setImplementation(method, imp_implementationWithBlock(replacement))
+  }
+}
 
 final class RunnerTests: XCTestCase {
   private let resetPasswordLink = URL(string: "https://auth.scene-lifecycle.example/oauth/account/reset-password?userId=u1&token=t1&redirectUrl=https%3A%2F%2Fauth.scene-lifecycle.example%2Foauth%2Faccount%2Flogin")!
@@ -12,6 +73,7 @@ final class RunnerTests: XCTestCase {
   override func setUp() {
     super.setUp()
     continueAfterFailure = false
+    _ = DeepLinkTrace.install
     waitForFlutterUI()
     closePresentedWindow()
     RouterLog.pageNotFoundLocations = []
@@ -43,6 +105,21 @@ final class RunnerTests: XCTestCase {
     }
     XCTAssertEqual(RouterLog.pageNotFoundLocations, [hostAppLink.absoluteString])
     XCTAssertNil(FronteggAuth.shared.pendingAppLink)
+  }
+
+  func testZDiagnosticDirectNavigationPushReachesTheAppRouter() {
+    let root = (windowScene.delegate as? UIWindowSceneDelegate)?.window??.rootViewController
+    guard let engine = (root as? FlutterViewController)?.engine else {
+      XCTFail("No FlutterViewController engine")
+      return
+    }
+    engine.navigationChannel.invokeMethod("pushRouteInformation", arguments: ["location": hostAppLink.absoluteString]) { result in
+      NSLog("%@", "DIAG direct pushRouteInformation result=\(String(describing: result))")
+    }
+    waitUntil("the app router receives the directly pushed link") {
+      !RouterLog.pageNotFoundLocations.isEmpty
+    }
+    NSLog("%@", "DIAG direct push pageNotFound=\(RouterLog.pageNotFoundLocations)")
   }
 
   private var windowScene: UIWindowScene {
