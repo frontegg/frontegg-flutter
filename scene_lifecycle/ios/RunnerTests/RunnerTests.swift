@@ -34,7 +34,8 @@ final class RunnerTests: XCTestCase {
   func testUniversalLinkOutsideFronteggStillReachesTheAppRouter() {
     deliverUniversalLink(hostAppLink)
 
-    waitUntil("the app router receives the host app's link") {
+    // Flutter forwards the link after a background-QoS hop that CI simulators can delay by 30 seconds.
+    waitUntil("the app router receives the host app's link", timeout: 60) {
       !RouterLog.pageNotFoundLocations.isEmpty
     }
     XCTAssertEqual(RouterLog.pageNotFoundLocations, [hostAppLink.absoluteString])
