@@ -122,6 +122,28 @@ final class RunnerTests: XCTestCase {
     NSLog("%@", "DIAG direct push pageNotFound=\(RouterLog.pageNotFoundLocations)")
   }
 
+  func testZDiagnosticMainQueueDrainsWhileTheRunLoopSpins() {
+    let insideMainQueueBlock = Thread.callStackSymbols.contains { $0.contains("_dispatch_main_queue_callback") }
+    var mainQueueRan = false
+    var backgroundQueueRan = false
+    DispatchQueue.main.async { mainQueueRan = true }
+    DispatchQueue.global(qos: .background).async { backgroundQueueRan = true }
+    RunLoop.current.run(until: Date().addingTimeInterval(2))
+    NSLog("%@", "DIAG queues insideMainQueueBlock=\(insideMainQueueBlock) mainQueueRan=\(mainQueueRan) backgroundQueueRan=\(backgroundQueueRan)")
+  }
+
+  @MainActor
+  func testZDiagnosticAsyncHostLinkReachesTheAppRouter() async throws {
+    let asyncHostAppLink = URL(string: "https://www.scene-lifecycle.example/promo-async")!
+    deliverUniversalLink(asyncHostAppLink)
+    let deadline = Date().addingTimeInterval(15)
+    while !RouterLog.pageNotFoundLocations.contains(asyncHostAppLink.absoluteString) && Date() < deadline {
+      try await Task.sleep(nanoseconds: 100_000_000)
+    }
+    NSLog("%@", "DIAG async host link pageNotFound=\(RouterLog.pageNotFoundLocations)")
+    XCTAssertTrue(RouterLog.pageNotFoundLocations.contains(asyncHostAppLink.absoluteString))
+  }
+
   private var windowScene: UIWindowScene {
     UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.first!
   }
