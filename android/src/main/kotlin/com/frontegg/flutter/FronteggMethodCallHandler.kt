@@ -607,7 +607,8 @@ internal fun forceStateUpdate(stateListener: FronteggStateListener?, result: Met
 
 private const val MIN_ACCESS_TOKEN_VALIDITY_SECONDS = 15
 private const val INITIALIZATION_TIMEOUT_MS = 20_000L
-private const val INITIALIZATION_POLL_INTERVAL_MS = 200L
+private const val REFRESH_SETTLE_TIMEOUT_MS = 10_000L
+private const val SETTLE_POLL_INTERVAL_MS = 200L
 
 // Mirrors iOS getOrRefreshAccessTokenAsync using only public APIs of the pinned Android SDK.
 internal suspend fun resolveValidAccessToken(
@@ -617,13 +618,10 @@ internal suspend fun resolveValidAccessToken(
 ): String? {
     if (auth.isMultiRegion && auth.selectedRegion == null) return null
 
-    val isReady = withTimeoutOrNull(INITIALIZATION_TIMEOUT_MS) {
-        while (auth.initializing.value || auth.refreshingToken.value) {
-            delay(INITIALIZATION_POLL_INTERVAL_MS)
-        }
-        true
+    val isSettled = waitWhile(INITIALIZATION_TIMEOUT_MS) {
+        auth.initializing.value || auth.refreshingToken.value
     }
-    checkNotNull(isReady) { "Timed out waiting for the Frontegg SDK to initialize" }
+    check(isSettled) { "Timed out waiting for the Frontegg SDK to initialize" }
     if (auth.refreshToken.value == null) return null
 
     val currentAccessToken = auth.accessToken.value
@@ -634,10 +632,31 @@ internal suspend fun resolveValidAccessToken(
         throw IllegalStateException("No network connection to refresh the access token")
     }
 
-    if (auth.refreshTokenAndWait()) return auth.accessToken.value
+    if (refreshUntilValid(auth)) return auth.accessToken.value
     if (auth.refreshToken.value == null) return null
     if (isOfflineModeEnabled && !isNetworkLikelyGood()) return auth.accessToken.value
     throw IllegalStateException("Failed to refresh the access token")
+}
+
+// A refresh started by the SDK's background job makes refreshTokenAndWait return true before the new token is set.
+private suspend fun refreshUntilValid(auth: FronteggAuth): Boolean {
+    if (!auth.refreshTokenAndWait()) return false
+    if (isValidLongEnough(auth.accessToken.value)) return true
+
+    waitWhile(REFRESH_SETTLE_TIMEOUT_MS) { auth.refreshingToken.value }
+    if (isValidLongEnough(auth.accessToken.value)) return true
+
+    return auth.refreshTokenAndWait() && isValidLongEnough(auth.accessToken.value)
+}
+
+private suspend fun waitWhile(timeoutMs: Long, condition: () -> Boolean): Boolean {
+    val finished = withTimeoutOrNull(timeoutMs) {
+        while (condition()) {
+            delay(SETTLE_POLL_INTERVAL_MS)
+        }
+        true
+    }
+    return finished != null
 }
 
 private fun isValidLongEnough(accessToken: String?): Boolean {

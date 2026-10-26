@@ -364,7 +364,9 @@ class _MyPageState extends State<MyPage> {
   same flow with the SDK's `refreshTokenAndWait()`, checks the network before refreshing, and reads
   offline mode from `FRONTEGG_ENABLE_OFFLINE_MODE` in `BuildConfig`. When the network is down,
   Android returns or fails right away, while iOS first tries the refresh, retrying up to five times
-  unless offline mode is enabled.
+  unless offline mode is enabled. If a refresh reports success while a background refresh is still
+  running, Android waits up to 10 more seconds for the new token and refreshes once more before
+  failing.
 
 ### Logout user after application was uninstalled
 

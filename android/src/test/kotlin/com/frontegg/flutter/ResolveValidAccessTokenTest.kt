@@ -3,14 +3,13 @@ package com.frontegg.flutter
 import com.frontegg.android.FronteggAuth
 import com.frontegg.android.utils.ObservableValue
 import kotlinx.coroutines.runBlocking
-import org.mockito.Mockito.mock
-import org.mockito.Mockito.mockingDetails
-import org.mockito.Mockito.`when`
+import java.lang.reflect.InvocationHandler
+import java.lang.reflect.Proxy
 import java.util.Base64
+import kotlin.concurrent.thread
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
-import kotlin.test.assertFalse
 import kotlin.test.assertNull
 
 internal class ResolveValidAccessTokenTest {
@@ -25,18 +24,33 @@ internal class ResolveValidAccessTokenTest {
         return "$header.$payload.signature"
     }
 
-    private fun authWithSession(accessToken: String?, refreshToken: String? = "refresh-token"): FronteggAuth {
-        val auth = mock(FronteggAuth::class.java)
-        `when`(auth.isMultiRegion).thenReturn(false)
-        `when`(auth.initializing).thenReturn(ObservableValue(false))
-        `when`(auth.refreshingToken).thenReturn(ObservableValue(false))
-        `when`(auth.accessToken).thenReturn(ObservableValue(accessToken))
-        `when`(auth.refreshToken).thenReturn(ObservableValue(refreshToken))
-        return auth
-    }
+    private val accessTokenValue = ObservableValue<String?>(null)
+    private val refreshTokenValue = ObservableValue<String?>(null)
+    private val refreshingTokenValue = ObservableValue(false)
+    private var refreshCount = 0
 
-    private fun refreshWasRequested(auth: FronteggAuth): Boolean =
-        mockingDetails(auth).invocations.any { it.method.name == "refreshTokenAndWait" }
+    private fun authWithSession(
+        accessToken: String?,
+        refreshToken: String? = "refresh-token",
+        isMultiRegion: Boolean = false,
+        refresh: (attempt: Int) -> Boolean = { false },
+    ): FronteggAuth {
+        accessTokenValue.value = accessToken
+        refreshTokenValue.value = refreshToken
+        val handler = InvocationHandler { _, method, _ ->
+            when (method.name) {
+                "isMultiRegion" -> isMultiRegion
+                "getSelectedRegion" -> null
+                "getInitializing" -> ObservableValue(false)
+                "getRefreshingToken" -> refreshingTokenValue
+                "getAccessToken" -> accessTokenValue
+                "getRefreshToken" -> refreshTokenValue
+                "refreshTokenAndWait" -> refresh(++refreshCount)
+                else -> throw UnsupportedOperationException(method.name)
+            }
+        }
+        return Proxy.newProxyInstance(javaClass.classLoader, arrayOf(FronteggAuth::class.java), handler) as FronteggAuth
+    }
 
     @Test
     fun offlineModeOn_noNetwork_returnsCachedTokenWithoutRefreshing() = runBlocking<Unit> {
@@ -45,7 +59,7 @@ internal class ResolveValidAccessTokenTest {
         val accessToken = resolveValidAccessToken(auth, isOfflineModeEnabled = true) { false }
 
         assertEquals(expiredAccessToken, accessToken)
-        assertFalse(refreshWasRequested(auth))
+        assertEquals(0, refreshCount)
     }
 
     @Test
@@ -55,7 +69,7 @@ internal class ResolveValidAccessTokenTest {
         assertFailsWith<IllegalStateException> {
             resolveValidAccessToken(auth, isOfflineModeEnabled = false) { false }
         }
-        assertFalse(refreshWasRequested(auth))
+        assertEquals(0, refreshCount)
     }
 
     @Test
@@ -65,7 +79,7 @@ internal class ResolveValidAccessTokenTest {
         val accessToken = resolveValidAccessToken(auth, isOfflineModeEnabled = false) { false }
 
         assertEquals(validAccessToken, accessToken)
-        assertFalse(refreshWasRequested(auth))
+        assertEquals(0, refreshCount)
     }
 
     @Test
@@ -77,10 +91,75 @@ internal class ResolveValidAccessTokenTest {
 
     @Test
     fun multiRegionWithoutSelectedRegion_returnsNull() = runBlocking<Unit> {
-        val auth = authWithSession(accessToken = validAccessToken)
-        `when`(auth.isMultiRegion).thenReturn(true)
-        `when`(auth.selectedRegion).thenReturn(null)
+        val auth = authWithSession(accessToken = validAccessToken, isMultiRegion = true)
 
         assertNull(resolveValidAccessToken(auth, isOfflineModeEnabled = true) { true })
+    }
+
+    @Test
+    fun refreshSucceeds_returnsNewToken() = runBlocking<Unit> {
+        val auth = authWithSession(accessToken = expiredAccessToken) {
+            accessTokenValue.value = validAccessToken
+            true
+        }
+
+        assertEquals(validAccessToken, resolveValidAccessToken(auth, isOfflineModeEnabled = false) { true })
+        assertEquals(1, refreshCount)
+    }
+
+    @Test
+    fun refreshReportsSuccessDuringBackgroundRefresh_waitsForNewToken() = runBlocking<Unit> {
+        val auth = authWithSession(accessToken = expiredAccessToken) {
+            refreshingTokenValue.value = true
+            thread {
+                Thread.sleep(300)
+                accessTokenValue.value = validAccessToken
+                refreshingTokenValue.value = false
+            }
+            true
+        }
+
+        assertEquals(validAccessToken, resolveValidAccessToken(auth, isOfflineModeEnabled = false) { true })
+        assertEquals(1, refreshCount)
+    }
+
+    @Test
+    fun refreshReportsSuccessWithStaleToken_retriesOnce() = runBlocking<Unit> {
+        val auth = authWithSession(accessToken = expiredAccessToken) { attempt ->
+            if (attempt == 2) accessTokenValue.value = validAccessToken
+            true
+        }
+
+        assertEquals(validAccessToken, resolveValidAccessToken(auth, isOfflineModeEnabled = false) { true })
+        assertEquals(2, refreshCount)
+    }
+
+    @Test
+    fun refreshFails_refreshTokenCleared_returnsNull() = runBlocking<Unit> {
+        val auth = authWithSession(accessToken = expiredAccessToken) {
+            refreshTokenValue.value = null
+            false
+        }
+
+        assertNull(resolveValidAccessToken(auth, isOfflineModeEnabled = true) { true })
+    }
+
+    @Test
+    fun refreshFails_offlineModeOn_networkLost_returnsCachedToken() = runBlocking<Unit> {
+        val auth = authWithSession(accessToken = expiredAccessToken) { false }
+        var networkChecks = 0
+
+        val accessToken = resolveValidAccessToken(auth, isOfflineModeEnabled = true) { networkChecks++ == 0 }
+
+        assertEquals(expiredAccessToken, accessToken)
+    }
+
+    @Test
+    fun refreshFails_otherwise_throws() = runBlocking<Unit> {
+        val auth = authWithSession(accessToken = expiredAccessToken) { false }
+
+        assertFailsWith<IllegalStateException> {
+            resolveValidAccessToken(auth, isOfflineModeEnabled = false) { true }
+        }
     }
 }
