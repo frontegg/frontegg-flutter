@@ -351,16 +351,20 @@ class _MyPageState extends State<MyPage> {
 }
 ```
 
-- Waits for the SDK to finish initializing, returns the current access token when it is valid for
-  more than 15 seconds, and refreshes it otherwise.
+- Waits up to 20 seconds for the SDK to finish initializing or refreshing, returns the current
+  access token when it is valid for more than 15 seconds, and refreshes it otherwise.
 - Returns `null` when there is no session, the refresh token was rejected, or no region is selected
   in a multi-region setup.
-- Throws a `FronteggException` when the token could not be refreshed for another reason, for
-  example no network.
+- With offline mode enabled, returns the cached access token, even if it is expired, when the
+  device has no network.
+- Throws a `FailedToAuthenticateException` when the SDK does not finish initializing within 20
+  seconds, or when the token could not be refreshed for another reason, for example no network
+  with offline mode disabled.
 - iOS calls `FronteggAuth.getOrRefreshAccessTokenAsync()`. On Android the plugin implements the
-  same flow with the SDK's `refreshTokenAndWait()`. Android waits up to 60 seconds for a network
-  before failing, while iOS retries the refresh up to five times and, in offline mode, returns the
-  cached token on a connectivity error.
+  same flow with the SDK's `refreshTokenAndWait()`, checks the network before refreshing, and reads
+  offline mode from `FRONTEGG_ENABLE_OFFLINE_MODE` in `BuildConfig`. When the network is down,
+  Android returns or fails right away, while iOS first tries the refresh, retrying up to five times
+  unless offline mode is enabled.
 
 ### Logout user after application was uninstalled
 

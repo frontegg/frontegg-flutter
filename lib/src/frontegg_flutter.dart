@@ -235,15 +235,17 @@ class FronteggFlutter {
   ///
   /// This is the recommended way to get a token after the app resumes from the
   /// background, when the token held in [currentState] may already be expired.
-  /// The native SDK waits for its initialization to finish, returns the current
-  /// access token when it is valid for more than 15 seconds, and refreshes it
-  /// otherwise.
+  /// The native SDK waits up to 20 seconds for its initialization to finish,
+  /// returns the current access token when it is valid for more than 15
+  /// seconds, and refreshes it otherwise. With offline mode enabled and no
+  /// network, it returns the cached access token, even if it is expired.
   ///
   /// Returns `null` when there is no session, the refresh token was rejected, or
   /// no region is selected in a multi-region setup.
   ///
-  /// Throws a [FronteggException] if the token could not be refreshed for
-  /// another reason, for example a network failure.
+  /// Throws a [FailedToAuthenticateException] if the SDK does not finish
+  /// initializing in time or the token could not be refreshed for another
+  /// reason, for example no network with offline mode disabled.
   Future<String?> getOrRefreshAccessToken() => _runAction(
         () => FronteggPlatform.instance.getOrRefreshAccessToken(),
       );

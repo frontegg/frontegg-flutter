@@ -403,7 +403,10 @@ class FronteggMethodCallHandler {
                 let accessToken = try await self.fronteggApp.auth.getOrRefreshAccessTokenAsync()
                 result(accessToken)
             } catch {
-                let failureReason = (error as? LocalizedError)?.failureReason ?? "unknown"
+                var failureReason = "unknown"
+                if case .authError(let authenticationError)? = error as? FronteggError {
+                    failureReason = authenticationError.failureReason ?? failureReason
+                }
                 result(FlutterError(code: failureReason, message: error.localizedDescription, details: nil))
             }
         }

@@ -18,7 +18,7 @@
 | `registerPasskeys` | None | Registers passkeys for the user. |
 | `logout` | None | Logs out the user and clears user-related data. |
 | `refreshToken` | None | Refreshes the authentication token if needed. Returns `true` if successful. |
-| `getOrRefreshAccessToken` | None | Returns a valid access token, refreshing it first when fewer than 15 seconds remain. Returns `null` when there is no session or the refresh token was rejected. Recommended way to get a token after app resume. |
+| `getOrRefreshAccessToken` | None | Returns a valid access token, refreshing it first when fewer than 15 seconds remain. Returns `null` when there is no session, the refresh token was rejected, or no region is selected. With offline mode enabled and no network, returns the cached token. Throws `FailedToAuthenticateException` otherwise on failure. Recommended way to get a token after app resume. |
 
 ### Social & Direct Login Methods
 
