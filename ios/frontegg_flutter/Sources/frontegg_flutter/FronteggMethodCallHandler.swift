@@ -394,6 +394,10 @@ class FronteggMethodCallHandler {
     }
 
     private func getOrRefreshAccessToken(result: @escaping FlutterResult) {
+        if fronteggApp.auth.isRegional && fronteggApp.auth.selectedRegion == nil {
+            return result(nil)
+        }
+
         Task { @MainActor in
             do {
                 let accessToken = try await self.fronteggApp.auth.getOrRefreshAccessTokenAsync()

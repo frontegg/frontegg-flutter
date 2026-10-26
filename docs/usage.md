@@ -353,7 +353,8 @@ class _MyPageState extends State<MyPage> {
 
 - Waits for the SDK to finish initializing, returns the current access token when it is valid for
   more than 15 seconds, and refreshes it otherwise.
-- Returns `null` when there is no session or the refresh token was rejected.
+- Returns `null` when there is no session, the refresh token was rejected, or no region is selected
+  in a multi-region setup.
 - Throws a `FronteggException` when the token could not be refreshed for another reason, for
   example no network.
 - iOS calls `FronteggAuth.getOrRefreshAccessTokenAsync()`. On Android the plugin implements the
