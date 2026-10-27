@@ -422,6 +422,10 @@ class FronteggMethodCallHandler(
             result.error("MISSING_PARAMS", "Missing region key", null)
             return
         }
+        if (context.fronteggAuth.regions.none { it.key == regionKey }) {
+            result.error("INVALID_REGION", "Unknown region key $regionKey", null)
+            return
+        }
 
         GlobalScope.launch(Dispatchers.Main) {
             try {
@@ -431,7 +435,7 @@ class FronteggMethodCallHandler(
                 stateListener?.forceNotifyChanges()
                 result.success(null)
             } catch (e: Exception) {
-                result.error("INVALID_REGION", e.message, null)
+                result.error("INIT_WITH_REGION_ERROR", e.message, null)
             }
         }
     }

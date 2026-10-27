@@ -34,11 +34,33 @@ class RegionPage extends StatelessWidget {
                 key: ValueKey('Region-${region.key}'),
                 title: Text(region.key.toUpperCase()),
                 subtitle: Text(region.baseUrl),
-                onTap: () => frontegg.initWithRegion(region.key),
+                onTap: () => _selectRegion(
+                  frontegg,
+                  ScaffoldMessenger.of(context),
+                  region.key,
+                ),
               ),
             ),
         ],
       ),
     );
+  }
+
+  Future<void> _selectRegion(
+    FronteggFlutter frontegg,
+    ScaffoldMessengerState messenger,
+    String regionKey,
+  ) async {
+    try {
+      await frontegg.initWithRegion(regionKey);
+    } on FronteggException catch (e) {
+      messenger.showSnackBar(
+        SnackBar(
+          content: Text(
+            'Failed to select region: ${e.message ?? e.failureReason}',
+          ),
+        ),
+      );
+    }
   }
 }
