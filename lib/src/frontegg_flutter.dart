@@ -259,8 +259,8 @@ class FronteggFlutter {
   ///
   /// - [regionKey]: The key of one of the configured regions.
   ///
-  /// Throws a [FronteggException] if the app is not configured for multiple
-  /// regions or [regionKey] is not one of the configured regions.
+  /// Throws an [InvalidRegionException] if the app is not configured for
+  /// multiple regions or [regionKey] is not one of the configured regions.
   ///
   /// Returns a [Future] that completes when the region is selected.
   Future<void> initWithRegion(String regionKey) => _runAction(

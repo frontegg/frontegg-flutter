@@ -24,13 +24,15 @@ sealed class FronteggException implements Exception {
     } else if (failureReason == "failedToAuthenticate" ||
         failureReason.contains("frontegg.error.failed_to_authenticate")) {
       return FailedToAuthenticateException(message);
-    } else if (failureReason == "failedToRefreshToken") {
+    } else if (failureReason == "failedToRefreshToken" ||
+        failureReason == "refresh_failed") {
       return FailedToRefreshTokenException(message);
     } else if (failureReason == "failedToLoadUserData") {
       return FailedToLoadUserDataException(message);
     } else if (failureReason == "failedToExtractCode") {
       return FailedToExtractCodeException(message);
-    } else if (failureReason == "failedToSwitchTenant") {
+    } else if (failureReason == "failedToSwitchTenant" ||
+        failureReason == "switch_tenant_failed") {
       return FailedToSwitchTenantException(message);
     } else if (failureReason == "codeVerifierNotFound") {
       return CodeVerifierNotFoundException(message);
@@ -54,7 +56,8 @@ sealed class FronteggException implements Exception {
       return InvalidResponseException(message);
     } else if (failureReason == "other") {
       return OtherException(message);
-    } else if (failureReason.contains("frontegg.error.canceled_by_user")) {
+    } else if (failureReason == "canceledByUser" ||
+        failureReason.contains("frontegg.error.canceled_by_user")) {
       return CanceledByUserException(message);
     } else if (failureReason.contains("frontegg.error.cookie_not_found")) {
       return CookieNotFoundException(message);
@@ -66,11 +69,13 @@ sealed class FronteggException implements Exception {
       return FailedToRegisterWbeauthnException(message);
     } else if (failureReason.contains("frontegg.error.mfa_not_enrolled")) {
       return MfaNotEnrolledException(message);
+    } else if (failureReason == "INVALID_REGION") {
+      return InvalidRegionException(message);
     } else if (failureReason == "unknown" ||
         failureReason.contains("frontegg.error.unknown")) {
       return UnknownException(message);
     } else {
-      return UnknownException(message);
+      return UnknownException(message, failureReason);
     }
   }
 }
@@ -225,9 +230,18 @@ class MfaRequiredException extends FronteggException {
 
 /// Exception thrown for unknown errors
 class UnknownException extends FronteggException {
-  const UnknownException([String? message])
+  const UnknownException([String? message, String failureReason = "unknown"])
       : super(
-          failureReason: "unknown",
+          failureReason: failureReason,
+          message: message,
+        );
+}
+
+/// Exception thrown when [FronteggFlutter.initWithRegion] receives a region key that is not configured.
+class InvalidRegionException extends FronteggException {
+  const InvalidRegionException([String? message])
+      : super(
+          failureReason: "INVALID_REGION",
           message: message,
         );
 }
@@ -241,11 +255,11 @@ class OtherException extends FronteggException {
         );
 }
 
-/// Exception thrown for other unspecified errors
+/// Exception thrown when the user cancels the login flow
 class CanceledByUserException extends FronteggException {
   const CanceledByUserException([String? message])
       : super(
-          failureReason: "other",
+          failureReason: "canceledByUser",
           message: message,
         );
 }

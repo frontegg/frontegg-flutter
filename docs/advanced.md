@@ -370,8 +370,8 @@ if (constants.isRegional && frontegg.currentState.selectedRegion == null) {
 
 - `FronteggConstants.regions` lists the configured regions (`key`, `baseUrl`, `clientId`,
   `applicationId`), and `FronteggConstants.isRegional` is `true` when there are any.
-- `initWithRegion(regionKey)` switches the native SDK to that region. It throws a
-  `FronteggException` when the key is not one of the configured regions.
+- `initWithRegion(regionKey)` switches the native SDK to that region. It throws an
+  `InvalidRegionException` when the key is not one of the configured regions.
 - `FronteggState.selectedRegion` reports the selected region. The native SDKs persist the
   selection, so it is restored on the next launch.
 - Until a region is selected, `FronteggState.initializing` stays `true` on Android and is `false`
