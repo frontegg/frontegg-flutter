@@ -231,6 +231,42 @@ class FronteggFlutter {
         return success ?? false;
       });
 
+  /// Returns a valid access token, refreshing it first when needed.
+  ///
+  /// This is the recommended way to get a token after the app resumes from the
+  /// background, when the token held in [currentState] may already be expired.
+  /// The native SDK waits up to 20 seconds for its initialization to finish,
+  /// returns the current access token when it is valid for more than 15
+  /// seconds, and refreshes it otherwise. With offline mode enabled and no
+  /// network, it returns the cached access token, even if it is expired.
+  ///
+  /// Returns `null` when there is no session, the refresh token was rejected, or
+  /// no region is selected in a multi-region setup.
+  ///
+  /// Throws a [FailedToAuthenticateException] if the SDK does not finish
+  /// initializing in time or the token could not be refreshed for another
+  /// reason, for example no network with offline mode disabled.
+  Future<String?> getOrRefreshAccessToken() => _runAction(
+        () => FronteggPlatform.instance.getOrRefreshAccessToken(),
+      );
+
+  /// Selects the region to authenticate against in a multi-region setup.
+  ///
+  /// The regions are configured natively (`regions` in `Frontegg.plist` on iOS,
+  /// `FronteggApp.initWithRegions` on Android) and are listed in
+  /// [FronteggConstants.regions]. The selection is persisted by the native SDK
+  /// and reported in [FronteggState.selectedRegion].
+  ///
+  /// - [regionKey]: The key of one of the configured regions.
+  ///
+  /// Throws an [InvalidRegionException] if the app is not configured for
+  /// multiple regions or [regionKey] is not one of the configured regions.
+  ///
+  /// Returns a [Future] that completes when the region is selected.
+  Future<void> initWithRegion(String regionKey) => _runAction(
+        () => FronteggPlatform.instance.initWithRegion(regionKey),
+      );
+
   /// Logs out the user and clears user-related data.
   ///
   /// This method may perform a network request to complete the logout process.
