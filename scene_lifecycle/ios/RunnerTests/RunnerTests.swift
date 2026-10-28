@@ -15,6 +15,7 @@ final class RunnerTests: XCTestCase {
     waitForFlutterUI()
     closePresentedWindow()
     RouterLog.pageNotFoundLocations = []
+    SceneLinkLog.linksPassedOn = []
     FronteggAuth.shared.pendingAppLink = nil
   }
 
@@ -25,19 +26,17 @@ final class RunnerTests: XCTestCase {
       FronteggAuth.shared.pendingAppLink != nil || !RouterLog.pageNotFoundLocations.isEmpty
     }
     XCTAssertEqual(RouterLog.pageNotFoundLocations, [], "The reset-password link reached the app's router")
+    XCTAssertEqual(SceneLinkLog.linksPassedOn, [], "The Frontegg plugin passed the reset-password link on to Flutter")
     XCTAssertEqual(FronteggAuth.shared.pendingAppLink, resetPasswordLink)
     waitUntil("the Frontegg login window is presented") {
       self.presentedControllerName()?.contains("EmbeddedLoginModal") == true
     }
   }
 
-  func testUniversalLinkOutsideFronteggStillReachesTheAppRouter() {
+  func testUniversalLinkOutsideFronteggIsPassedOnToFlutter() {
     deliverUniversalLink(hostAppLink)
 
-    waitUntil("the app router receives the host app's link") {
-      !RouterLog.pageNotFoundLocations.isEmpty
-    }
-    XCTAssertEqual(RouterLog.pageNotFoundLocations, [hostAppLink.absoluteString])
+    XCTAssertEqual(SceneLinkLog.linksPassedOn, [hostAppLink], "The Frontegg plugin kept the host app's link")
     XCTAssertNil(FronteggAuth.shared.pendingAppLink)
   }
 
