@@ -257,6 +257,10 @@ class FronteggFlutter {
   /// [FronteggConstants.regions]. The selection is persisted by the native SDK
   /// and reported in [FronteggState.selectedRegion].
   ///
+  /// The current session is kept, so call [logout] before switching regions
+  /// while signed in; otherwise the previous region's user and tokens stay
+  /// active.
+  ///
   /// - [regionKey]: The key of one of the configured regions.
   ///
   /// Throws an [InvalidRegionException] if the app is not configured for
