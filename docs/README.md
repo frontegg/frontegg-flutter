@@ -27,7 +27,8 @@ The official Flutter plugin, built on Frontegg's native iOS (`FronteggSwift`) an
 - **Admin Portal (beta)**: `openAdminPortal()` opens the self-service portal in a native WebView.
 - **Session handling**: the native SDKs store and refresh tokens, `stateChanged` streams the
   authentication state, offline mode keeps the session without a network, and
-  `getOrRefreshAccessToken()` returns a valid token after the app resumes.
+  `getOrRefreshAccessToken()` refreshes the token when needed after the app resumes (in offline
+  mode without a network, it returns the cached token, which may be expired).
 
 ## 📚 Documentation
 
