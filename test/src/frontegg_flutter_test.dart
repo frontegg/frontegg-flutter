@@ -96,16 +96,16 @@ void main() {
       expect(result, isNull);
     });
 
-    test('should throw FailedToRefreshTokenException when the refresh fails',
+    test('should throw FailedToAuthenticateException when the refresh fails',
         () async {
       // Arrange
       when(fronteggPlatform.getOrRefreshAccessToken()).thenThrow(
-        PlatformException(code: "failedToRefreshToken", message: "offline"),
+        PlatformException(code: "failedToAuthenticate", message: "offline"),
       );
       // Act & Assert
       expect(
         frontegg.getOrRefreshAccessToken(),
-        throwsA(isA<FailedToRefreshTokenException>()),
+        throwsA(isA<FailedToAuthenticateException>()),
       );
     });
   });
