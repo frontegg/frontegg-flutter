@@ -330,7 +330,7 @@ class App : Application() {
    If you pass `enableOfflineMode = true`, also add
    `buildConfigField "boolean", "FRONTEGG_ENABLE_OFFLINE_MODE", "true"`: `getOrRefreshAccessToken`
    reads offline mode from `BuildConfig`, and without the field it fails instead of returning the
-   cached token when the device is offline.
+   cached token, which may be expired, when the device is offline.
 
 3. The `frontegg_domain` manifest placeholder adds the OAuth callback for the first region only.
    Add the callbacks of every other region to `AndroidManifest.xml`:
