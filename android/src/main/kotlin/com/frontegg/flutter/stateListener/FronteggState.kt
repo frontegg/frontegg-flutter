@@ -13,6 +13,7 @@ data class FronteggState(
     val appLink: Boolean,
     val refreshingToken: Boolean,
     val isOfflineMode: Boolean,
+    val selectedRegion: Map<String, Any?>?,
 ) {
     fun toMap(): Map<String, Any?> {
         return mapOf(
@@ -26,6 +27,7 @@ data class FronteggState(
             Pair("appLink", appLink),
             Pair("refreshingToken", refreshingToken),
             Pair("isOfflineMode", isOfflineMode),
+            Pair("selectedRegion", selectedRegion),
         )
     }
 
@@ -41,6 +43,7 @@ data class FronteggState(
             showLoader,
             refreshingToken,
             isOfflineMode,
+            selectedRegion,
         )
     }
 
@@ -57,6 +60,7 @@ data class FronteggState(
                 appLink == state.appLink &&
                 showLoader == state.showLoader &&
                 refreshingToken == state.refreshingToken &&
-                isOfflineMode == state.isOfflineMode;
+                isOfflineMode == state.isOfflineMode &&
+                Objects.equals(selectedRegion, state.selectedRegion)
     }
 }

@@ -22,6 +22,7 @@ internal class FronteggConstantsTest {
             bundleId = "com.example.app",
             deepLinkScheme = null,
             useDiskCacheWebview = false,
+            regions = emptyList(),
         )
 
         assertTrue(

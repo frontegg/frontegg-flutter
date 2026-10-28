@@ -6,8 +6,23 @@ enum RouterLog {
   static var pageNotFoundLocations: [String] = []
 }
 
+enum SceneLinkLog {
+  static var linksPassedOn: [URL] = []
+}
+
+final class SceneLinkRecorder: NSObject, FlutterSceneLifeCycleDelegate {
+  func scene(_ scene: UIScene, continue userActivity: NSUserActivity) -> Bool {
+    if let link = userActivity.webpageURL {
+      SceneLinkLog.linksPassedOn.append(link)
+    }
+    return false
+  }
+}
+
 @main
 @objc class AppDelegate: FlutterAppDelegate, FlutterImplicitEngineDelegate {
+  private let sceneLinkRecorder = SceneLinkRecorder()
+
   override func application(
     _ application: UIApplication,
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
@@ -21,6 +36,7 @@ enum RouterLog {
   func didInitializeImplicitFlutterEngine(_ engineBridge: FlutterImplicitEngineBridge) {
     GeneratedPluginRegistrant.register(with: engineBridge.pluginRegistry)
     let registrar = engineBridge.pluginRegistry.registrar(forPlugin: "SceneLifecycleRouterLog")!
+    registrar.addSceneDelegate(sceneLinkRecorder)
     FlutterMethodChannel(name: "scene_lifecycle/router", binaryMessenger: registrar.messenger())
       .setMethodCallHandler { call, result in
         if call.method == "pageNotFound", let location = call.arguments as? String {

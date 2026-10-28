@@ -1,4 +1,5 @@
 import 'package:frontegg_flutter/src/inner_utils.dart';
+import 'package:frontegg_flutter/src/models/frontegg_region_config.dart';
 import 'package:frontegg_flutter/src/models/frontegg_user.dart';
 
 /// Represents the authentication state in the Frontegg system.
@@ -33,6 +34,10 @@ class FronteggState {
   /// Whether the SDK considers the app in offline / no-connection UX (native-driven).
   final bool isOfflineMode;
 
+  /// The region selected with `FronteggFlutter.initWithRegion`, or `null` when
+  /// no region is selected or the app is not configured for multiple regions.
+  final FronteggRegionConfig? selectedRegion;
+
   /// Creates a [FronteggState] instance with the given parameters.
   const FronteggState({
     this.accessToken,
@@ -45,6 +50,7 @@ class FronteggState {
     this.appLink = false,
     this.refreshingToken = false,
     this.isOfflineMode = false,
+    this.selectedRegion,
   });
 
   @override
@@ -61,7 +67,8 @@ class FronteggState {
           appLink == other.appLink &&
           showLoader == other.showLoader &&
           refreshingToken == other.refreshingToken &&
-          isOfflineMode == other.isOfflineMode;
+          isOfflineMode == other.isOfflineMode &&
+          selectedRegion == other.selectedRegion;
 
   @override
   int get hashCode =>
@@ -74,7 +81,8 @@ class FronteggState {
       appLink.hashCode ^
       showLoader.hashCode ^
       refreshingToken.hashCode ^
-      isOfflineMode.hashCode;
+      isOfflineMode.hashCode ^
+      selectedRegion.hashCode;
 
   Map<String, dynamic> toMap() {
     return {
@@ -88,11 +96,13 @@ class FronteggState {
       "showLoader": showLoader,
       "refreshingToken": refreshingToken,
       "isOfflineMode": isOfflineMode,
+      "selectedRegion": selectedRegion?.toMap(),
     };
   }
 
   factory FronteggState.fromMap(Map<Object?, Object?> map) {
     var user = map["user"] as Map<Object?, Object?>?;
+    var selectedRegion = map["selectedRegion"] as Map<Object?, Object?>?;
 
     return FronteggState(
       accessToken: map["accessToken"] as String?,
@@ -105,11 +115,14 @@ class FronteggState {
       appLink: readPlatformBool(map["appLink"]),
       refreshingToken: readPlatformBool(map["refreshingToken"]),
       isOfflineMode: readPlatformBool(map["isOfflineMode"]),
+      selectedRegion: selectedRegion != null
+          ? FronteggRegionConfig.fromMap(selectedRegion)
+          : null,
     );
   }
 
   @override
   String toString() {
-    return 'FronteggState{accessToken: $accessToken, refreshToken: $refreshToken, user: $user, isAuthenticated: $isAuthenticated, isLoading: $isLoading, initializing: $initializing, showLoader: $showLoader, appLink: $appLink, refreshingToken: $refreshingToken, isOfflineMode: $isOfflineMode}';
+    return 'FronteggState{accessToken: $accessToken, refreshToken: $refreshToken, user: $user, isAuthenticated: $isAuthenticated, isLoading: $isLoading, initializing: $initializing, showLoader: $showLoader, appLink: $appLink, refreshingToken: $refreshingToken, isOfflineMode: $isOfflineMode, selectedRegion: $selectedRegion}';
   }
 }

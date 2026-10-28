@@ -251,6 +251,137 @@ Future<void> performSensitiveAction() async {
 }
 ```
 
+## Multi-region support
+
+Use multi-region support when your Frontegg workspace runs in more than one region (for example EU
+and US) and each user signs in to their own region. The regions are configured in the native
+projects; the Dart API lists them, selects one, and reports the selection.
+
+### iOS
+
+In `Frontegg.plist`, replace `baseUrl` and `clientId` with a `regions` array:
+
+```xml
+<plist version="1.0">
+  <dict>
+    <key>regions</key>
+    <array>
+      <dict>
+        <key>key</key>
+        <string>eu</string>
+        <key>baseUrl</key>
+        <string>https://{{FRONTEGG_EU_BASE_URL}}</string>
+        <key>clientId</key>
+        <string>{{FRONTEGG_EU_CLIENT_ID}}</string>
+      </dict>
+      <dict>
+        <key>key</key>
+        <string>us</string>
+        <key>baseUrl</key>
+        <string>https://{{FRONTEGG_US_BASE_URL}}</string>
+        <key>clientId</key>
+        <string>{{FRONTEGG_US_CLIENT_ID}}</string>
+      </dict>
+    </array>
+  </dict>
+</plist>
+```
+
+A region can also have an `applicationId`. Configure associated domains for the domain of every
+region (see [Project setup](setup.md)).
+
+### Android
+
+1. Add the Frontegg Android SDK to your app module, so the app can initialize it, in
+   `android/app/build.gradle`:
+
+```groovy
+dependencies {
+    implementation 'com.frontegg.sdk:android:1.3.41'
+}
+```
+
+2. Initialize the SDK with your regions in an `Application` class, and register it with
+   `android:name=".App"` on the `<application>` element of `AndroidManifest.xml`:
+
+```kotlin
+import android.app.Application
+import com.frontegg.android.FronteggApp
+import com.frontegg.android.regions.RegionConfig
+
+class App : Application() {
+    override fun onCreate() {
+        super.onCreate()
+        FronteggApp.initWithRegions(
+            regions = listOf(
+                RegionConfig("eu", "{{FRONTEGG_EU_BASE_URL}}", "{{FRONTEGG_EU_CLIENT_ID}}"),
+                RegionConfig("us", "{{FRONTEGG_US_BASE_URL}}", "{{FRONTEGG_US_CLIENT_ID}}"),
+            ),
+            context = this,
+            useAssetsLinks = true,
+            useChromeCustomTabs = true,
+        )
+    }
+}
+```
+
+   `initWithRegions` does not read the `FRONTEGG_*` `buildConfigField` entries. Pass options such
+   as `enableOfflineMode`, `entitlementsEnabled` or `enableSessionPerTenant` as arguments instead.
+   If you pass `enableOfflineMode = true`, also add
+   `buildConfigField "boolean", "FRONTEGG_ENABLE_OFFLINE_MODE", "true"`: `getOrRefreshAccessToken`
+   reads offline mode from `BuildConfig`, and without the field it fails instead of returning the
+   cached token, which may be expired, when the device is offline.
+
+3. The `frontegg_domain` manifest placeholder adds the OAuth callback for the first region only.
+   Add the callbacks of every other region to `AndroidManifest.xml`:
+
+```xml
+<activity android:name="com.frontegg.android.AuthenticationActivity" android:exported="true" tools:node="merge">
+    <intent-filter android:autoVerify="true">
+        <action android:name="android.intent.action.VIEW"/>
+        <category android:name="android.intent.category.DEFAULT"/>
+        <category android:name="android.intent.category.BROWSABLE"/>
+        <data android:scheme="https"/>
+        <data android:host="{{FRONTEGG_US_BASE_URL}}"/>
+        <data android:pathPrefix="/oauth/account/redirect/android/${package_name}"/>
+    </intent-filter>
+    <intent-filter>
+        <action android:name="android.intent.action.VIEW"/>
+        <category android:name="android.intent.category.DEFAULT"/>
+        <category android:name="android.intent.category.BROWSABLE"/>
+        <data android:host="{{FRONTEGG_US_BASE_URL}}" android:scheme="${package_name}" android:pathPrefix="/android/oauth/callback"/>
+    </intent-filter>
+</activity>
+```
+
+   Configure AssetLinks for the domain of every region (see [Project setup](setup.md)).
+
+### Select a region from Flutter
+
+```dart
+final frontegg = context.frontegg;
+final constants = await frontegg.getConstants();
+
+if (constants.isRegional && frontegg.currentState.selectedRegion == null) {
+  // Let the user pick one of constants.regions, then:
+  await frontegg.initWithRegion("eu");
+}
+```
+
+- `FronteggConstants.regions` lists the configured regions (`key`, `baseUrl`, `clientId`,
+  `applicationId`), and `FronteggConstants.isRegional` is `true` when there are any.
+- `initWithRegion(regionKey)` switches the native SDK to that region. It throws an
+  `InvalidRegionException` when the key is not one of the configured regions.
+- `FronteggState.selectedRegion` reports the selected region. The native SDKs persist the
+  selection, so it is restored on the next launch.
+- To switch regions after the user has signed in, call `logout()` first. `initWithRegion` does not
+  clear the session, so without a logout the previous region's user and tokens stay active.
+- Until a region is selected, `FronteggState.initializing` stays `true` on Android and is `false`
+  on iOS, so check `selectedRegion` before `initializing` when choosing which page to show.
+
+The [hosted example](https://github.com/frontegg/frontegg-flutter/tree/master/hosted#multi-region-mode)
+has a multi-region mode with a region picker.
+
 ## Admin Portal (Beta)
 
 The Admin Portal is a hosted page that lets end users manage their account, profile, sessions, and tenant settings. The Flutter SDK exposes `openAdminPortal()` which delegates to the native SDKs:
