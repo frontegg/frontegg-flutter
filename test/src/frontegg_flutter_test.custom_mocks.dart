@@ -127,6 +127,15 @@ class MockFronteggPlatform extends _i1.Mock
       ) as _i3.Future<bool?>);
 
   @override
+  _i3.Future<String?> getOrRefreshAccessToken() => (super.noSuchMethod(
+        Invocation.method(
+          #getOrRefreshAccessToken,
+          [],
+        ),
+        returnValue: _i3.Future<String?>.value(),
+      ) as _i3.Future<String?>);
+
+  @override
   _i3.Future<void> logout() => (super.noSuchMethod(
         Invocation.method(
           #logout,

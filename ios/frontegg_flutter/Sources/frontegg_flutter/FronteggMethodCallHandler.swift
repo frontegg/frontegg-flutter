@@ -28,6 +28,8 @@ class FronteggMethodCallHandler {
             switchTenant(call: call, result: result)
         case "refreshToken":
             refreshToken(result: result)
+        case "getOrRefreshAccessToken":
+            getOrRefreshAccessToken(result: result)
         case "logout":
             logout(result: result)
         case "getConstants":
@@ -384,6 +386,25 @@ class FronteggMethodCallHandler {
             Task {
                 let success = await self.fronteggApp.auth.refreshTokenIfNeeded()
                 result(success)
+            }
+        }
+    }
+
+    private func getOrRefreshAccessToken(result: @escaping FlutterResult) {
+        if fronteggApp.auth.isRegional && fronteggApp.auth.selectedRegion == nil {
+            return result(nil)
+        }
+
+        Task { @MainActor in
+            do {
+                let accessToken = try await self.fronteggApp.auth.getOrRefreshAccessTokenAsync()
+                result(accessToken)
+            } catch {
+                var failureReason = "failedToAuthenticate"
+                if case .authError(let authenticationError)? = error as? FronteggError {
+                    failureReason = authenticationError.failureReason ?? failureReason
+                }
+                result(FlutterError(code: failureReason, message: error.localizedDescription, details: nil))
             }
         }
     }

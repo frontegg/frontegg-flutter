@@ -4,10 +4,14 @@ import android.content.Context
 import android.util.Base64
 import com.frontegg.android.AdminPortalActivity
 import com.frontegg.android.EmbeddedAuthActivity
+import com.frontegg.android.FronteggAuth
 import com.frontegg.android.exceptions.FronteggException
 import com.frontegg.android.fronteggAuth
 import com.frontegg.android.models.Entitlement
 import com.frontegg.android.services.StorageProvider
+import com.frontegg.android.utils.FronteggConstantsProvider
+import com.frontegg.android.utils.JWTHelper
+import com.frontegg.android.utils.NetworkGate
 import com.frontegg.flutter.stateListener.FronteggStateListener
 import com.frontegg.flutter.stateListener.FronteggStateListenerImpl
 import io.flutter.plugin.common.MethodCall
@@ -15,8 +19,10 @@ import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlinx.coroutines.withTimeoutOrNull
 import org.json.JSONObject
 import kotlin.time.DurationUnit
 import kotlin.time.toDuration
@@ -44,6 +50,7 @@ class FronteggMethodCallHandler(
             "login" -> login(call, result)
             "switchTenant" -> switchTenant(call, result)
             "refreshToken" -> refreshToken(result)
+            "getOrRefreshAccessToken" -> getOrRefreshAccessToken(result)
             "logout" -> logout(result)
             "getConstants" -> getConstants(result)
             "registerPasskeys" -> registerPasskeys(result)
@@ -388,6 +395,25 @@ class FronteggMethodCallHandler(
         }
     }
 
+    private fun getOrRefreshAccessToken(result: MethodChannel.Result) {
+        GlobalScope.launch(Dispatchers.Main) {
+            try {
+                val accessToken = withContext(Dispatchers.IO) {
+                    resolveValidAccessToken(
+                        auth = context.fronteggAuth,
+                        isOfflineModeEnabled = runCatching {
+                            FronteggConstantsProvider.fronteggConstants(context).enableOfflineMode
+                        }.getOrDefault(false),
+                        isNetworkLikelyGood = { NetworkGate.isNetworkLikelyGood(context) },
+                    )
+                }
+                result.success(accessToken)
+            } catch (e: Exception) {
+                result.error("failedToAuthenticate", e.message, null)
+            }
+        }
+    }
+
     private fun logout(result: MethodChannel.Result) {
         context.fronteggAuth.logout {
             result.success(null)
@@ -552,4 +578,66 @@ internal fun completeAuthResult(
 internal fun forceStateUpdate(stateListener: FronteggStateListener?, result: MethodChannel.Result) {
     stateListener?.forceNotifyChanges()
     result.success(null)
+}
+
+private const val MIN_ACCESS_TOKEN_VALIDITY_SECONDS = 15
+private const val INITIALIZATION_TIMEOUT_MS = 20_000L
+private const val REFRESH_SETTLE_TIMEOUT_MS = 10_000L
+private const val SETTLE_POLL_INTERVAL_MS = 200L
+
+// Mirrors iOS getOrRefreshAccessTokenAsync using only public APIs of the pinned Android SDK.
+internal suspend fun resolveValidAccessToken(
+    auth: FronteggAuth,
+    isOfflineModeEnabled: Boolean,
+    isNetworkLikelyGood: () -> Boolean,
+): String? {
+    if (auth.isMultiRegion && auth.selectedRegion == null) return null
+
+    val isSettled = waitWhile(INITIALIZATION_TIMEOUT_MS) {
+        auth.initializing.value || auth.refreshingToken.value
+    }
+    check(isSettled) { "Timed out waiting for the Frontegg SDK to initialize" }
+    if (auth.refreshToken.value == null) return null
+
+    val currentAccessToken = auth.accessToken.value
+    if (isValidLongEnough(currentAccessToken)) return currentAccessToken
+
+    if (!isNetworkLikelyGood()) {
+        if (isOfflineModeEnabled) return currentAccessToken
+        throw IllegalStateException("No network connection to refresh the access token")
+    }
+
+    if (refreshUntilValid(auth)) return auth.accessToken.value
+    if (auth.refreshToken.value == null) return null
+    if (isOfflineModeEnabled && !isNetworkLikelyGood()) return auth.accessToken.value
+    throw IllegalStateException("Failed to refresh the access token")
+}
+
+// A refresh started by the SDK's background job makes refreshTokenAndWait return true before the new token is set.
+private suspend fun refreshUntilValid(auth: FronteggAuth): Boolean {
+    if (!auth.refreshTokenAndWait()) return false
+    if (isValidLongEnough(auth.accessToken.value)) return true
+
+    waitWhile(REFRESH_SETTLE_TIMEOUT_MS) { auth.refreshingToken.value }
+    if (isValidLongEnough(auth.accessToken.value)) return true
+
+    return auth.refreshTokenAndWait() && isValidLongEnough(auth.accessToken.value)
+}
+
+private suspend fun waitWhile(timeoutMs: Long, condition: () -> Boolean): Boolean {
+    val finished = withTimeoutOrNull(timeoutMs) {
+        while (condition()) {
+            delay(SETTLE_POLL_INTERVAL_MS)
+        }
+        true
+    }
+    return finished != null
+}
+
+private fun isValidLongEnough(accessToken: String?): Boolean {
+    if (accessToken == null) return false
+    val expirationSeconds =
+        (JWTHelper.decodeClaims(accessToken)["exp"] as? Number)?.toLong() ?: return false
+    val nowSeconds = System.currentTimeMillis() / 1000
+    return expirationSeconds - nowSeconds > MIN_ACCESS_TOKEN_VALIDITY_SECONDS
 }

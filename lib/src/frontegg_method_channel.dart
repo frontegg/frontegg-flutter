@@ -23,6 +23,8 @@ class FronteggMethodChannel extends FronteggPlatform {
   static const String socialLoginMethodName = "socialLogin";
   static const String customSocialLoginMethodName = "customSocialLogin";
   static const String refreshTokenMethodName = "refreshToken";
+  static const String getOrRefreshAccessTokenMethodName =
+      "getOrRefreshAccessToken";
   static const String getConstantsMethodName = "getConstants";
   static const String requestAuthorizeMethodName = "requestAuthorize";
   static const String stepUpMethodName = "stepUp";
@@ -191,6 +193,13 @@ class FronteggMethodChannel extends FronteggPlatform {
   @override
   Future<bool?> refreshToken() =>
       methodChannel.invokeMethod<bool>(refreshTokenMethodName);
+
+  /// Returns a valid access token, refreshing it first when it is about to expire.
+  ///
+  /// Returns a [Future] that completes with the access token, or `null` when there is no session.
+  @override
+  Future<String?> getOrRefreshAccessToken() =>
+      methodChannel.invokeMethod<String>(getOrRefreshAccessTokenMethodName);
 
   /// Logs the user out by invoking the native platform's logout method.
   ///

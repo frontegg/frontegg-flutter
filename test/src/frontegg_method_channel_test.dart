@@ -38,6 +38,8 @@ void main() {
             return tFronteggConstantsMap;
           case FronteggMethodChannel.refreshTokenMethodName:
             return true;
+          case FronteggMethodChannel.getOrRefreshAccessTokenMethodName:
+            return "accessToken1";
           case FronteggMethodChannel.loginMethodName:
             return null;
           case FronteggMethodChannel.logoutMethodName:
@@ -81,6 +83,10 @@ void main() {
 
   test('refreshToken()', () async {
     expect(await platform.refreshToken(), true);
+  });
+
+  test('getOrRefreshAccessToken()', () async {
+    expect(await platform.getOrRefreshAccessToken(), "accessToken1");
   });
 
   test('getConstants()', () async {

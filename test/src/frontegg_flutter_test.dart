@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:frontegg_flutter/frontegg_flutter.dart';
 import 'package:frontegg_flutter/src/frontegg_platform_interface.dart';
@@ -71,6 +72,41 @@ void main() {
       final result = await frontegg.refreshToken();
       // Assert
       expect(result, equals(false));
+    });
+  });
+
+  group('getOrRefreshAccessToken()', () {
+    test('should return the access token from the platform', () async {
+      // Arrange
+      when(fronteggPlatform.getOrRefreshAccessToken())
+          .thenAnswer((_) async => "accessToken1");
+      // Act
+      final result = await frontegg.getOrRefreshAccessToken();
+      // Assert
+      expect(result, equals("accessToken1"));
+    });
+
+    test('should return null when there is no session', () async {
+      // Arrange
+      when(fronteggPlatform.getOrRefreshAccessToken())
+          .thenAnswer((_) async => null);
+      // Act
+      final result = await frontegg.getOrRefreshAccessToken();
+      // Assert
+      expect(result, isNull);
+    });
+
+    test('should throw FailedToRefreshTokenException when the refresh fails',
+        () async {
+      // Arrange
+      when(fronteggPlatform.getOrRefreshAccessToken()).thenThrow(
+        PlatformException(code: "failedToRefreshToken", message: "offline"),
+      );
+      // Act & Assert
+      expect(
+        frontegg.getOrRefreshAccessToken(),
+        throwsA(isA<FailedToRefreshTokenException>()),
+      );
     });
   });
 
