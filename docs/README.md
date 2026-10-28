@@ -7,6 +7,29 @@ app. [Frontegg](https://frontegg.com/) is a self-served user management platform
 SaaS applications. Easily implement authentication, SSO, RBAC, multi-tenancy, and more — all from a
 single SDK.
 
+## Why Frontegg for Flutter
+
+The official Flutter plugin, built on Frontegg's native iOS (`FronteggSwift`) and Android
+(`frontegg-android-kotlin`) SDKs, so one Dart API covers both platforms:
+
+- **Hosted and embedded login**: the Frontegg login box in an in-app WebView (embedded), or in the
+  system browser and Chrome Custom Tabs (hosted).
+- **Social login and passkeys**: Google, Apple, Microsoft, GitHub, LinkedIn, Facebook, Slack and
+  custom social providers, plus `loginWithPasskeys()` and `registerPasskeys()`.
+- **B2B multi-tenancy**: the user's tenants and active tenant on `FronteggUser`, `switchTenant()`,
+  and optional per-tenant sessions.
+- **Multi-region**: configure several regions natively and select one at runtime with
+  `initWithRegion()`.
+- **Multi-app**: sign in to a specific Frontegg application with `applicationId`.
+- **Step-up authentication**: `stepUp()` and `isSteppedUp()` for sensitive actions.
+- **Entitlements**: on-device feature and permission checks with `getFeatureEntitlement()` and
+  `getPermissionEntitlement()`.
+- **Admin Portal (beta)**: `openAdminPortal()` opens the self-service portal in a native WebView.
+- **Session handling**: the native SDKs store and refresh tokens, `stateChanged` streams the
+  authentication state, offline mode keeps the session without a network, and
+  `getOrRefreshAccessToken()` refreshes the token when needed after the app resumes (in offline
+  mode without a network, it returns the cached token, which may be expired).
+
 ## 📚 Documentation
 
 This repository includes:
@@ -16,7 +39,7 @@ This repository includes:
 - An [API Reference](https://flutter-guide.frontegg.com/#/api) for detailed SDK functionality
 - [Usage Examples](https://flutter-guide.frontegg.com/#/usage) with common implementation patterns
 - [Advanced Topics](https://flutter-guide.frontegg.com/#/advanced) for complex integration scenarios
-- A [Hosted](https://github.com/frontegg/frontegg-flutter/tree/master/hosted), [Embedded](https://github.com/frontegg/frontegg-flutter/tree/master/embedded), and [Application-Id](https://github.com/frontegg/frontegg-flutter/tree/master/application_id) example projects to help you get started quickly
+- A [Hosted](https://github.com/frontegg/frontegg-flutter/tree/master/hosted) (which also has a [multi-region mode](https://github.com/frontegg/frontegg-flutter/tree/master/hosted#multi-region-mode)), [Embedded](https://github.com/frontegg/frontegg-flutter/tree/master/embedded), and [Application-Id](https://github.com/frontegg/frontegg-flutter/tree/master/application_id) example projects to help you get started quickly
 
 For full documentation, visit the Frontegg Developer Portal:  
 🔗 [https://developers.frontegg.com](https://developers.frontegg.com)
@@ -36,7 +59,7 @@ The Flutter SDK supports Frontegg's **per-tenant sessions** feature through the 
 
 - On **Android**, the plugin and example apps use `com.frontegg.sdk:android:1.3.41`.
 - On **iOS**, the plugin depends on `FronteggSwift`:
-  - **Flutter 3.41+** (SPM): `1.3.17` from GitHub. Run `flutter config --enable-swift-package-manager`, then `flutter pub get` and build.
+  - **Flutter 3.41+** (SPM): `1.3.26` from GitHub. Run `flutter config --enable-swift-package-manager`, then `flutter pub get` and build.
   - Note: CocoaPods fallback is no longer supported for `FronteggSwift`.
   - SPM integration requires **Xcode 15+**.
 
