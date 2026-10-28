@@ -22,6 +22,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeoutOrNull
 import org.json.JSONObject
@@ -35,6 +37,7 @@ class FronteggMethodCallHandler(
 
     companion object {
         private const val ERROR_CODE = "frontegg.error"
+        private val regionSelectionLock = Mutex()
     }
     
     private var stateListener: FronteggStateListenerImpl? = null
@@ -429,10 +432,12 @@ class FronteggMethodCallHandler(
 
         GlobalScope.launch(Dispatchers.Main) {
             try {
-                withContext(Dispatchers.IO) {
-                    context.fronteggApp.initWithRegion(regionKey)
+                regionSelectionLock.withLock {
+                    withContext(Dispatchers.IO) {
+                        context.fronteggApp.initWithRegion(regionKey)
+                    }
+                    stateListener?.forceNotifyChanges()
                 }
-                stateListener?.forceNotifyChanges()
                 result.success(null)
             } catch (e: Exception) {
                 result.error("INIT_WITH_REGION_ERROR", e.message, null)
