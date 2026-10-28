@@ -374,6 +374,8 @@ if (constants.isRegional && frontegg.currentState.selectedRegion == null) {
   `InvalidRegionException` when the key is not one of the configured regions.
 - `FronteggState.selectedRegion` reports the selected region. The native SDKs persist the
   selection, so it is restored on the next launch.
+- To switch regions after the user has signed in, call `logout()` first. `initWithRegion` does not
+  clear the session, so without a logout the previous region's user and tokens stay active.
 - Until a region is selected, `FronteggState.initializing` stays `true` on Android and is `false`
   on iOS, so check `selectedRegion` before `initializing` when choosing which page to show.
 
