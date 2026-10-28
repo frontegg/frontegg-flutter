@@ -38,7 +38,7 @@
 
 | Method | Parameters | Description |
 |--------|------------|-------------|
-| `initWithRegion` | `regionKey` (required): String | Selects one of the natively configured regions. The selection is persisted and reported in `FronteggState.selectedRegion`. |
+| `initWithRegion` | `regionKey` (required): String | Selects one of the natively configured regions. The selection is persisted and reported in `FronteggState.selectedRegion`. Call `logout()` first when switching regions while signed in. |
 
 | Property | Description |
 |----------|-------------|
