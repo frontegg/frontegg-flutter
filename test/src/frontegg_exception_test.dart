@@ -9,9 +9,11 @@ void main() {
         "failedToAuthenticate": FailedToAuthenticateException,
         "frontegg.error.failed_to_authenticate": FailedToAuthenticateException,
         "failedToRefreshToken": FailedToRefreshTokenException,
+        "refresh_failed": FailedToRefreshTokenException,
         "failedToLoadUserData": FailedToLoadUserDataException,
         "failedToExtractCode": FailedToExtractCodeException,
         "failedToSwitchTenant": FailedToSwitchTenantException,
+        "switch_tenant_failed": FailedToSwitchTenantException,
         "codeVerifierNotFound": CodeVerifierNotFoundException,
         "couldNotFindRootViewController":
             CouldNotFindRootViewControllerException,
@@ -27,6 +29,7 @@ void main() {
         "invalidResponse": InvalidResponseException,
         "other": OtherException,
         "frontegg.error.canceled_by_user": CanceledByUserException,
+        "canceledByUser": CanceledByUserException,
         "frontegg.error.cookie_not_found": CookieNotFoundException,
         "frontegg.error.key_not_found_shared_preferences":
             KeyNotFoundSharedPreferencesException,
@@ -47,6 +50,30 @@ void main() {
 
         expect(exception, isA<FronteggException>());
         expect(exception.runtimeType, expectedType);
+      }
+    });
+
+    test('keeps the platform code of an unrecognised failure', () {
+      final exception = FronteggException.fromFailureReason(
+        "MISSING_PARAMS",
+        message: 'Missing region key',
+      );
+
+      expect(exception, isA<UnknownException>());
+      expect(exception.failureReason, "MISSING_PARAMS");
+      expect(exception.message, 'Missing region key');
+    });
+
+    test('gives each exception a failureReason that maps back to it', () {
+      const exceptions = [
+        CanceledByUserException(),
+        OtherException(),
+      ];
+
+      for (final exception in exceptions) {
+        final roundTripped =
+            FronteggException.fromFailureReason(exception.failureReason);
+        expect(roundTripped.runtimeType, exception.runtimeType);
       }
     });
   });
