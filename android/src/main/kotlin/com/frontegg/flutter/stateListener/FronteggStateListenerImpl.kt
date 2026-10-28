@@ -95,6 +95,7 @@ class FronteggStateListenerImpl(
             appLink = fronteggAuth.useAssetsLinks,
             refreshingToken = fronteggAuth.refreshingToken.value,
             isOfflineMode = fronteggAuth.isOfflineMode.value,
+            selectedRegion = fronteggAuth.selectedRegion?.toReadableMap(),
         )
 
         sendState(state)
@@ -136,6 +137,7 @@ class FronteggStateListenerImpl(
             appLink = fronteggAuth.useAssetsLinks,
             refreshingToken = fronteggAuth.refreshingToken.value,
             isOfflineMode = fronteggAuth.isOfflineMode.value,
+            selectedRegion = fronteggAuth.selectedRegion?.toReadableMap(),
         )
 
         sendState(state)

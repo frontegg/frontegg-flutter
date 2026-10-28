@@ -250,6 +250,23 @@ class FronteggFlutter {
         () => FronteggPlatform.instance.getOrRefreshAccessToken(),
       );
 
+  /// Selects the region to authenticate against in a multi-region setup.
+  ///
+  /// The regions are configured natively (`regions` in `Frontegg.plist` on iOS,
+  /// `FronteggApp.initWithRegions` on Android) and are listed in
+  /// [FronteggConstants.regions]. The selection is persisted by the native SDK
+  /// and reported in [FronteggState.selectedRegion].
+  ///
+  /// - [regionKey]: The key of one of the configured regions.
+  ///
+  /// Throws an [InvalidRegionException] if the app is not configured for
+  /// multiple regions or [regionKey] is not one of the configured regions.
+  ///
+  /// Returns a [Future] that completes when the region is selected.
+  Future<void> initWithRegion(String regionKey) => _runAction(
+        () => FronteggPlatform.instance.initWithRegion(regionKey),
+      );
+
   /// Logs out the user and clears user-related data.
   ///
   /// This method may perform a network request to complete the logout process.

@@ -34,6 +34,18 @@
 |--------|------------|-------------|
 | `switchTenant` | `tenantId` (required): String | Switches the user's active tenant. IDs available from `User.tenants.tenantId`. |
 
+### Multi-Region
+
+| Method | Parameters | Description |
+|--------|------------|-------------|
+| `initWithRegion` | `regionKey` (required): String | Selects one of the natively configured regions. The selection is persisted and reported in `FronteggState.selectedRegion`. |
+
+| Property | Description |
+|----------|-------------|
+| `FronteggConstants.regions` | The configured regions (`List<FronteggRegionConfig>`: `key`, `baseUrl`, `clientId`, `applicationId`). Empty for a single-region setup. |
+| `FronteggConstants.isRegional` | `true` when regions are configured. |
+| `FronteggState.selectedRegion` | The selected `FronteggRegionConfig`, or `null` when none is selected. |
+
 ### Authorization & Security
 
 | Method | Parameters | Description |

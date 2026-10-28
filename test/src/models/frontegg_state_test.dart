@@ -51,5 +51,38 @@ void main() {
         expect(result.user, isNotNull);
       },
     );
+
+    test(
+      "should parse the selected region",
+      () {
+        final map = Map<Object?, Object?>.from(tFronteggStateMap);
+        map["selectedRegion"] = tFronteggRegionConfigMap;
+
+        final result = FronteggState.fromMap(map);
+
+        expect(result.selectedRegion, equals(tFronteggRegionConfig));
+      },
+    );
+
+    test(
+      "should have no selected region when the platform sends none",
+      () {
+        final result = FronteggState.fromMap(tFronteggStateMap);
+        expect(result.selectedRegion, isNull);
+      },
+    );
+  });
+
+  group('toMap', () {
+    test(
+      "should round-trip the selected region",
+      () {
+        const state = FronteggState(selectedRegion: tFronteggRegionConfig);
+
+        final result = FronteggState.fromMap(state.toMap());
+
+        expect(result.selectedRegion, equals(tFronteggRegionConfig));
+      },
+    );
   });
 }

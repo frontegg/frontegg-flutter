@@ -229,6 +229,7 @@ class FronteggState {
   final bool appLink;
   final bool refreshingToken;
   final bool isOfflineMode;
+  final FronteggRegionConfig? selectedRegion;
 }
 ```
 

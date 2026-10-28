@@ -78,6 +78,10 @@ abstract class FronteggPlatform extends PlatformInterface {
     );
   }
 
+  Future<void> initWithRegion(String regionKey) {
+    throw UnimplementedError("initWithRegion() has not been implemented.");
+  }
+
   Future<void> logout() {
     throw UnimplementedError("logout() has not been implemented.");
   }

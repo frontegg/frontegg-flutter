@@ -30,6 +30,7 @@ void main() {
         "other": OtherException,
         "frontegg.error.canceled_by_user": CanceledByUserException,
         "canceledByUser": CanceledByUserException,
+        "INVALID_REGION": InvalidRegionException,
         "frontegg.error.cookie_not_found": CookieNotFoundException,
         "frontegg.error.key_not_found_shared_preferences":
             KeyNotFoundSharedPreferencesException,
@@ -67,6 +68,7 @@ void main() {
     test('gives each exception a failureReason that maps back to it', () {
       const exceptions = [
         CanceledByUserException(),
+        InvalidRegionException(),
         OtherException(),
       ];
 
