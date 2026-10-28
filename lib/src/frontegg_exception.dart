@@ -69,6 +69,8 @@ sealed class FronteggException implements Exception {
       return FailedToRegisterWbeauthnException(message);
     } else if (failureReason.contains("frontegg.error.mfa_not_enrolled")) {
       return MfaNotEnrolledException(message);
+    } else if (failureReason == "INVALID_REGION") {
+      return InvalidRegionException(message);
     } else if (failureReason == "unknown" ||
         failureReason.contains("frontegg.error.unknown")) {
       return UnknownException(message);
@@ -231,6 +233,15 @@ class UnknownException extends FronteggException {
   const UnknownException([String? message, String failureReason = "unknown"])
       : super(
           failureReason: failureReason,
+          message: message,
+        );
+}
+
+/// Exception thrown when [FronteggFlutter.initWithRegion] receives a region key that is not configured.
+class InvalidRegionException extends FronteggException {
+  const InvalidRegionException([String? message])
+      : super(
+          failureReason: "INVALID_REGION",
           message: message,
         );
 }

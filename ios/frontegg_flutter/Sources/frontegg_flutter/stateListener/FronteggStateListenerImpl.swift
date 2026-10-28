@@ -86,7 +86,8 @@ class FronteggStateListenerImpl: FronteggStateListener {
             showLoader: NSNumber(value: auth.showLoader),
             appLink: NSNumber(value: auth.appLink),
             refreshingToken: NSNumber(value: auth.refreshingToken),
-            isOfflineMode: NSNumber(value: auth.isOfflineMode)
+            isOfflineMode: NSNumber(value: auth.isOfflineMode),
+            selectedRegion: auth.selectedRegion?.toMap()
         )
         
         self.sendState(state: state)

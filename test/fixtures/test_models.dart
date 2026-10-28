@@ -15,6 +15,29 @@ const tIOSFronteggConstants = FronteggConstants(
   bundleId: "com.test.1",
 );
 
+const tFronteggRegionConfig = FronteggRegionConfig(
+  key: "eu",
+  baseUrl: "https://eu.base.url.com",
+  clientId: "euClientId",
+);
+
+const tRegionalFronteggConstants = FronteggConstants(
+  baseUrl: "https://eu.base.url.com",
+  clientId: "euClientId",
+  useAssetsLinks: true,
+  useChromeCustomTabs: false,
+  bundleId: "com.test.1",
+  regions: [
+    tFronteggRegionConfig,
+    FronteggRegionConfig(
+      key: "us",
+      baseUrl: "https://us.base.url.com",
+      clientId: "usClientId",
+      applicationId: "usApplicationId",
+    ),
+  ],
+);
+
 final tFronteggTenant = FronteggTenant(
   vendorId: "392b348b-a37c-471f-8f1b-2c35d23aa7e6",
   id: " 9ca34b3c-8ab6-40b9-a582-bd8badb571cb",

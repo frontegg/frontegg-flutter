@@ -1,6 +1,7 @@
 package com.frontegg.flutter
 
 import com.frontegg.android.models.User
+import com.frontegg.android.regions.RegionConfig
 import com.google.gson.Gson
 import org.json.JSONArray
 import org.json.JSONException
@@ -11,6 +12,14 @@ fun User.toReadableMap(): MutableMap<String, Any?> {
     val jsonObject = JSONObject(jsonStr)
     return convertJsonToMap(jsonObject)
 }
+
+fun RegionConfig.toReadableMap(): Map<String, Any?> =
+    mapOf(
+        "key" to key,
+        "baseUrl" to baseUrl,
+        "clientId" to clientId,
+        "applicationId" to applicationId,
+    )
 
 @Throws(JSONException::class)
 fun convertJsonToArray(jsonArray: JSONArray): ArrayList<Any?> {

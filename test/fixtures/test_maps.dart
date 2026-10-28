@@ -14,6 +14,30 @@ const tIOSFronteggConstantsMap = {
   "bundleId": "com.test.1",
 };
 
+const tFronteggRegionConfigMap = {
+  "key": "eu",
+  "baseUrl": "https://eu.base.url.com",
+  "clientId": "euClientId",
+  "applicationId": null,
+};
+
+const tRegionalFronteggConstantsMap = {
+  "baseUrl": "https://eu.base.url.com",
+  "clientId": "euClientId",
+  "useAssetsLinks": true,
+  "useChromeCustomTabs": false,
+  "bundleId": "com.test.1",
+  "regions": [
+    tFronteggRegionConfigMap,
+    {
+      "key": "us",
+      "baseUrl": "https://us.base.url.com",
+      "clientId": "usClientId",
+      "applicationId": "usApplicationId",
+    },
+  ],
+};
+
 const tFronteggTenantMap = {
   "vendorId": "392b348b-a37c-471f-8f1b-2c35d23aa7e6",
   "id": " 9ca34b3c-8ab6-40b9-a582-bd8badb571cb",

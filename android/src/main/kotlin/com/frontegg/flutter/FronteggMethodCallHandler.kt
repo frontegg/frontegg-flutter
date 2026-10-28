@@ -6,6 +6,7 @@ import com.frontegg.android.AdminPortalActivity
 import com.frontegg.android.EmbeddedAuthActivity
 import com.frontegg.android.FronteggAuth
 import com.frontegg.android.exceptions.FronteggException
+import com.frontegg.android.fronteggApp
 import com.frontegg.android.fronteggAuth
 import com.frontegg.android.models.Entitlement
 import com.frontegg.android.services.StorageProvider
@@ -21,6 +22,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeoutOrNull
 import org.json.JSONObject
@@ -34,6 +37,7 @@ class FronteggMethodCallHandler(
 
     companion object {
         private const val ERROR_CODE = "frontegg.error"
+        private val regionSelectionLock = Mutex()
     }
     
     private var stateListener: FronteggStateListenerImpl? = null
@@ -51,6 +55,7 @@ class FronteggMethodCallHandler(
             "switchTenant" -> switchTenant(call, result)
             "refreshToken" -> refreshToken(result)
             "getOrRefreshAccessToken" -> getOrRefreshAccessToken(result)
+            "initWithRegion" -> initWithRegion(call, result)
             "logout" -> logout(result)
             "getConstants" -> getConstants(result)
             "registerPasskeys" -> registerPasskeys(result)
@@ -414,6 +419,32 @@ class FronteggMethodCallHandler(
         }
     }
 
+    private fun initWithRegion(call: MethodCall, result: MethodChannel.Result) {
+        val regionKey = call.argument<String>("regionKey")
+        if (regionKey == null) {
+            result.error("MISSING_PARAMS", "Missing region key", null)
+            return
+        }
+        if (context.fronteggAuth.regions.none { it.key == regionKey }) {
+            result.error("INVALID_REGION", "Unknown region key $regionKey", null)
+            return
+        }
+
+        GlobalScope.launch(Dispatchers.Main) {
+            try {
+                regionSelectionLock.withLock {
+                    withContext(Dispatchers.IO) {
+                        context.fronteggApp.initWithRegion(regionKey)
+                    }
+                    stateListener?.forceNotifyChanges()
+                }
+                result.success(null)
+            } catch (e: Exception) {
+                result.error("INIT_WITH_REGION_ERROR", e.message, null)
+            }
+        }
+    }
+
     private fun logout(result: MethodChannel.Result) {
         context.fronteggAuth.logout {
             result.success(null)
@@ -432,6 +463,7 @@ class FronteggMethodCallHandler(
                 bundleId = storage.packageName,
                 deepLinkScheme = storage.deepLinkScheme,
                 useDiskCacheWebview = storage.useDiskCacheWebview,
+                regions = storage.regions.map { it.toReadableMap() },
             )
         )
     }
@@ -511,6 +543,7 @@ internal fun buildFronteggConstants(
     bundleId: String,
     deepLinkScheme: String?,
     useDiskCacheWebview: Boolean,
+    regions: List<Map<String, Any?>>,
 ): Map<String, Any?> =
     mapOf(
         "baseUrl" to baseUrl,
@@ -521,6 +554,7 @@ internal fun buildFronteggConstants(
         "bundleId" to bundleId,
         "deepLinkScheme" to deepLinkScheme,
         "useDiskCacheWebview" to useDiskCacheWebview,
+        "regions" to regions,
     )
 
 /**

@@ -110,6 +110,30 @@ void main() {
     });
   });
 
+  group('initWithRegion()', () {
+    test('should call FronteggPlatform.instance.initWithRegion()', () async {
+      // Arrange
+      when(fronteggPlatform.initWithRegion("eu"))
+          .thenAnswer((_) => Future.value());
+      // Act
+      await frontegg.initWithRegion("eu");
+      // Assert
+      verify(fronteggPlatform.initWithRegion("eu")).called(1);
+    });
+
+    test('should throw a FronteggException for an unknown region', () async {
+      // Arrange
+      when(fronteggPlatform.initWithRegion("mars")).thenThrow(
+        PlatformException(code: "INVALID_REGION", message: "Unknown region"),
+      );
+      // Act & Assert
+      expect(
+        frontegg.initWithRegion("mars"),
+        throwsA(isA<FronteggException>()),
+      );
+    });
+  });
+
   group('directLogin()', () {
     test('should call FronteggPlatform.instance.directLogin()', () async {
       // Arrange
@@ -259,6 +283,16 @@ void main() {
       final result = await frontegg.getConstants();
       // Assert
       expect(result, tFronteggConstants);
+    });
+
+    test('should return regional FronteggConstant', () async {
+      // Arrange
+      when(fronteggPlatform.getConstants())
+          .thenAnswer((_) async => tRegionalFronteggConstantsMap);
+      // Act
+      final result = await frontegg.getConstants();
+      // Assert
+      expect(result, tRegionalFronteggConstants);
     });
 
     test('should return valid iOS FronteggConstant', () async {

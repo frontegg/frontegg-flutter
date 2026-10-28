@@ -25,5 +25,23 @@ void main() {
         expect(result, equals(tIOSFronteggConstants));
       },
     );
+
+    test(
+      "should return a valid regional model",
+      () {
+        final result = FronteggConstants.fromMap(tRegionalFronteggConstantsMap);
+        expect(result, equals(tRegionalFronteggConstants));
+        expect(result.isRegional, isTrue);
+      },
+    );
+
+    test(
+      "should not be regional when the platform sends no regions",
+      () {
+        final result = FronteggConstants.fromMap(tFronteggConstantsMap);
+        expect(result.regions, isEmpty);
+        expect(result.isRegional, isFalse);
+      },
+    );
   });
 }

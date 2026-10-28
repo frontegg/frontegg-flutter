@@ -136,6 +136,16 @@ class MockFronteggPlatform extends _i1.Mock
       ) as _i3.Future<String?>);
 
   @override
+  _i3.Future<void> initWithRegion(String? regionKey) => (super.noSuchMethod(
+        Invocation.method(
+          #initWithRegion,
+          [regionKey],
+        ),
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
+
+  @override
   _i3.Future<void> logout() => (super.noSuchMethod(
         Invocation.method(
           #logout,

@@ -27,12 +27,14 @@ void main() {
       EventChannel(FronteggMethodChannel.stateEventChannelName);
   final streamHandler = MockStateStreamHandler();
   late final Stream stateEventChannelStream;
+  final recordedMethodCalls = <MethodCall>[];
 
   setUpAll(() {
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(
       channel,
       (MethodCall methodCall) async {
+        recordedMethodCalls.add(methodCall);
         switch (methodCall.method) {
           case FronteggMethodChannel.getConstantsMethodName:
             return tFronteggConstantsMap;
@@ -40,6 +42,8 @@ void main() {
             return true;
           case FronteggMethodChannel.getOrRefreshAccessTokenMethodName:
             return "accessToken1";
+          case FronteggMethodChannel.initWithRegionMethodName:
+            return null;
           case FronteggMethodChannel.loginMethodName:
             return null;
           case FronteggMethodChannel.logoutMethodName:
@@ -87,6 +91,13 @@ void main() {
 
   test('getOrRefreshAccessToken()', () async {
     expect(await platform.getOrRefreshAccessToken(), "accessToken1");
+  });
+
+  test('initWithRegion(regionKey) sends the region key', () async {
+    await platform.initWithRegion("eu");
+    expect(recordedMethodCalls.last.method,
+        FronteggMethodChannel.initWithRegionMethodName);
+    expect(recordedMethodCalls.last.arguments, {"regionKey": "eu"});
   });
 
   test('getConstants()', () async {
