@@ -400,11 +400,7 @@ class FronteggMethodCallHandler {
                 let accessToken = try await self.fronteggApp.auth.getOrRefreshAccessTokenAsync()
                 result(accessToken)
             } catch {
-                var failureReason = "failedToAuthenticate"
-                if case .authError(let authenticationError)? = error as? FronteggError {
-                    failureReason = authenticationError.failureReason ?? failureReason
-                }
-                result(FlutterError(code: failureReason, message: error.localizedDescription, details: nil))
+                result(FlutterError(code: "failedToAuthenticate", message: error.localizedDescription, details: nil))
             }
         }
     }
