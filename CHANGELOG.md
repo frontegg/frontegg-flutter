@@ -1,88 +1,21 @@
 ## v1.0.55
-This PR now carries the whole stack that replaced frontegg/frontegg-flutter#157, plus two earlier PRs. It was reviewed in parts:
-
-| Part | Reviewed in | Merged into this branch |
-|---|---|---|
-| Error mapping, scene-lifecycle test, example Gradle versions | this PR (with the former #160 and #161) | — |
-| `getOrRefreshAccessToken` and FronteggSwift 1.3.26 | frontegg/frontegg-flutter#163 | yes |
-| Multi-region | frontegg/frontegg-flutter#164 | yes, via #163 |
-| README | frontegg/frontegg-flutter#165 | yes, via #164 |
-| Bridge-contract tests | frontegg/frontegg-flutter#159 | yes, via #165 |
-| Android SDK 1.3.43 | frontegg/frontegg-flutter#155 | yes; its FronteggSwift 1.3.24 pin is superseded by 1.3.26 |
-| docsify 5.0.0 with pinned CDN versions | frontegg/frontegg-flutter#156 | yes, unchanged |
-
-Jira: FR-25950 (API audit), FR-25952 (get-or-refresh helper), FR-25959 (multi-region), FR-25951 (bridge-contract tests).
-
-## Summary
-
-### Error mapping (FR-25950)
-- **Android codes:** `switch_tenant_failed` and `refresh_failed` now map to `FailedToSwitchTenantException` and `FailedToRefreshTokenException` instead of `UnknownException`.
-- **Unknown codes:** an unrecognised platform code still becomes `UnknownException`, but its `failureReason` now keeps the platform code (for example `MISSING_PARAMS`).
-- **Cancelled login:** `CanceledByUserException.failureReason` is now `"canceledByUser"`. It used to be `"other"`, which mapped back to `OtherException`.
-- **Invalid region:** `INVALID_REGION` maps to the new `InvalidRegionException`.
-
-### getOrRefreshAccessToken (FR-25952)
-`Future<String?> getOrRefreshAccessToken()` returns an access token that is valid for more than 15 s, refreshing it first when needed. Call it before API calls after the app resumes.
-
-**When it returns `null`:**
-- there is no session;
-- the refresh token was rejected;
-- the app is multi-region and no region is selected yet.
-
-**When it waits:**
-- If initialization or a refresh is still running, it waits up to 20 s, then throws `FailedToAuthenticateException`.
-- On Android, if a background refresh is still settling, it waits up to 10 s for it.
-
-**Offline:**
-- With offline mode on, it returns the cached token, which may be expired.
-- With offline mode off, it throws `FailedToAuthenticateException`.
-
-**Implementation:**
-- **iOS:** calls FronteggSwift's `getOrRefreshAccessTokenAsync()`. The plugin now pins FronteggSwift 1.3.26 (was 1.3.21). 1.3.26 includes frontegg/frontegg-ios-swift#347: the call now waits for an automatic refresh that is already running, instead of racing it with the same refresh token and signing the user out. 1.3.26 also carries 1.3.24's embedded step-up fixes from #155.
-- **Android:** uses SDK 1.3.43 (was 1.3.41), which includes the step-up fixes from #155. It builds the same behaviour from the SDK's public APIs: `refreshTokenAndWait`, the network check and the offline-mode setting.
-- **Errors:** on both platforms, every failure reaches Dart as `FailedToAuthenticateException`.
-
-**Behaviour change from FronteggSwift 1.3.25:** token exchange, passkey and Apple sign-in failures can now arrive as `OtherException`.
-
-### Multi-region (FR-25959)
-- **New API:** `FronteggRegionConfig`, `FronteggConstants.regions` and `isRegional`, `FronteggState.selectedRegion`, and `initWithRegion(regionKey)`.
-- **Unknown region key:** `initWithRegion` throws `InvalidRegionException` before calling the native SDK, which would otherwise crash on iOS.
-- **Android:** overlapping `initWithRegion` calls now run one after the other.
-- **Configuration:** regions are set natively, in the `regions` array in `Frontegg.plist` on iOS and through `FronteggApp.initWithRegions` on Android.
-- **Switching while signed in:** `initWithRegion` does not clear the session, so apps must call `logout()` before switching regions. This is documented.
-- **iOS MFA:** FronteggSwift 1.3.26 rebuilds its MFA client when a region is selected, so native Apple sign-in that requires MFA works in multi-region apps.
-- **Hosted example:** has an opt-in multi-region mode with a region picker.
-- **Docs:** see "Multi-region support" in `docs/advanced.md`.
-
-### Bridge-contract tests (FR-25951)
-`test/src/bridge_contract_test.dart` runs in the existing `flutter test` job. It checks that both native handlers:
-- dispatch exactly the methods Dart calls;
-- read exactly the argument keys Dart sends;
-- return every key the Dart `fromMap` readers expect.
-
-### Scene-lifecycle iOS test
-- **Problem:** this check is also red on `master`. The host-app link test waited for Dart's router, which gets the link only after Flutter's background QoS queue delivers it. On CI simulators that took more than 60 s.
-- **Fix:** a test-only scene delegate records the links the plugin passes on to Flutter, and the test asserts on that instead.
-
-### Example apps and docs
-- **Example apps:** `hosted` and `application_id` now use Gradle 8.14.3, AGP 8.11.1 and Kotlin 2.2.20, so `flutter build apk` passes Flutter's dependency check.
-- **SDK versions:** all example apps and `docs/setup.md` use Android SDK 1.3.43.
-- **README:** new "Why Frontegg for Flutter" section, and it lists FronteggSwift 1.3.26 and Android 1.3.43.
-- **Docs site:** docsify 5.0.0 with exact CDN versions over https (#156). The 4.x search plugin wrote the `s` query parameter into the page without escaping it.
-
-## Testing
-- **Dart:** `flutter analyze lib test` is clean. `flutter test` passes 96/96, including the 12 bridge-contract tests.
-- **Android:** after merging #155, the plugin compiles against SDK 1.3.43. Its unit tests pass 18/18, including the 11 `ResolveValidAccessTokenTest` cases.
-- **iOS:** the scene-lifecycle `xcodebuild test` job passed against FronteggSwift 1.3.26 on #163 and #164.
-- **Reviews:** nureview and Bugbot findings were fixed or resolved on each part.
-- **Not verified:**
-  - no device test, including #155's embedded step-up check against an MFA-enforced tenant;
-  - the hosted example's US-region client ID differs between Android and iOS and needs a check in the Frontegg portal;
-  - the example `Package.resolved` files pin only `frontegg-ios-swift`, so Xcode adds the GoogleSignIn-iOS pins on first resolve.
-
-🤖 Generated with [Claude Code](https://claude.com/claude-code)
-
-https://claude.ai/code/session_01S2yW3aohcrkGZ96iyLpv3a
+- Added: `getOrRefreshAccessToken()` returns an access token valid for more than 15 seconds, refreshing it first when needed. Use it before API calls after the app resumes.
+  - Returns `null` when there is no session, when the refresh token was rejected, or when a multi-region app has no region selected.
+  - With offline mode on and no network, returns the cached token, which may be expired.
+  - Throws `FailedToAuthenticateException` when the token can't be refreshed. (FR-25952)
+- Added: multi-region support. Configure regions natively (the `regions` array in `Frontegg.plist`, `FronteggApp.initWithRegions` on Android), then select one with `initWithRegion(regionKey)`.
+  - The configured regions are in `FronteggConstants.regions` and `isRegional`, and the selected one in `FronteggState.selectedRegion`.
+  - An unknown key throws `InvalidRegionException`.
+  - `initWithRegion` keeps the current session, so call `logout()` before switching regions while signed in.
+  - See "Multi-region support" in `docs/advanced.md`. (FR-25959)
+- Changed: Android error codes `refresh_failed` and `switch_tenant_failed` now throw `FailedToRefreshTokenException` and `FailedToSwitchTenantException` instead of `UnknownException`. Other unrecognised platform codes still throw `UnknownException`, whose `failureReason` now holds the platform code instead of `"unknown"`. (FR-25950)
+- Changed: `CanceledByUserException.failureReason` is now `"canceledByUser"` instead of `"other"`.
+- Changed: on iOS, token exchange, passkey and Apple sign-in failures can now throw `OtherException`, following FronteggSwift 1.3.25.
+- Fixed: on iOS, `getOrRefreshAccessToken()` could sign the user out on app resume by racing the SDK's automatic token refresh.
+- Fixed: on iOS, native Apple sign-in that required MFA failed after a region was selected.
+- Fixed: embedded step-up now returns a stepped-up token after MFA, and no longer signs the user out before the MFA challenge appears.
+- Bump native SDKs to Android `1.3.43` / iOS `1.3.26`.
+- Docs: the docs site uses docsify 5.0.0 with pinned CDN versions, and the `hosted` and `application_id` examples use Gradle 8.14.3, AGP 8.11.1 and Kotlin 2.2.20.
 
 ## v1.0.54
 - Fixed: on iOS apps using the UIScene lifecycle (the `flutter create` default since Flutter 3.41), Frontegg links such as reset-password emails now reach the SDK instead of the app's router.
