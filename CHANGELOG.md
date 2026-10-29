@@ -2,13 +2,13 @@
 - Added: `getOrRefreshAccessToken()` returns an access token valid for more than 15 seconds, refreshing it first when needed. Use it before API calls after the app resumes.
   - Returns `null` when there is no session, when the refresh token was rejected, or when a multi-region app has no region selected.
   - With offline mode on and no network, returns the cached token, which may be expired.
-  - Throws `FailedToAuthenticateException` when the token can't be refreshed. (FR-25952)
+  - Throws `FailedToAuthenticateException` when the token can't be refreshed.
 - Added: multi-region support. Configure regions natively (the `regions` array in `Frontegg.plist`, `FronteggApp.initWithRegions` on Android), then select one with `initWithRegion(regionKey)`.
   - The configured regions are in `FronteggConstants.regions` and `isRegional`, and the selected one in `FronteggState.selectedRegion`.
   - An unknown key throws `InvalidRegionException`.
   - `initWithRegion` keeps the current session, so call `logout()` before switching regions while signed in.
-  - See "Multi-region support" in `docs/advanced.md`. (FR-25959)
-- Changed: Android error codes `refresh_failed` and `switch_tenant_failed` now throw `FailedToRefreshTokenException` and `FailedToSwitchTenantException` instead of `UnknownException`. Other unrecognised platform codes still throw `UnknownException`, whose `failureReason` now holds the platform code instead of `"unknown"`. (FR-25950)
+  - See "Multi-region support" in `docs/advanced.md`.
+- Changed: Android error codes `refresh_failed` and `switch_tenant_failed` now throw `FailedToRefreshTokenException` and `FailedToSwitchTenantException` instead of `UnknownException`. Other unrecognised platform codes still throw `UnknownException`, whose `failureReason` now holds the platform code instead of `"unknown"`.
 - Changed: `CanceledByUserException.failureReason` is now `"canceledByUser"` instead of `"other"`.
 - Changed: on iOS, token exchange, passkey and Apple sign-in failures can now throw `OtherException`, following FronteggSwift 1.3.25.
 - Fixed: on iOS, `getOrRefreshAccessToken()` could sign the user out on app resume by racing the SDK's automatic token refresh.
