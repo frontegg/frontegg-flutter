@@ -1,6 +1,7 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:frontegg_flutter/src/frontegg_method_channel.dart';
+import 'package:frontegg_flutter/src/models/admin_portal_layout.dart';
 
 import '../fixtures/test_maps.dart';
 
@@ -166,8 +167,14 @@ void main() {
     await platform.stepUp();
   });
 
-  test('openAdminPortal()', () async {
+  test('openAdminPortal() sends the desktop layout by default', () async {
     await platform.openAdminPortal();
+    expect(recordedMethodCalls.last.arguments, {"layout": "desktop"});
+  });
+
+  test('openAdminPortal() sends the responsive layout when asked', () async {
+    await platform.openAdminPortal(layout: AdminPortalLayout.responsive);
+    expect(recordedMethodCalls.last.arguments, {"layout": "responsive"});
   });
 
   group('StateEventChannel', () {

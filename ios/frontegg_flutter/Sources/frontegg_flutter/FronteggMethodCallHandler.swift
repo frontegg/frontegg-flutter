@@ -59,7 +59,7 @@ class FronteggMethodCallHandler {
         case "getPermissionEntitlement":
             getPermissionEntitlement(call: call, result: result)
         case "openAdminPortal":
-            openAdminPortal(result: result)
+            openAdminPortal(call: call, result: result)
         case "forceStateUpdate":
             forceStateUpdate(result: result)
 
@@ -480,7 +480,13 @@ class FronteggMethodCallHandler {
         ]
     }
 
-    private func openAdminPortal(result: @escaping FlutterResult) {
+    private static func adminPortalLayout(from value: String?) -> AdminPortalLayout {
+        value == "responsive" ? .responsive : .desktop
+    }
+
+    private func openAdminPortal(call: FlutterMethodCall, result: @escaping FlutterResult) {
+        let arguments = call.arguments as? [String: Any?]
+        let layout = Self.adminPortalLayout(from: arguments?["layout"] as? String)
         DispatchQueue.main.async {
             guard let viewController = Self.topViewController() else {
                 result(FlutterError(
@@ -492,7 +498,7 @@ class FronteggMethodCallHandler {
             }
 
             if #available(iOS 14.0, *) {
-                let host = UIHostingController(rootView: AdminPortalView())
+                let host = UIHostingController(rootView: AdminPortalView(layout: layout))
                 host.modalPresentationStyle = .pageSheet
                 viewController.present(host, animated: true)
                 result(nil)

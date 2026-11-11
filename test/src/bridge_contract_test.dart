@@ -4,6 +4,7 @@ import "package:flutter/foundation.dart";
 import "package:flutter/services.dart";
 import "package:flutter_test/flutter_test.dart";
 import "package:frontegg_flutter/src/frontegg_method_channel.dart";
+import "package:frontegg_flutter/src/models/admin_portal_layout.dart";
 
 const _androidSources = "android/src/main/kotlin/com/frontegg/flutter";
 const _iosSources = "ios/frontegg_flutter/Sources/frontegg_flutter";
@@ -131,7 +132,7 @@ Future<Map<String, Set<String>>> _recordDartArgumentKeys() async {
   await platform.getFeatureEntitlement("feature-1");
   await platform.getPermissionEntitlement("permission-1");
   await platform.loadEntitlements(forceRefresh: true);
-  await platform.openAdminPortal();
+  await platform.openAdminPortal(layout: AdminPortalLayout.responsive);
 
   TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
       .setMockMethodCallHandler(channel, null);

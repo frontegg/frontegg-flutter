@@ -404,3 +404,16 @@ await frontegg.openAdminPortal();
 ```
 
 The portal is dismissed when the user swipes down (iOS) or taps the built-in close button. On Android, `window.close()` finishes the activity automatically.
+
+### Layout
+
+By default the portal uses the desktop layout: it renders at 1024px and is scaled to fit, with the sidebar always visible. On phones this makes the text small. Pass `AdminPortalLayout.responsive` to use the device's real width instead, so on phones the sidebar collapses into a menu button, as it does in a mobile browser:
+
+```dart
+await frontegg.openAdminPortal(layout: AdminPortalLayout.responsive);
+```
+
+| Layout | Behaviour |
+|--------|-----------|
+| `AdminPortalLayout.desktop` (default) | 1024px desktop layout scaled to fit, desktop user agent. |
+| `AdminPortalLayout.responsive` | Device width and the system user agent. On iPad the portal lays itself out as it does in Safari. |

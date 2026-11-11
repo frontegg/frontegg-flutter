@@ -403,9 +403,15 @@ class FronteggFlutter {
   /// The portal loads `${baseUrl}/oauth/portal` in a native WebView that shares
   /// the SDK session, so authenticated users are not asked to sign in again.
   ///
+  /// [layout] defaults to [AdminPortalLayout.desktop]. Pass
+  /// [AdminPortalLayout.responsive] to fit the portal to the device's width.
+  ///
   /// Throws a [FronteggException] if the portal cannot be opened.
-  Future<void> openAdminPortal() => _runAction(() async {
-        await FronteggPlatform.instance.openAdminPortal();
+  Future<void> openAdminPortal({
+    AdminPortalLayout layout = AdminPortalLayout.desktop,
+  }) =>
+      _runAction(() async {
+        await FronteggPlatform.instance.openAdminPortal(layout: layout);
       });
 
   Future<T> _runAction<T>(Future<T> Function() action) async {

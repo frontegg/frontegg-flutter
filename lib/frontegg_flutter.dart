@@ -1,5 +1,6 @@
 export 'src/frontegg_flutter.dart';
 export 'src/frontegg_provider.dart';
+export 'src/models/admin_portal_layout.dart';
 export 'src/models/entitlement.dart';
 export 'src/models/frontegg_constants.dart';
 export 'src/models/frontegg_region_config.dart';
