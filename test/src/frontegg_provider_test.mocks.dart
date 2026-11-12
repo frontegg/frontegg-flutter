@@ -336,10 +336,13 @@ class MockFronteggFlutter extends _i1.Mock implements _i2.FronteggFlutter {
       ) as _i3.Future<_i2.Entitlement>);
 
   @override
-  _i3.Future<void> openAdminPortal() => (super.noSuchMethod(
+  _i3.Future<void> openAdminPortal(
+          {_i2.AdminPortalLayout? layout = _i2.AdminPortalLayout.desktop}) =>
+      (super.noSuchMethod(
         Invocation.method(
           #openAdminPortal,
           [],
+          {#layout: layout},
         ),
         returnValue: _i3.Future<void>.value(),
         returnValueForMissingStub: _i3.Future<void>.value(),

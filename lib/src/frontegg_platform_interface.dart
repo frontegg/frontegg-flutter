@@ -1,4 +1,5 @@
 import "package:frontegg_flutter/src/frontegg_method_channel.dart";
+import "package:frontegg_flutter/src/models/admin_portal_layout.dart";
 import "package:frontegg_flutter/src/models/entitlement.dart";
 import "package:plugin_platform_interface/plugin_platform_interface.dart";
 
@@ -137,7 +138,9 @@ abstract class FronteggPlatform extends PlatformInterface {
   }
 
   /// Opens the embedded Frontegg Admin Portal.
-  Future<void> openAdminPortal() {
+  Future<void> openAdminPortal({
+    AdminPortalLayout layout = AdminPortalLayout.desktop,
+  }) {
     throw UnimplementedError("openAdminPortal() has not been implemented.");
   }
 }

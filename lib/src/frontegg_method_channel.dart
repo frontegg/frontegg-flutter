@@ -1,5 +1,6 @@
 import "package:flutter/foundation.dart";
 import "package:flutter/services.dart";
+import "package:frontegg_flutter/src/models/admin_portal_layout.dart";
 import "package:frontegg_flutter/src/models/entitlement.dart";
 
 import "frontegg_platform_interface.dart";
@@ -295,14 +296,21 @@ class FronteggMethodChannel extends FronteggPlatform {
     bool forceRefresh = false,
   }) async =>
       (await methodChannel.invokeMethod<bool>(
-            loadEntitlementsMethodName,
-            {
-              "forceRefresh": forceRefresh,
-            },
-          )) ??
-          false;
+        loadEntitlementsMethodName,
+        {
+          "forceRefresh": forceRefresh,
+        },
+      )) ??
+      false;
 
   @override
-  Future<void> openAdminPortal() =>
-      methodChannel.invokeMethod(openAdminPortalMethodName);
+  Future<void> openAdminPortal({
+    AdminPortalLayout layout = AdminPortalLayout.desktop,
+  }) =>
+      methodChannel.invokeMethod(
+        openAdminPortalMethodName,
+        {
+          "layout": layout.value,
+        },
+      );
 }

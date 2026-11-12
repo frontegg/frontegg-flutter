@@ -3,6 +3,7 @@ package com.frontegg.flutter
 import android.content.Context
 import android.util.Base64
 import com.frontegg.android.AdminPortalActivity
+import com.frontegg.android.AdminPortalLayout
 import com.frontegg.android.EmbeddedAuthActivity
 import com.frontegg.android.FronteggAuth
 import com.frontegg.android.exceptions.FronteggException
@@ -75,7 +76,7 @@ class FronteggMethodCallHandler(
             "getFeatureEntitlement" -> getFeatureEntitlement(call, result)
             "getPermissionEntitlement" -> getPermissionEntitlement(call, result)
 
-            "openAdminPortal" -> openAdminPortal(result)
+            "openAdminPortal" -> openAdminPortal(call, result)
 
             else -> result.notImplemented()
         }
@@ -514,7 +515,10 @@ class FronteggMethodCallHandler(
             "justification" to entitlement.justification,
         )
 
-    private fun openAdminPortal(result: MethodChannel.Result) {
+    private fun openAdminPortal(
+        call: MethodCall,
+        result: MethodChannel.Result,
+    ) {
         val activity = activityProvider.getActivity()
         if (activity == null) {
             result.error(
@@ -525,10 +529,13 @@ class FronteggMethodCallHandler(
             return
         }
 
-        AdminPortalActivity.open(activity)
+        AdminPortalActivity.open(activity, adminPortalLayoutFrom(call.argument<String>("layout")))
         result.success(null)
     }
 }
+
+internal fun adminPortalLayoutFrom(value: String?): AdminPortalLayout =
+    if (value == "responsive") AdminPortalLayout.RESPONSIVE else AdminPortalLayout.DESKTOP
 
 /**
  * Builds the constants map returned to Dart's `FronteggConstants.fromMap`.
