@@ -297,7 +297,7 @@ region (see [Project setup](setup.md)).
 
 ```groovy
 dependencies {
-    implementation 'com.frontegg.sdk:android:1.3.41'
+    implementation 'com.frontegg.sdk:android:1.3.45'
 }
 ```
 
