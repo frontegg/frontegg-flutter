@@ -1,3 +1,22 @@
+## v1.0.55
+- Added: `getOrRefreshAccessToken()` returns an access token valid for more than 15 seconds, refreshing it first when needed. Use it before API calls after the app resumes.
+  - Returns `null` when there is no session, when the refresh token was rejected, or when a multi-region app has no region selected.
+  - With offline mode on and no network, returns the cached token, which may be expired.
+  - Throws `FailedToAuthenticateException` when the token can't be refreshed.
+- Added: multi-region support. Configure regions natively (the `regions` array in `Frontegg.plist`, `FronteggApp.initWithRegions` on Android), then select one with `initWithRegion(regionKey)`.
+  - The configured regions are in `FronteggConstants.regions` and `isRegional`, and the selected one in `FronteggState.selectedRegion`.
+  - An unknown key throws `InvalidRegionException`.
+  - `initWithRegion` keeps the current session, so call `logout()` before switching regions while signed in.
+  - See "Multi-region support" in `docs/advanced.md`.
+- Changed: Android error codes `refresh_failed` and `switch_tenant_failed` now throw `FailedToRefreshTokenException` and `FailedToSwitchTenantException` instead of `UnknownException`. Other unrecognised platform codes still throw `UnknownException`, whose `failureReason` now holds the platform code instead of `"unknown"`.
+- Changed: `CanceledByUserException.failureReason` is now `"canceledByUser"` instead of `"other"`.
+- Changed: on iOS, token exchange, passkey and Apple sign-in failures can now throw `OtherException`, following FronteggSwift 1.3.25.
+- Fixed: on iOS, `getOrRefreshAccessToken()` could sign the user out on app resume by racing the SDK's automatic token refresh.
+- Fixed: on iOS, native Apple sign-in that required MFA failed after a region was selected.
+- Fixed: embedded step-up now returns a stepped-up token after MFA, and no longer signs the user out before the MFA challenge appears.
+- Bump native SDKs to Android `1.3.43` / iOS `1.3.26`.
+- Docs: the docs site uses docsify 5.0.0 with pinned CDN versions, and the `hosted` and `application_id` examples use Gradle 8.14.3, AGP 8.11.1 and Kotlin 2.2.20.
+
 ## v1.0.54
 - Fixed: on iOS apps using the UIScene lifecycle (the `flutter create` default since Flutter 3.41), Frontegg links such as reset-password emails now reach the SDK instead of the app's router.
 

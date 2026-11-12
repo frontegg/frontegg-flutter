@@ -1,3 +1,11 @@
+## v1.0.56
+- Bump native SDKs to Android `1.3.45` / iOS `1.3.27`.
+- Fixed: on Android, users are no longer signed out when a token refresh is rate-limited (HTTP 429) or times out (408). The SDK keeps the session and retries the refresh with backoff.
+- Docs: the Android snippet in `docs/advanced.md` now shows `1.3.45`.
+- Added: `openAdminPortal(layout: AdminPortalLayout.responsive)` opens the Admin Portal at the device's real width, so on phones the sidebar collapses into a menu button, as it does in a mobile browser. The default, `AdminPortalLayout.desktop`, keeps the current layout: the portal renders at 1024px and is scaled to fit. Apps that don't pass a layout are unaffected.
+- Docs: `docs/advanced.md` (new "Layout" section) and `docs/api.md`.
+- CI: the PR and E2E workflows are pinned to Flutter 3.47.9. They had been installing the latest stable, 3.50.0, whose new deprecations and Gradle 9.3.1 minimum failed the checks on unchanged code.
+
 ## v1.0.55
 - Added: `getOrRefreshAccessToken()` returns an access token valid for more than 15 seconds, refreshing it first when needed. Use it before API calls after the app resumes.
   - Returns `null` when there is no session, when the refresh token was rejected, or when a multi-region app has no region selected.
